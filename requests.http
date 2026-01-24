@@ -1,0 +1,83 @@
+
+GET localhost:8080/foods
+
+###
+
+POST localhost:8080/foods
+Content-Type: application/json
+
+{
+  "name" : "Banana",
+  "kcalAndNutrients" : {
+    "kcal": 100.0,
+    "fat": 1.0,
+    "carb": 20.0,
+    "protein": 1.0
+  }
+}
+
+###
+
+GET localhost:8080/foods/2
+
+###
+
+GET localhost:8080/users
+
+###
+
+POST localhost:8080/users
+Content-Type: application/json
+
+{
+  "name" : "Viktor",
+  "height": 190.0,
+  "weight": 84.0,
+  "userType": "PREMIUM",
+  "differentDays": true
+}
+
+###
+
+GET localhost:8080/days
+
+###
+
+POST localhost:8080/days
+Content-Type: application/json
+
+{
+  "date": "2025-11-12",
+  "foodList": [
+    {
+      "name": "Banana",
+      "kcalAndNutrients": {
+        "kcal": 100.0,
+        "fat": 1.0,
+        "carb": 20.0,
+        "protein": 1.0
+      }
+    },
+    {
+      "name": "Apple",
+      "kcalAndNutrients": {
+        "kcal": 52.0,
+        "fat": 0.2,
+        "carb": 14.0,
+        "protein": 0.3
+      }
+    }
+  ]
+}
+
+###
+
+POST localhost:8080/days
+Content-Type: application/json
+
+{
+  "date": "2025-11-12",
+  "foodList": []
+}
+
+###
