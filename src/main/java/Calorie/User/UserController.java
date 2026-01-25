@@ -26,4 +26,14 @@ public class UserController {
     public void addNewUser(@RequestBody User user) {
         userService.insertUser(user);
     }
+
+    @DeleteMapping("{id}")
+    public void deleteFoodById(@PathVariable Integer id) {
+        userService.deleteUserById(id);
+    }
+
+    @PutMapping("{id}")
+    public void updateFoodById(@PathVariable Integer id, @RequestBody User user) {
+        userService.updateUserById(id, user);
+    }
 }

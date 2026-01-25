@@ -15,9 +15,13 @@ public class Day {
     //Év-hó-nap tárolására!
     //POST előtt check, hogy van-e már az adott nap!!!
     private LocalDate date;
-    //Nem primitív adattípus List-ben.
+
+
+    //TODO: Megoldás(?): külön EmbeddableFood osztály létrehozása!!!
     @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn(name = "day_id") // Ide kerül az idegen kulcs a Food táblába.
+    //@Transient //nem jó, mert a foodList: null
+    //@ElementCollection() //List<Food>: nem jó, mert nem primitív adattípus!
     private List<Food> foodList;
 
     public Day() {}

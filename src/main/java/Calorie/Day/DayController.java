@@ -26,4 +26,14 @@ public class DayController {
     public void addNewDay(@RequestBody Day day) {
         dayService.insertDay(day);
     }
+
+    @DeleteMapping("{id}")
+    public void deleteDayById(@PathVariable Integer id) {
+        dayService.deleteDayById(id);
+    }
+
+    @PutMapping("{id}")
+    public void updateFoodById(@PathVariable Integer id, @RequestBody Day day) {
+        dayService.updateDayById(id, day);
+    }
 }

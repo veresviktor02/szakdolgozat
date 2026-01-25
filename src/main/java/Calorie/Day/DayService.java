@@ -1,5 +1,6 @@
 package Calorie.Day;
 
+import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -20,8 +21,25 @@ public class DayService {
         dayRepository.save(day);
     }
 
+    @Transactional
+    public void updateDayById(Integer id, Day newDay) {
+        Day oldDay = dayRepository.findById(id).orElseThrow(
+                () -> new IllegalStateException(
+                        "A frissíteni kívánt nap nem található! (ID: " + id + ')'
+                ));
+
+        oldDay.setDate(newDay.getDate());
+        oldDay.setFoodList(newDay.getFoodList());
+    }
+
+    public void deleteDayById(Integer id) {
+        dayRepository.deleteById(id);
+    }
+
     public Day getDayById(Integer id) {
         return dayRepository.findById(id)
-                .orElseThrow(() -> new IllegalStateException(id + " not found."));
+                .orElseThrow(() -> new IllegalStateException(
+                        "A megadott ID nem található! " + id + ')'
+                ));
     }
 }

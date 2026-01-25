@@ -18,6 +18,45 @@ Content-Type: application/json
 
 ###
 
+POST localhost:8080/foods
+Content-Type: application/json
+
+{
+  "name": "Apple",
+  "kcalAndNutrients": {
+    "kcal": 52.0,
+    "fat": 0.2,
+    "carb": 14.0,
+    "protein": 0.3
+  }
+}
+
+###
+
+PUT localhost:8080/foods/2
+Content-Type: application/json
+
+{
+  "name": "New Apple",
+  "kcalAndNutrients": {
+    "kcal": 100.0,
+    "fat": 100.0,
+    "carb": 100.0,
+    "protein": 100.0
+  }
+}
+
+###
+
+GET localhost:8080/foods
+
+###
+
+###Mindig legyen kikommentelve, ha nem használjuk, mert a PUT lefutása helyett ez fut le!!!
+###DELETE localhost:8080/foods/1
+
+###
+
 GET localhost:8080/foods/2
 
 ###
@@ -39,10 +78,41 @@ Content-Type: application/json
 
 ###
 
+POST localhost:8080/users
+Content-Type: application/json
+
+{
+  "name" : "Dávid",
+  "height": 160.0,
+  "weight": 64.0,
+  "userType": "FREE",
+  "differentDays": false
+}
+
+###
+
+PUT localhost:8080/users/2
+Content-Type: application/json
+
+{
+  "name" : "New Dávid",
+  "height": 169.0,
+  "weight": 67.0,
+  "userType": "PREMIUM",
+  "differentDays": true
+}
+
+###
+
+###DELETE localhost:8080/users/2
+
+###
+
 GET localhost:8080/days
 
 ###
 
+###TODO: A Day request-ek hozzáadják a bennük szereplő ételeket a /foods-hoz!!!
 POST localhost:8080/days
 Content-Type: application/json
 
@@ -50,7 +120,7 @@ Content-Type: application/json
   "date": "2025-11-12",
   "foodList": [
     {
-      "name": "Banana",
+      "name": "Banana in Day",
       "kcalAndNutrients": {
         "kcal": 100.0,
         "fat": 1.0,
@@ -59,7 +129,7 @@ Content-Type: application/json
       }
     },
     {
-      "name": "Apple",
+      "name": "Apple in Day",
       "kcalAndNutrients": {
         "kcal": 52.0,
         "fat": 0.2,
@@ -76,8 +146,41 @@ POST localhost:8080/days
 Content-Type: application/json
 
 {
-  "date": "2025-11-12",
+  "date": "2025-12-13",
   "foodList": []
 }
+
+###
+
+PUT localhost:8080/days/2
+Content-Type: application/json
+
+{
+  "date": "2030-12-12",
+  "foodList": [
+    {
+      "name": "New Banana in day",
+      "kcalAndNutrients": {
+        "kcal": 100.0,
+        "fat": 100.0,
+        "carb": 100.0,
+        "protein": 100.0
+      }
+    },
+    {
+      "name": "New Apple in day",
+      "kcalAndNutrients": {
+        "kcal": 100.0,
+        "fat": 100.0,
+        "carb": 100.0,
+        "protein": 100.0
+      }
+    }
+  ]
+}
+
+###
+
+###DELETE localhost:8080/days/2
 
 ###

@@ -25,13 +25,23 @@ public class FoodController {
     @PostMapping
     public void addNewFood(@RequestBody Food food) {
         foodService.insertFood(food);
+    }
 
-        /*
+    @DeleteMapping("{id}")
+    public void deleteFoodById(@PathVariable Integer id) {
+        foodService.deleteFoodById(id);
+    }
+
+    @PutMapping("{id}")
+    public void updateFoodById(@PathVariable Integer id, @RequestBody Food food) {
+        foodService.updateFoodById(id, food);
+    }
+
+    /*
         void helyett ResponseEntity<String> kell!!!
 
         return ResponseEntity
             .status(HttpStatus.CREATED) // HTTP 201
             .body("Food " + food.getName() + " created successfully!");
-        */
-    }
+     */
 }
