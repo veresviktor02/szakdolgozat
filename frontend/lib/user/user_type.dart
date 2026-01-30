@@ -1,0 +1,4 @@
+enum UserType {
+  FREE,
+  PREMIUM,
+}
