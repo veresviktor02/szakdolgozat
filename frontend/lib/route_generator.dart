@@ -6,14 +6,14 @@ import 'package:flutter_application/pages/third_page.dart';
 
 class RouteGenerator {
   static Route<dynamic> generateRoute(RouteSettings settings) {
-    switch (settings.name) {
+    switch(settings.name) {
       //Főoldal
       case '/':
         return MaterialPageRoute(builder: (_) => HomePage());
 
       //Második oldal: Feltétel szükséges
       case '/second':
-        if (settings.arguments is String) { //TODO: átalakítani a feltételt!
+        if(settings.arguments is String) { //TODO: átalakítani a feltételt!
           return MaterialPageRoute(
             builder: (_) => SecondPage(
               data: settings.arguments.toString(),
@@ -34,15 +34,16 @@ class RouteGenerator {
   }
 
   static Route<dynamic> _errorRoute() {
-    return MaterialPageRoute(builder: (_) {
-      return Scaffold(
-        appBar: AppBar(
-          title: Text('Error'),
-        ),
-        body: Center(
-          child: Text('ERROR'),
-        ),
-      );
-    });
+    return MaterialPageRoute(
+        builder: (_) {
+          return Scaffold(
+            appBar: AppBar(
+              title: Text('Error'),
+            ),
+            body: Center(
+              child: Text('ERROR'),
+            ),
+          );
+        });
   }
 }
