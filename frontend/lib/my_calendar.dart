@@ -7,7 +7,7 @@ import 'food/food_model.dart';
 class MyCalendar {
   Map<DateTime, Day> daysMap = {};
 
-  DateTime? selectedDay; // = DateTime.now();
+  DateTime? selectedDay;
   DateTime focusedDay = DateTime.now();
 
   DateTime dayOnly(DateTime date) {

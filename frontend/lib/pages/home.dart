@@ -42,8 +42,11 @@ class _HomePageState extends State<HomePage> {
   void initState() {
     super.initState();
 
+    //refreshPage() nem jó itt, mert 0.000001 secre hiba (aztán meg nincs).
     foodFuture = foodService.fetchFoods();
     dayFuture = dayService.fetchDays();
+
+    myCalendar.daysMap.clear();
 
     dayFuture.then((days) {
       setState(() {
@@ -51,6 +54,21 @@ class _HomePageState extends State<HomePage> {
           myCalendar.daysMap[myCalendar.dayOnly(day.date)] = day;
         }
       });
+    });
+  }
+
+  Future<void> refreshPage() async {
+    final days = await dayService.fetchDays();
+
+    setState(() {
+      foodFuture = foodService.fetchFoods();
+      dayFuture = dayService.fetchDays();
+
+      myCalendar.daysMap.clear();
+
+      for (final day in days) {
+        myCalendar.daysMap[myCalendar.dayOnly(day.date)] = day;
+      }
     });
   }
 
@@ -67,7 +85,7 @@ class _HomePageState extends State<HomePage> {
             crossAxisAlignment: CrossAxisAlignment.start,
           
             children: [
-              _calendar(myCalendar, setState),
+              _calendar(),
 
               const SizedBox(height: 5,),
 
@@ -87,14 +105,7 @@ class _HomePageState extends State<HomePage> {
           
               const SizedBox(height: 20,),
           
-              _dataSenderContainer(
-                nameController,
-                kcalController,
-                fatController,
-                carbController,
-                proteinController,
-                foodService
-              ),
+              _dataSenderContainer(),
           
               const SizedBox(height: 20,),
           
@@ -105,58 +116,166 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
+  Container _calendar() {
+    return Container(
+      alignment: Alignment.center,
 
-}
+      child: SizedBox(
+        width: 600,
+        //Megcsinálni a magasságot!
+        height: 300,
 
-Container _calendar(MyCalendar myCalendar, void Function(VoidCallback) setState) {
-  return Container(
-    alignment: Alignment.center,
+        child: Column(
+          children: [
+            TableCalendar(
 
-    child: SizedBox(
-      width: 600,
-      //height: 300,
+            headerStyle: HeaderStyle(
+              titleCentered: true,
+              formatButtonVisible: false,
 
-      child: Column(
-        children: [
-          TableCalendar(
-            //TODO: magyar napok nevei!
-            firstDay: DateTime(2024, 1, 1),
-            lastDay: DateTime(2027, 12, 31),
-            focusedDay: myCalendar.focusedDay,
+              titleTextFormatter: (date, locale) {
+              //TODO: Hónap kiírása magyarul!!!
+                return 'Kalória naptár';
+              },
 
-            //default: Vasárnap!
-            startingDayOfWeek: StartingDayOfWeek.monday,
+            ),
 
-            selectedDayPredicate: (day) {
-              return isSameDay(myCalendar.selectedDay, day);
-            },
+              //Hét napjainak testreszabása
+              calendarBuilders: CalendarBuilders(
+                dowBuilder: (context, day) {
+                  switch (day.weekday) {
+                    case DateTime.monday:
+                      return const Center(child: Text('H'));
+                    case DateTime.tuesday:
+                      return const Center(child: Text('K'));
+                    case DateTime.wednesday:
+                      return const Center(child: Text('Sze'));
+                    case DateTime.thursday:
+                      return const Center(child: Text('Cs'));
+                    case DateTime.friday:
+                      return const Center(child: Text('P'));
+                    case DateTime.saturday:
+                      return const Center(child: Text('Szo'));
+                    case DateTime.sunday:
+                      return const Center(child: Text('V'));
+                  }
+                },
+              ),
 
-            eventLoader: (day) {
-              return myCalendar.daysMap[myCalendar.dayOnly(day)]?.foodList ?? [];
-            },
+              calendarStyle: CalendarStyle(
+                todayDecoration: BoxDecoration(
+                  color: Colors.orange,
+                  shape: BoxShape.circle,
+                ),
+                selectedDecoration: BoxDecoration(
+                  color: Colors.green,
+                  shape: BoxShape.circle,
+                ),
+                //weekendTextStyle: const TextStyle(color: Colors.blue),
+                defaultTextStyle: const TextStyle(color: Colors.black),
+                outsideTextStyle: TextStyle(color: Colors.grey.shade400),
+              ),
 
-            onDaySelected: (selectedDay, focusedDay) {
-              setState(() {
-                myCalendar.selectedDay = selectedDay;
-                myCalendar.focusedDay = focusedDay;
-              });
-            },
+              firstDay: DateTime(2024, 1, 1),
+              lastDay: DateTime(2027, 12, 31),
+              focusedDay: myCalendar.focusedDay,
 
-            calendarFormat: myCalendar.calendarFormat,
+              //default: Vasárnap!
+              startingDayOfWeek: StartingDayOfWeek.monday,
 
-            //Eltűnik a választó!
-            availableCalendarFormats: const {
-              CalendarFormat.week: 'Hét',
-            },
+              selectedDayPredicate: (day) {
+                return isSameDay(myCalendar.selectedDay, day);
+              },
+
+              eventLoader: (day) {
+                return myCalendar.daysMap[myCalendar.dayOnly(day)]?.foodList ?? [];
+              },
+
+              onDaySelected: (selectedDay, focusedDay) {
+                setState(() {
+                  myCalendar.selectedDay = selectedDay;
+                  myCalendar.focusedDay = focusedDay;
+                });
+              },
+
+              calendarFormat: myCalendar.calendarFormat,
+
+              //Eltűnik a választó!
+              availableCalendarFormats: const {
+                CalendarFormat.week: 'Hét',
+              },
 
 
-          ),
+            ),
 
-          _dayDetails(myCalendar.selectedFoods, myCalendar.selectedDay),
-        ],
+            _dayDetails(myCalendar.selectedFoods, myCalendar.selectedDay),
+          ],
+        ),
       ),
-    ),
-  );
+    );
+  }
+
+  Future<void> sendFood() async {
+    await foodService.sendFood(
+      nameController.text,
+      KcalAndNutrients(
+        kcal: double.parse(kcalController.text),
+        fat: double.parse(fatController.text),
+        carb: double.parse(carbController.text),
+        protein: double.parse(proteinController.text),
+      ),
+    );
+  }
+
+
+  Container _dataSenderContainer() {
+    return Container(
+        padding: const EdgeInsets.all(20),
+
+        child: Column(
+          children: [
+            Row(
+              children: [
+                Text('Add meg a bevinni kívánt adatokat!'),
+              ],
+            ),
+
+            const SizedBox(height: 20,),
+
+            _nameTextField(nameController),
+
+            Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+
+              children: [
+                _textFieldColumn('Kcal', kcalController), //TODO: Más legyen ez a mező (style)!!!
+                _textFieldColumn('Fat', fatController),
+                _textFieldColumn('Carb', carbController),
+                _textFieldColumn('Protein', proteinController),
+              ],
+            ),
+
+            Container(
+              alignment: Alignment.centerLeft,
+
+              child: ElevatedButton(
+                onPressed: () {
+                  sendFood();
+                  refreshPage();
+                },
+                style: ButtonStyle(
+                  //TODO: style
+                ),
+
+                child: Text('Kattints ide a küldéshez!'),
+              ),
+            ),
+
+          ],
+        )
+    );
+  }
+
 }
 
 Widget _dayDetails(List<Food> selectedFoods, DateTime? selectedDay) {
@@ -203,72 +322,6 @@ Widget _dayDetails(List<Food> selectedFoods, DateTime? selectedDay) {
         },
       ),
     ],
-  );
-}
-
-Container _dataSenderContainer(
-    TextEditingController nameController,
-    TextEditingController kcalController,
-    TextEditingController fatController,
-    TextEditingController carbController,
-    TextEditingController proteinController,
-    FoodService foodService
-    ) {
-  return Container(
-      padding: const EdgeInsets.all(20),
-
-      child: Column(
-        children: [
-          Row(
-            children: [
-              Text('Add meg a bevinni kívánt adatokat!'),
-            ],
-          ),
-
-          const SizedBox(height: 20,),
-
-          _nameTextField(nameController),
-
-          Row(
-            mainAxisAlignment: MainAxisAlignment.start,
-
-            children: [
-              _textFieldColumn('Kcal', kcalController), //TODO: Más legyen ez a mező (style)!!!
-              _textFieldColumn('Fat', fatController),
-              _textFieldColumn('Carb', carbController),
-              _textFieldColumn('Protein', proteinController),
-            ],
-          ),
-
-          Container(
-            alignment: Alignment.centerLeft,
-
-            child: ElevatedButton(
-              onPressed: () async {
-
-                foodService.sendFood(
-                  nameController.text,
-                  KcalAndNutrients(
-                    kcal: double.parse(kcalController.text),
-                    fat: double.parse(fatController.text),
-                    carb: double.parse(carbController.text),
-                    protein: double.parse(proteinController.text),
-                  ),
-                );
-
-                print('Gomb lenyomva!');
-
-              },
-              style: ButtonStyle(
-                //TODO: style
-              ),
-
-              child: Text('Kattints ide a küldéshez!'),
-            ),
-          ),
-
-        ],
-      )
   );
 }
 
