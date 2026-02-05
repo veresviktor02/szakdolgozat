@@ -1,9 +1,9 @@
 package Calorie.Day;
 
-import Calorie.Food.Food;
 import jakarta.persistence.*;
 
 import java.time.LocalDate;
+
 import java.util.List;
 import java.util.Objects;
 
@@ -12,21 +12,17 @@ public class Day {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
+
     //Év-hó-nap tárolására!
-    //POST előtt check, hogy van-e már az adott nap!!!
+    @Column(unique = true)
     private LocalDate date;
 
-
-    //TODO: Megoldás(?): külön EmbeddableFood osztály létrehozása!!!
     @OneToMany(cascade = CascadeType.ALL)
-    @JoinColumn(name = "day_id") // Ide kerül az idegen kulcs a Food táblába.
-    //@Transient //nem jó, mert a foodList: null
-    //@ElementCollection() //List<Food>: nem jó, mert nem primitív adattípus!
-    private List<Food> foodList;
+    private List<EmbeddedFood> foodList;
 
     public Day() {}
 
-    public Day(Integer id, LocalDate date, List<Food> foodList) {
+    public Day(Integer id, LocalDate date, List<EmbeddedFood> foodList) {
         this.id = id;
         this.date = date;
         this.foodList = foodList;
@@ -40,7 +36,7 @@ public class Day {
         return date;
     }
 
-    public List<Food> getFoodList() {
+    public List<EmbeddedFood> getFoodList() {
         return foodList;
     }
 
@@ -52,7 +48,7 @@ public class Day {
         this.date = date;
     }
 
-    public void setFoodList(List<Food> foodList) {
+    public void setFoodList(List<EmbeddedFood> foodList) {
         this.foodList = foodList;
     }
 

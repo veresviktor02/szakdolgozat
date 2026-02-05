@@ -112,12 +112,11 @@ GET localhost:8080/days
 
 ###
 
-###TODO: A Day request-ek hozzáadják a bennük szereplő ételeket a /foods-hoz!!!
 POST localhost:8080/days
 Content-Type: application/json
 
 {
-  "date": "2025-11-12",
+  "date": "2026-02-04",
   "foodList": [
     {
       "name": "Banana in Day",
