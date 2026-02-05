@@ -72,3 +72,10 @@ Runner/GeneratedPluginRegistrant.*
 ### Sajátok ###
 TODO.txt
 test_codes.txt
+.DS_Store
+frontend/.dart_tool/
+.build/
+build/
+.packages
+.pub/
+.pub-cache/
