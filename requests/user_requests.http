@@ -1,0 +1,47 @@
+GET localhost:8080/users
+
+###
+
+POST localhost:8080/users
+Content-Type: application/json
+
+{
+  "name" : "Viktor",
+  "height": 190.0,
+  "weight": 84.0,
+  "userType": "PREMIUM",
+  "differentDays": true
+}
+
+###
+
+POST localhost:8080/users
+Content-Type: application/json
+
+{
+  "name" : "Dávid",
+  "height": 160.0,
+  "weight": 64.0,
+  "userType": "FREE",
+  "differentDays": false
+}
+
+###
+
+PUT localhost:8080/users/2
+Content-Type: application/json
+
+{
+  "name" : "New Dávid",
+  "height": 169.0,
+  "weight": 67.0,
+  "userType": "PREMIUM",
+  "differentDays": true
+}
+
+###
+
+###DELETE localhost:8080/users/2
+
+###
+

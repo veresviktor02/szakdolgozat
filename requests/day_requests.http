@@ -1,0 +1,90 @@
+GET localhost:8080/days
+
+###
+
+POST localhost:8080/days
+Content-Type: application/json
+
+{
+  "date": "2026-02-04",
+  "foodList": [
+    {
+      "name": "Banana in Day",
+      "kcalAndNutrients": {
+        "kcal": 100.0,
+        "fat": 1.0,
+        "carb": 20.0,
+        "protein": 1.0
+      }
+    },
+    {
+      "name": "Apple in Day",
+      "kcalAndNutrients": {
+        "kcal": 52.0,
+        "fat": 0.2,
+        "carb": 14.0,
+        "protein": 0.3
+      }
+    }
+  ]
+}
+
+###
+
+POST localhost:8080/days
+Content-Type: application/json
+
+{
+  "date": "2025-12-13",
+  "foodList": []
+}
+
+###
+
+PUT localhost:8080/days/2
+Content-Type: application/json
+
+{
+  "date": "2030-12-12",
+  "foodList": [
+    {
+      "name": "New Banana in day",
+      "kcalAndNutrients": {
+        "kcal": 100.0,
+        "fat": 100.0,
+        "carb": 100.0,
+        "protein": 100.0
+      }
+    },
+    {
+      "name": "New Apple in day",
+      "kcalAndNutrients": {
+        "kcal": 100.0,
+        "fat": 100.0,
+        "carb": 100.0,
+        "protein": 100.0
+      }
+    }
+  ]
+}
+
+###
+
+###DELETE localhost:8080/days/2
+
+###
+
+###DELETE localhost:8080/days/1/foods/1
+
+POST localhost:8080/days/2
+Content-Type: application/json
+
+{
+  "name": "New added food",
+  "kcalAndNutrients": {
+    "kcal": 420.0,
+    "fat": 6.9,
+    "carb": 6.7,
+    "protein": 18.0
+  }
+}
