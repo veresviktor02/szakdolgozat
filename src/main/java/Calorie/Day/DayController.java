@@ -1,5 +1,6 @@
 package Calorie.Day;
 
+import Calorie.Food.Food;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -35,5 +36,15 @@ public class DayController {
     @PutMapping("{id}")
     public void updateFoodById(@PathVariable Integer id, @RequestBody Day day) {
         dayService.updateDayById(id, day);
+    }
+
+    @DeleteMapping("{dayId}/foods/{foodId}")
+    public void removeFoodFromDay(@PathVariable Integer dayId, @PathVariable Integer foodId) {
+        dayService.removeFoodFromDay(dayId, foodId);
+    }
+
+    @PostMapping("{dayId}")
+    public void addFoodToDay(@PathVariable Integer dayId, @RequestBody EmbeddedFood food) {
+        dayService.addFoodToDay(dayId, food);
     }
 }

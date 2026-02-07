@@ -183,3 +183,18 @@ Content-Type: application/json
 ###DELETE localhost:8080/days/2
 
 ###
+
+###DELETE localhost:8080/days/1/foods/1
+
+POST localhost:8080/days/2
+Content-Type: application/json
+
+{
+  "name": "New added food",
+  "kcalAndNutrients": {
+    "kcal": 420.0,
+    "fat": 6.9,
+    "carb": 6.7,
+    "protein": 18.0
+  }
+}

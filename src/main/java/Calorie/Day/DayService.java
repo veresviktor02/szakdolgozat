@@ -42,4 +42,33 @@ public class DayService {
                         "A megadott ID nem található! " + id + ')'
                 ));
     }
+
+    public void removeFoodFromDay(Integer dayId, Integer foodId) {
+        //Megnézzük, hogy létezik-e a megadott nap.
+        Day day = dayRepository.findById(dayId).
+                orElseThrow(() -> new IllegalStateException(
+                        "A megadott ID nem található! " + dayId + ')'
+                ));
+
+        //Töröljük az ételt, ha nem található, Error dobása.
+        if(!day.getFoodList().removeIf(food -> food.getId().equals(foodId))) {
+            throw new IllegalStateException("A megadott ID nem található! " + foodId + ')');
+        }
+
+        //Mentse el, vagy nem változik az adatbázis!
+        dayRepository.save(day);
+
+    }
+
+    public void addFoodToDay(Integer dayId, EmbeddedFood food) {
+        //Megnézzük, hogy létezik-e a megadott nap.
+        Day day = dayRepository.findById(dayId).
+                orElseThrow(() -> new IllegalStateException(
+                        "A megadott ID nem található! " + dayId + ')'
+                ));
+
+        day.getFoodList().add(food);
+
+        dayRepository.save(day);
+    }
 }
