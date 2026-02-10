@@ -1,6 +1,7 @@
 import 'package:flutter_application/user/user_type.dart';
 
 class User {
+  final int id;
   final String name;
   final double height;
   final double weight;
@@ -8,6 +9,7 @@ class User {
   final bool differentDays;
 
   User({
+    required this.id,
     required this.name,
     required this.height,
     required this.weight,
@@ -17,6 +19,7 @@ class User {
 
   factory User.fromJson(Map<String, dynamic> json) {
     return User(
+      id: json['id'],
       name: json['name'],
       height: json['height'],
       weight: json['weight'],
@@ -28,6 +31,7 @@ class User {
 
   Map<String, dynamic> toJson() {
     return {
+      'id': id,
       'name': name,
       'height': height,
       'weight': weight,
