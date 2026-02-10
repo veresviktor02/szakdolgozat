@@ -134,8 +134,31 @@ class _HomePageState extends State<HomePage> {
               formatButtonVisible: false,
 
               titleTextFormatter: (date, locale) {
-              //TODO: Hónap kiírása magyarul!!!
-                return 'Kalória naptár';
+                switch(date.month) {
+                  case DateTime.january:
+                    return '${date.year} Január';
+                  case DateTime.february:
+                    return '${date.year} Február';
+                  case DateTime.march:
+                    return '${date.year} Március';
+                  case DateTime.april:
+                    return '${date.year} Április';
+                  case DateTime.may:
+                    return '${date.year} Május';
+                  case DateTime.june:
+                    return '${date.year} Június';
+                  case DateTime.july:
+                    return '${date.year} Július';
+                  case DateTime.august:
+                    return '${date.year} Augusztus';
+                  case DateTime.september:
+                    return '${date.year} Szeptember';
+                  case DateTime.october:
+                    return '${date.year} Október';
+                  case DateTime.november:
+                    return '${date.year} November';
+                }
+                return '${date.year} December';
               },
 
             ),
