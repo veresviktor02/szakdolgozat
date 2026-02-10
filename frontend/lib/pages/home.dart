@@ -50,7 +50,7 @@ class _HomePageState extends State<HomePage> {
 
     dayFuture.then((days) {
       setState(() {
-        for (final day in days) {
+        for(final day in days) {
           myCalendar.daysMap[myCalendar.dayOnly(day.date)] = day;
         }
       });
@@ -66,7 +66,7 @@ class _HomePageState extends State<HomePage> {
 
       myCalendar.daysMap.clear();
 
-      for (final day in days) {
+      for(final day in days) {
         myCalendar.daysMap[myCalendar.dayOnly(day.date)] = day;
       }
     });
@@ -123,7 +123,7 @@ class _HomePageState extends State<HomePage> {
       child: SizedBox(
         width: 600,
         //Megcsinálni a magasságot!
-        height: 300,
+        height: 500,
 
         child: Column(
           children: [
@@ -208,7 +208,7 @@ class _HomePageState extends State<HomePage> {
 
             ),
 
-            _dayDetails(myCalendar.selectedFoods, myCalendar.selectedDay),
+            _dayDetails(),
           ],
         ),
       ),
@@ -276,54 +276,69 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-}
+  Widget _dayDetails() {
+    //Nincs kiválasztva (fókuszban) nap
+    if (myCalendar.selectedDay == null) {
+      return const Center(child: Text('Válassz ki egy napot! (myCalendar.selectedDay == null)'));
+    }
 
-Widget _dayDetails(List<Food> selectedFoods, DateTime? selectedDay) {
-  late List<Food> lateSelectedFoods = selectedFoods;
+    //Nincs étel a napban
+    if (myCalendar.selectedFoods.isEmpty) {
+      return const Center(child: Text('A napod üres! (myCalendar.selectedFoods.isEmpty == true)'));
+    }
 
-  //Nincs kiválasztva (fókuszban) nap
-  if (selectedDay == null) {
-    return const Center(child: Text('Válassz ki egy napot! (selectedDay == null)'));
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.end,
+
+      children: [
+        ListView.builder(
+          shrinkWrap: true,
+          itemCount: myCalendar.selectedFoods.length,
+
+          itemBuilder: (context, index) {
+            final food = myCalendar.selectedFoods[index];
+
+            return Card(
+              color: Colors.blue,
+              shadowColor: Colors.greenAccent,
+              elevation: 8,
+
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+
+                children: [
+                  ElevatedButton(
+                    onPressed: () async {
+                      final day = myCalendar.daysMap[myCalendar.dayOnly(myCalendar.selectedDay!)];
+
+                      await dayService.removeFoodFromDay(day!.id, food.id);
+
+                      print("Étel sikeresen törölve! (ID: ${food.id}, Név: ${food.name})");
+
+                      await refreshPage();
+                    },
+
+                    child: Text("Törlés"),
+                  ),
+
+                  Text('ID: ${food.id}'),
+                  Text('Név: ${food.name}'),
+                  Text('Kcal: ${food.kcalAndNutrients.kcal}'),
+                  Text('Zsír: ${food.kcalAndNutrients.fat}'),
+                  Text('Szénhidrát: ${food.kcalAndNutrients.carb}'),
+                  Text('Fehérje: ${food.kcalAndNutrients.protein}'),
+                ],
+              ),
+            );
+          },
+        ),
+      ],
+    );
   }
 
-  //Nincs étel a napban
-  if (lateSelectedFoods.isEmpty) {
-    return const Center(child: Text('A napod üres! (lateSelectedFoods.isEmpty == true)'));
-  }
-
-  return Column(
-    crossAxisAlignment: CrossAxisAlignment.end,
-
-    children: [
-      ListView.builder(
-        shrinkWrap: true,
-        itemCount: lateSelectedFoods.length,
-
-        itemBuilder: (context, index) {
-          final food = lateSelectedFoods[index];
-
-          return Card(
-            color: Colors.blue,
-            shadowColor: Colors.greenAccent,
-            elevation: 8,
-
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-
-              children: [
-                Text('Név: ${food.name}'),
-                Text('Kcal: ${food.kcalAndNutrients.kcal}'),
-                Text('Zsír: ${food.kcalAndNutrients.fat}'),
-                Text('Szénhidrát: ${food.kcalAndNutrients.carb}'),
-                Text('Fehérje: ${food.kcalAndNutrients.protein}'),
-              ],
-            ),
-          );
-        },
-      ),
-    ],
-  );
 }
+
+
 
 Container _nameTextField(TextEditingController nameController) {
   return Container(
