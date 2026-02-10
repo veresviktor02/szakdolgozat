@@ -79,3 +79,8 @@ build/
 .packages
 .pub/
 .pub-cache/
+
+### API ###
+
+API_KEY.txt
+requests/api_requests.http
