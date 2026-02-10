@@ -23,5 +23,16 @@ class DayService {
     );
   }
 
+  Future<void> removeFoodFromDay(int dayId, int foodId) async {
+    final response = await http.delete(Uri.parse(
+      '$_baseUrl/days/$dayId/foods/$foodId',
+    ));
+
+    //HTTP 204: No content! - Delete sikeres, de nincs válasz!
+    if(response.statusCode != 204 && response.statusCode != 200) {
+      throw Exception('Étel törlése sikertelen!');
+    }
+  }
+
   //TODO: sendDay()
 }
