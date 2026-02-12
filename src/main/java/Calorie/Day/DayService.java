@@ -1,6 +1,5 @@
 package Calorie.Day;
 
-import Calorie.Food.Food;
 import Calorie.Food.KcalAndNutrients;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
@@ -9,7 +8,7 @@ import java.util.List;
 
 @Service
 public class DayService {
-    private DayRepository dayRepository;
+    private final DayRepository dayRepository;
 
     public DayService(DayRepository dayRepository) {
         this.dayRepository = dayRepository;
@@ -55,7 +54,7 @@ public class DayService {
 
         //Töröljük az ételt, ha nem található, Error dobása.
         if(!day.getFoodList().removeIf(food -> food.getId().equals(foodId))) {
-            throw new IllegalStateException("A megadott ID nem található! " + foodId + ')');
+            throw new IllegalStateException("A megadott ID nem található! (ID: " + foodId + ')');
         }
 
         //Mentse el, vagy nem változik az adatbázis!
@@ -67,7 +66,7 @@ public class DayService {
         //Megnézzük, hogy létezik-e a megadott nap.
         Day day = dayRepository.findById(dayId).
                 orElseThrow(() -> new IllegalStateException(
-                        "A megadott ID nem található! " + dayId + ')'
+                        "A megadott ID nem található! (ID: " + dayId + ')'
                 ));
 
         day.getFoodList().add(food);

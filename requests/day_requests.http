@@ -6,7 +6,7 @@ POST localhost:8080/days
 Content-Type: application/json
 
 {
-  "date": "2026-02-04",
+  "date": "2026-02-12",
   "foodList": [
     {
       "name": "Banana in Day",
@@ -88,3 +88,13 @@ Content-Type: application/json
     "protein": 18.0
   }
 }
+
+###
+
+GET localhost:8080/days/1/total
+
+###
+
+GET localhost:8080/days/3/total
+
+###
