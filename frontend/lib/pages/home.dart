@@ -29,6 +29,7 @@ class _HomePageState extends State<HomePage> {
 
   late Future<List<Food>> foodFuture;
   late Future<List<Day>> dayFuture;
+  Future<KcalAndNutrients>? totalFuture;
 
   //Beviteli mezők
   final nameController = TextEditingController();
@@ -41,20 +42,11 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     super.initState();
+    refreshPage();
 
-    //refreshPage() nem jó itt, mert 0.000001 secre hiba (aztán meg nincs).
+    //Ez a kettő azért kell ide, mert rövid időre Error lenne nélküle!
     foodFuture = foodService.fetchFoods();
     dayFuture = dayService.fetchDays();
-
-    myCalendar.daysMap.clear();
-
-    dayFuture.then((days) {
-      setState(() {
-        for(final day in days) {
-          myCalendar.daysMap[myCalendar.dayOnly(day.date)] = day;
-        }
-      });
-    });
   }
 
   Future<void> refreshPage() async {
@@ -69,6 +61,10 @@ class _HomePageState extends State<HomePage> {
       for(final day in days) {
         myCalendar.daysMap[myCalendar.dayOnly(day.date)] = day;
       }
+
+      final today = myCalendar.daysMap[myCalendar.dayOnly(DateTime.now())];
+
+      totalFuture = dayService.getTotalKcalAndNutrients(today!.id);
     });
   }
 
@@ -86,6 +82,10 @@ class _HomePageState extends State<HomePage> {
           
             children: [
               _calendar(),
+
+              const SizedBox(height: 5,),
+
+              _dailyInfos(),
 
               const SizedBox(height: 5,),
 
