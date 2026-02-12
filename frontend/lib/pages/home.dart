@@ -122,67 +122,24 @@ class _HomePageState extends State<HomePage> {
 
       child: SizedBox(
         width: 600,
-        //Megcsinálni a magasságot!
+        //TODO: Megcsinálni a magasságot!
         height: 500,
 
         child: Column(
           children: [
             TableCalendar(
-
             headerStyle: HeaderStyle(
               titleCentered: true,
               formatButtonVisible: false,
 
-              titleTextFormatter: (date, locale) {
-                switch(date.month) {
-                  case DateTime.january:
-                    return '${date.year} Január';
-                  case DateTime.february:
-                    return '${date.year} Február';
-                  case DateTime.march:
-                    return '${date.year} Március';
-                  case DateTime.april:
-                    return '${date.year} Április';
-                  case DateTime.may:
-                    return '${date.year} Május';
-                  case DateTime.june:
-                    return '${date.year} Június';
-                  case DateTime.july:
-                    return '${date.year} Július';
-                  case DateTime.august:
-                    return '${date.year} Augusztus';
-                  case DateTime.september:
-                    return '${date.year} Szeptember';
-                  case DateTime.october:
-                    return '${date.year} Október';
-                  case DateTime.november:
-                    return '${date.year} November';
-                }
-                return '${date.year} December';
-              },
+              //Hónapok testreszabása
+              titleTextFormatter: (date, locale) => _hungarianNameOfMonths(date),
 
             ),
 
               //Hét napjainak testreszabása
               calendarBuilders: CalendarBuilders(
-                dowBuilder: (context, day) {
-                  switch (day.weekday) {
-                    case DateTime.monday:
-                      return const Center(child: Text('H'));
-                    case DateTime.tuesday:
-                      return const Center(child: Text('K'));
-                    case DateTime.wednesday:
-                      return const Center(child: Text('Sze'));
-                    case DateTime.thursday:
-                      return const Center(child: Text('Cs'));
-                    case DateTime.friday:
-                      return const Center(child: Text('P'));
-                    case DateTime.saturday:
-                      return const Center(child: Text('Szo'));
-                    case DateTime.sunday:
-                      return const Center(child: Text('V'));
-                  }
-                },
+                dowBuilder: (context, day) => _hungarianNameOfDays(day),
               ),
 
               calendarStyle: CalendarStyle(
@@ -190,12 +147,15 @@ class _HomePageState extends State<HomePage> {
                   color: Colors.orange,
                   shape: BoxShape.circle,
                 ),
+
                 selectedDecoration: BoxDecoration(
                   color: Colors.green,
                   shape: BoxShape.circle,
                 ),
+
                 //weekendTextStyle: const TextStyle(color: Colors.blue),
                 defaultTextStyle: const TextStyle(color: Colors.black),
+
                 outsideTextStyle: TextStyle(color: Colors.grey.shade400),
               ),
 
@@ -227,8 +187,6 @@ class _HomePageState extends State<HomePage> {
               availableCalendarFormats: const {
                 CalendarFormat.week: 'Hét',
               },
-
-
             ),
 
             _dayDetails(),
@@ -241,6 +199,7 @@ class _HomePageState extends State<HomePage> {
   Future<void> sendFood() async {
     await foodService.sendFood(
       nameController.text,
+
       KcalAndNutrients(
         kcal: double.parse(kcalController.text),
         fat: double.parse(fatController.text),
@@ -259,7 +218,7 @@ class _HomePageState extends State<HomePage> {
           children: [
             Row(
               children: [
-                Text('Add meg a bevinni kívánt adatokat!'),
+                const Text('Add meg a bevinni kívánt adatokat!'),
               ],
             ),
 
@@ -290,7 +249,7 @@ class _HomePageState extends State<HomePage> {
                   //TODO: style
                 ),
 
-                child: Text('Kattints ide a küldéshez!'),
+                child: const Text('Kattints ide a küldéshez!'),
               ),
             ),
 
@@ -341,7 +300,7 @@ class _HomePageState extends State<HomePage> {
                       await refreshPage();
                     },
 
-                    child: Text("Törlés"),
+                    child: const Text("Törlés"),
                   ),
 
                   Text('ID: ${food.id}'),
@@ -376,14 +335,15 @@ Container _nameTextField(TextEditingController nameController) {
         decoration: InputDecoration(
           filled: true,
           fillColor: Colors.white,
-          contentPadding: EdgeInsets.all(15),
+
+          contentPadding: const EdgeInsets.all(15),
+
           hintText: 'Étel neve:',
 
-          hintStyle: TextStyle(
+          hintStyle: const TextStyle(
             color: Color(0xffDDDADA),
             fontSize: 14,
           ),
-
         ),
       ),
     ),
@@ -413,6 +373,7 @@ Column _textFieldColumn(String textData, TextEditingController controller) {
           controller: controller,
 
           inputFormatters: [
+            //Csak számok!
             FilteringTextInputFormatter.allow(RegExp(r'[\d\.]')),
           ],
 
@@ -421,10 +382,12 @@ Column _textFieldColumn(String textData, TextEditingController controller) {
           decoration: InputDecoration(
             filled: true,
             fillColor: Colors.white,
-            contentPadding: EdgeInsets.all(15),
+
+            contentPadding: const EdgeInsets.all(15),
 
             hintText: '0',
-            hintStyle: TextStyle(
+
+            hintStyle: const TextStyle(
               color: Color(0xffDDDADA),
               fontSize: 14,
             ),
@@ -581,7 +544,7 @@ Column _dayColumn(AsyncSnapshot<List<Day>> daySnapshot) {
 
                 const SizedBox(height: 5,),
 
-                Text('Ételek:'),
+                const Text('Ételek:'),
 
                 ListView.builder(
                   shrinkWrap: true,
@@ -622,11 +585,9 @@ ElevatedButton _navigateToSecondPage(BuildContext context) {
           arguments: 'Hello',
           //arguments: '12', -> Error oldal!
         );
-
       },
 
-      child:
-      Text('2. oldal')
+      child: const Text('2. oldal')
   );
 }
 
@@ -641,8 +602,7 @@ ElevatedButton _navigateToThirdPage(BuildContext context) {
 
       },
 
-      child:
-      Text('3. oldal')
+      child: const Text('3. oldal')
   );
 }
 
@@ -652,7 +612,7 @@ AppBar _appbar() {
     title: Text(
       'Kalóriaszámláló alkalmazás',
 
-      style: TextStyle(
+      style: const TextStyle(
         color: Colors.red,
         fontSize: 34,
         fontWeight: FontWeight.bold,
@@ -664,4 +624,52 @@ AppBar _appbar() {
     elevation: 0.0,
     centerTitle: true,
   );
+}
+
+Widget _hungarianNameOfDays(DateTime day) {
+  switch(day.weekday) {
+    case DateTime.monday:
+      return const Center(child: Text('H'));
+    case DateTime.tuesday:
+      return const Center(child: Text('K'));
+    case DateTime.wednesday:
+      return const Center(child: Text('Sze'));
+    case DateTime.thursday:
+      return const Center(child: Text('Cs'));
+    case DateTime.friday:
+      return const Center(child: Text('P'));
+    case DateTime.saturday:
+      return const Center(child: Text('Szo'));
+    default:
+      return const Center(child: Text('V'));
+  }
+}
+
+String _hungarianNameOfMonths(DateTime date) {
+  switch(date.month) {
+    case DateTime.january:
+      return '${date.year} Január';
+    case DateTime.february:
+      return '${date.year} Február';
+    case DateTime.march:
+      return '${date.year} Március';
+    case DateTime.april:
+      return '${date.year} Április';
+    case DateTime.may:
+      return '${date.year} Május';
+    case DateTime.june:
+      return '${date.year} Június';
+    case DateTime.july:
+      return '${date.year} Július';
+    case DateTime.august:
+      return '${date.year} Augusztus';
+    case DateTime.september:
+      return '${date.year} Szeptember';
+    case DateTime.october:
+      return '${date.year} Október';
+    case DateTime.november:
+      return '${date.year} November';
+    default:
+      return '${date.year} December';
+  }
 }
