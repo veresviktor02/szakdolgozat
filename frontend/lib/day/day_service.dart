@@ -1,4 +1,5 @@
 import 'package:flutter_application/day/day_model.dart';
+import 'package:flutter_application/food/kcal_and_nutrients_model.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
@@ -34,5 +35,18 @@ class DayService {
     }
   }
 
-  //TODO: sendDay()
+  Future<KcalAndNutrients> getTotalKcalAndNutrients(int dayId) async {
+    final response = await http.get(
+      Uri.parse('$_baseUrl/days/$dayId/total'),
+    );
+
+    if(response.statusCode == 200) {
+      final Map<String, dynamic> jsonMap = json.decode(response.body);
+
+      return KcalAndNutrients.fromJson(jsonMap);
+    }
+    throw Exception("Kcal és tápanyagok lekérése sikertelen! (Válasz: ${response.statusCode})");
+  }
+
+
 }

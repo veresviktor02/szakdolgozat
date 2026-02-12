@@ -1,5 +1,7 @@
 package Calorie.Day;
 
+import Calorie.Food.Food;
+import Calorie.Food.KcalAndNutrients;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
@@ -43,6 +45,7 @@ public class DayService {
                 ));
     }
 
+    @Transactional
     public void removeFoodFromDay(Integer dayId, Integer foodId) {
         //Megnézzük, hogy létezik-e a megadott nap.
         Day day = dayRepository.findById(dayId).
@@ -70,5 +73,21 @@ public class DayService {
         day.getFoodList().add(food);
 
         dayRepository.save(day);
+    }
+
+    @Transactional
+    public KcalAndNutrients getTotalKcalAndNutrients(Integer dayId) {
+        KcalAndNutrients totalKcalAndNutrients = new KcalAndNutrients(0.0, 0.0, 0.0 ,0.0);
+
+        getDayById(dayId).getFoodList().forEach(
+                food -> {
+                    totalKcalAndNutrients.setKcal(totalKcalAndNutrients.getKcal() + food.getKcalAndNutrients().getKcal());
+                    totalKcalAndNutrients.setFat(totalKcalAndNutrients.getFat() + food.getKcalAndNutrients().getFat());
+                    totalKcalAndNutrients.setCarb(totalKcalAndNutrients.getCarb() + food.getKcalAndNutrients().getCarb());
+                    totalKcalAndNutrients.setProtein(totalKcalAndNutrients.getProtein() + food.getKcalAndNutrients().getProtein());
+                }
+        );
+
+        return totalKcalAndNutrients;
     }
 }

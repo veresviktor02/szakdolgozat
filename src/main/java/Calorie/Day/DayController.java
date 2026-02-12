@@ -1,6 +1,7 @@
 package Calorie.Day;
 
 import Calorie.Food.Food;
+import Calorie.Food.KcalAndNutrients;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -46,5 +47,10 @@ public class DayController {
     @PostMapping("{dayId}")
     public void addFoodToDay(@PathVariable Integer dayId, @RequestBody EmbeddedFood food) {
         dayService.addFoodToDay(dayId, food);
+    }
+
+    @GetMapping("{dayId}/total")
+    public KcalAndNutrients getTotalKcalAndNutrients(@PathVariable Integer dayId) {
+        return dayService.getTotalKcalAndNutrients(dayId);
     }
 }
