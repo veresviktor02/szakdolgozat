@@ -318,6 +318,60 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
+  Container _dailyInfos() {
+    return Container(
+      width: 400,
+      height: 400,
+
+      decoration: BoxDecoration(
+        border: Border.all(color: Colors.blueAccent),
+      ),
+
+      child: Column(
+        children: [
+          FutureBuilder<KcalAndNutrients>(
+            future: totalFuture,
+
+            builder: (context, totalSnapshot) {
+              if(totalFuture == null) {
+                return const Text('Válassz ki egy napot!');
+              }
+              else if(totalSnapshot.connectionState == ConnectionState.waiting) {
+                return const CircularProgressIndicator();
+              }
+              else if(totalSnapshot.hasError) {
+                return Text(
+                  'Hiba: ${totalSnapshot.error}',
+                  style: const TextStyle(color: Colors.red),
+                );
+              }
+
+              return Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+
+                children: [
+                  const Text(
+                    'Napi összes Tápérték:',
+                    style: TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+
+                  const SizedBox(height: 10,),
+
+                  Text('Kcal: ${totalSnapshot.data!.kcal} Kcal'),
+                  Text('Zsír: ${totalSnapshot.data!.fat} g'),
+                  Text('Szénhidrát: ${totalSnapshot.data!.carb} g'),
+                  Text('Fehérje: ${totalSnapshot.data!.protein} g'),
+                ],
+              );
+            },
+          ),
+        ],
+      ),
+    );
+  }
 }
 
 
