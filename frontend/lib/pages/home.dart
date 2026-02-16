@@ -133,13 +133,13 @@ class _HomePageState extends State<HomePage> {
               formatButtonVisible: false,
 
               //Hónapok testreszabása
-              titleTextFormatter: (date, locale) => _hungarianNameOfMonths(date),
+              titleTextFormatter: (date, locale) => myCalendar.hungarianNameOfMonths(date),
 
             ),
 
               //Hét napjainak testreszabása
               calendarBuilders: CalendarBuilders(
-                dowBuilder: (context, day) => _hungarianNameOfDays(day),
+                dowBuilder: (context, day) => Center(child: Text(myCalendar.hungarianNameOfDays(day)),),
               ),
 
               calendarStyle: CalendarStyle(
@@ -678,52 +678,4 @@ AppBar _appbar() {
     elevation: 0.0,
     centerTitle: true,
   );
-}
-
-Widget _hungarianNameOfDays(DateTime day) {
-  switch(day.weekday) {
-    case DateTime.monday:
-      return const Center(child: Text('H'));
-    case DateTime.tuesday:
-      return const Center(child: Text('K'));
-    case DateTime.wednesday:
-      return const Center(child: Text('Sze'));
-    case DateTime.thursday:
-      return const Center(child: Text('Cs'));
-    case DateTime.friday:
-      return const Center(child: Text('P'));
-    case DateTime.saturday:
-      return const Center(child: Text('Szo'));
-    default:
-      return const Center(child: Text('V'));
-  }
-}
-
-String _hungarianNameOfMonths(DateTime date) {
-  switch(date.month) {
-    case DateTime.january:
-      return '${date.year} Január';
-    case DateTime.february:
-      return '${date.year} Február';
-    case DateTime.march:
-      return '${date.year} Március';
-    case DateTime.april:
-      return '${date.year} Április';
-    case DateTime.may:
-      return '${date.year} Május';
-    case DateTime.june:
-      return '${date.year} Június';
-    case DateTime.july:
-      return '${date.year} Július';
-    case DateTime.august:
-      return '${date.year} Augusztus';
-    case DateTime.september:
-      return '${date.year} Szeptember';
-    case DateTime.october:
-      return '${date.year} Október';
-    case DateTime.november:
-      return '${date.year} November';
-    default:
-      return '${date.year} December';
-  }
 }
