@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import 'package:flutter_application/pages/welcome.dart';
 import 'package:flutter_application/pages/home.dart';
 import 'package:flutter_application/pages/second_page.dart';
 import 'package:flutter_application/pages/third_page.dart';
@@ -7,8 +8,12 @@ import 'package:flutter_application/pages/third_page.dart';
 class RouteGenerator {
   static Route<dynamic> generateRoute(RouteSettings settings) {
     switch(settings.name) {
-      //Főoldal
+      //Üdvözlőoldal
       case '/':
+        return MaterialPageRoute(builder: (_) => WelcomePage());
+
+      //Főoldal
+      case '/home':
         return MaterialPageRoute(builder: (_) => HomePage());
 
       //Második oldal: Feltétel szükséges
