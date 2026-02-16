@@ -259,11 +259,6 @@ class _HomePageState extends State<HomePage> {
   }
 
   Widget _dayDetails() {
-    //Nincs kiválasztva (fókuszban) nap
-    if (myCalendar.selectedDay == null) {
-      return const Center(child: Text('Válassz ki egy napot! (myCalendar.selectedDay == null)'));
-    }
-
     //Nincs étel a napban
     if (myCalendar.selectedFoods.isEmpty) {
       return const Center(child: Text('A napod üres! (myCalendar.selectedFoods.isEmpty == true)'));
