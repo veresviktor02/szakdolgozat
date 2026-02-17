@@ -139,7 +139,7 @@ class _HomePageState extends State<HomePage> {
 
               //Hét napjainak testreszabása
               calendarBuilders: CalendarBuilders(
-                dowBuilder: (context, day) => Center(child: Text(myCalendar.hungarianNameOfDays(day)),),
+                dowBuilder: (context, day) => Center(child: Text(myCalendar.hungarianNameOfDays(day),),),
               ),
 
               calendarStyle: CalendarStyle(
@@ -153,7 +153,6 @@ class _HomePageState extends State<HomePage> {
                   shape: BoxShape.circle,
                 ),
 
-                //weekendTextStyle: const TextStyle(color: Colors.blue),
                 defaultTextStyle: const TextStyle(color: Colors.black),
 
                 outsideTextStyle: TextStyle(color: Colors.grey.shade400),
@@ -182,11 +181,6 @@ class _HomePageState extends State<HomePage> {
               },
 
               calendarFormat: myCalendar.calendarFormat,
-
-              //Eltűnik a választó!
-              availableCalendarFormats: const {
-                CalendarFormat.week: 'Hét',
-              },
             ),
 
             _dayDetails(),
@@ -209,7 +203,6 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-
   Container _dataSenderContainer() {
     return Container(
         padding: const EdgeInsets.all(20),
@@ -218,7 +211,7 @@ class _HomePageState extends State<HomePage> {
           children: [
             Row(
               children: [
-                const Text('Add meg a bevinni kívánt adatokat!'),
+                const Text('Add meg a bevinni kívánt adatokat!',),
               ],
             ),
 
@@ -249,7 +242,7 @@ class _HomePageState extends State<HomePage> {
                   //TODO: style
                 ),
 
-                child: const Text('Kattints ide a küldéshez!'),
+                child: const Text('Kattints ide a küldéshez!',),
               ),
             ),
 
@@ -261,7 +254,7 @@ class _HomePageState extends State<HomePage> {
   Widget _dayDetails() {
     //Nincs étel a napban
     if (myCalendar.selectedFoods.isEmpty) {
-      return const Center(child: Text('A napod üres! (myCalendar.selectedFoods.isEmpty == true)'));
+      return const Center(child: Text('A napod üres! (myCalendar.selectedFoods.isEmpty == true)',),);
     }
 
     return Column(
@@ -286,24 +279,24 @@ class _HomePageState extends State<HomePage> {
                 children: [
                   ElevatedButton(
                     onPressed: () async {
-                      final day = myCalendar.daysMap[myCalendar.dayOnly(myCalendar.selectedDay!)];
+                      final day = myCalendar.daysMap[myCalendar.dayOnly(myCalendar.selectedDay)];
 
                       await dayService.removeFoodFromDay(day!.id, food.id);
 
-                      print("Étel sikeresen törölve! (ID: ${food.id}, Név: ${food.name})");
+                      print('Étel sikeresen törölve! (ID: ${food.id}, Név: ${food.name})',);
 
                       await refreshPage();
                     },
 
-                    child: const Text("Törlés"),
+                    child: const Text('Törlés',),
                   ),
 
-                  Text('ID: ${food.id}'),
-                  Text('Név: ${food.name}'),
-                  Text('Kcal: ${food.kcalAndNutrients.kcal}'),
-                  Text('Zsír: ${food.kcalAndNutrients.fat}'),
-                  Text('Szénhidrát: ${food.kcalAndNutrients.carb}'),
-                  Text('Fehérje: ${food.kcalAndNutrients.protein}'),
+                  Text('ID: ${food.id}',),
+                  Text('Név: ${food.name}',),
+                  Text('Kcal: ${food.kcalAndNutrients.kcal}',),
+                  Text('Zsír: ${food.kcalAndNutrients.fat}',),
+                  Text('Szénhidrát: ${food.kcalAndNutrients.carb}',),
+                  Text('Fehérje: ${food.kcalAndNutrients.protein}',),
                 ],
               ),
             );
@@ -329,7 +322,7 @@ class _HomePageState extends State<HomePage> {
 
             builder: (context, totalSnapshot) {
               if(totalFuture == null) {
-                return const Text('Válassz ki egy napot!');
+                return const Text('Válassz ki egy napot!',);
               }
               else if(totalSnapshot.connectionState == ConnectionState.waiting) {
                 return const CircularProgressIndicator();
@@ -355,10 +348,10 @@ class _HomePageState extends State<HomePage> {
 
                   const SizedBox(height: 10,),
 
-                  Text('Kcal: ${totalSnapshot.data!.kcal} Kcal'),
-                  Text('Zsír: ${totalSnapshot.data!.fat} g'),
-                  Text('Szénhidrát: ${totalSnapshot.data!.carb} g'),
-                  Text('Fehérje: ${totalSnapshot.data!.protein} g'),
+                  Text('Kcal: ${totalSnapshot.data!.kcal} Kcal',),
+                  Text('Zsír: ${totalSnapshot.data!.fat} g',),
+                  Text('Szénhidrát: ${totalSnapshot.data!.carb} g',),
+                  Text('Fehérje: ${totalSnapshot.data!.protein} g',),
                 ],
               );
             },
@@ -480,7 +473,7 @@ Container _futureFoodBuilder(Future<List<Food>> foodFuture) {
         }
 
         //Üres a lista
-        return const Text('Nincs adat.');
+        return const Text('Nincs adat.',);
       },
     ),
   );
@@ -518,10 +511,11 @@ Column _foodColumn(AsyncSnapshot<List<Food>> foodSnapshot) {
 
                   const SizedBox(height: 5,),
 
-                  Text('Kcal: ${food.kcalAndNutrients.kcal} kcal'),
-                  Text('Zsír: ${food.kcalAndNutrients.fat} g'),
-                  Text('Szénhidrát: ${food.kcalAndNutrients.carb} g'),
-                  Text('Fehérje: ${food.kcalAndNutrients.protein} g'),
+                  Text('ID: ${food.id}',),
+                  Text('Kcal: ${food.kcalAndNutrients.kcal} kcal',),
+                  Text('Zsír: ${food.kcalAndNutrients.fat} g',),
+                  Text('Szénhidrát: ${food.kcalAndNutrients.carb} g',),
+                  Text('Fehérje: ${food.kcalAndNutrients.protein} g',),
                 ],
 
               ),
@@ -557,7 +551,7 @@ Container _futureDayBuilder(Future<List<Day>> dayFuture) {
         }
 
         //Üres a lista
-        return const Text('Nincs adat.');
+        return const Text('Nincs adat.',);
       },
     ),
   );
@@ -571,6 +565,7 @@ Column _dayColumn(AsyncSnapshot<List<Day>> daySnapshot) {
             (day) {
         return Card(
           elevation: 3,
+
           margin: const EdgeInsets.symmetric(vertical: 8),
 
           shape: RoundedRectangleBorder(
@@ -585,7 +580,7 @@ Column _dayColumn(AsyncSnapshot<List<Day>> daySnapshot) {
 
               children: [
                 Text(
-                  style: const TextStyle(fontSize: 16),
+                  style: const TextStyle(fontSize: 16,),
 
                   //TODO: Egyszámjegyű hónapot és napot kétszámjegyűvé konvertálni!
                   'Dátum: ${day.date.year}-${day.date.month}-${day.date.day}',
@@ -593,7 +588,7 @@ Column _dayColumn(AsyncSnapshot<List<Day>> daySnapshot) {
 
                 const SizedBox(height: 5,),
 
-                const Text('Ételek:'),
+                const Text('Ételek:',),
 
                 ListView.builder(
                   shrinkWrap: true,
@@ -607,11 +602,11 @@ Column _dayColumn(AsyncSnapshot<List<Day>> daySnapshot) {
                       crossAxisAlignment: CrossAxisAlignment.start,
 
                       children: [
-                        Text('Név: ${food.name}'),
-                        Text('Kcal: ${food.kcalAndNutrients.kcal}'),
-                        Text('Zsír: ${food.kcalAndNutrients.fat}'),
-                        Text('Szénhidrát: ${food.kcalAndNutrients.carb}'),
-                        Text('Fehérje: ${food.kcalAndNutrients.protein}'),
+                        Text('Név: ${food.name}',),
+                        Text('Kcal: ${food.kcalAndNutrients.kcal}',),
+                        Text('Zsír: ${food.kcalAndNutrients.fat}',),
+                        Text('Szénhidrát: ${food.kcalAndNutrients.carb}',),
+                        Text('Fehérje: ${food.kcalAndNutrients.protein}',),
                       ],
                     );
                   },
@@ -636,22 +631,21 @@ ElevatedButton _navigateToSecondPage(BuildContext context) {
         );
       },
 
-      child: const Text('2. oldal')
+      child: const Text('2. oldal',),
   );
 }
 
 ElevatedButton _navigateToThirdPage(BuildContext context) {
   return ElevatedButton(
       onPressed: () {
-        print('Gomb lenyomva! (3. oldal gombja)');
+        print('Gomb lenyomva! (3. oldal gombja)',);
 
         Navigator.of(context).pushNamed(
           '/third',
         );
-
       },
 
-      child: const Text('3. oldal')
+      child: const Text('3. oldal',),
   );
 }
 
