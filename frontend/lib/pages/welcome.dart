@@ -13,10 +13,15 @@ class WelcomePage extends StatefulWidget {
 class _WelcomePageState extends State<WelcomePage> {
   final UserService userService = UserService();
 
+  bool differentDays = false;
+
+  UserType userType = UserType.FREE;
+
   //Beviteli mezők
   final nameController = TextEditingController();
   final weightController = TextEditingController();
   final heightController = TextEditingController();
+  final couponController = TextEditingController();
   //
 
   @override
@@ -66,9 +71,21 @@ class _WelcomePageState extends State<WelcomePage> {
             children: [
               _userDataInput(nameController, 'Név:', 'Név',),
 
+              const SizedBox(height: 10,),
+
               _userDataInput(weightController, 'Testtömeg (kg):', 'Testtömeg',),
 
+              const SizedBox(height: 10,),
+
               _userDataInput(heightController, 'Magasság (cm):', 'Magasság',),
+
+              const SizedBox(height: 10,),
+
+              _userDataInput(couponController, 'Kuponkód:', 'Kuponkód',),
+
+              const SizedBox(height: 10,),
+
+              _differentDaysSwitch(),
             ],
           ),
         ),
@@ -77,12 +94,24 @@ class _WelcomePageState extends State<WelcomePage> {
   }
 
   Future<void> sendUser() async {
+    //PREMIUM kuponkóddal prémium felhasználói szint!
+    if(couponController.text == 'PREMIUM') {
+      userType = UserType.PREMIUM;
+    }
+
+    //Nem jogosult a prémium funkcióra az ingyenes felhasználó!
+    if(userType == UserType.FREE && differentDays) {
+      throw Exception(
+        "FREE felhasználó (Név: ${nameController.text}) nem jogosult különböző napokra!",
+      );
+    }
+
     await userService.sendUser(
       nameController.text,
       double.parse(heightController.text),
       double.parse(weightController.text),
-      UserType.FREE,
-      false,
+      userType,
+      differentDays,
     );
   }
 
@@ -94,13 +123,24 @@ class _WelcomePageState extends State<WelcomePage> {
         sendUser();
       },
 
-      child: const Text('User mentése'),
+      child: const Text('User mentése',),
+    );
+  }
+
+  SwitchListTile _differentDaysSwitch() {
+    return SwitchListTile(
+      title: const Text("Különböző napok"),
+
+      value: differentDays,
+      onChanged: (bool value) {
+        setState(() {
+          differentDays = value;
+        });
+      },
     );
   }
 
 }
-
-
 
 SizedBox _userDataInput(TextEditingController controller, String labelText, String hintText,) {
   return SizedBox(
@@ -174,7 +214,6 @@ ElevatedButton _navigateToHomePage(BuildContext context,) {
       onPressed: () {
         print('Gomb lenyomva! (Home oldal gombja)',);
 
-        //TODO: user paramétereit menteni!
         Navigator.of(context).pushNamed(
           '/home',
         );

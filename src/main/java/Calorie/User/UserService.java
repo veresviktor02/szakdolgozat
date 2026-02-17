@@ -7,7 +7,7 @@ import java.util.List;
 
 @Service
 public class UserService {
-    private UserRepository userRepository;
+    private final UserRepository userRepository;
 
     public UserService(UserRepository userRepository) {
         this.userRepository = userRepository;
@@ -18,6 +18,12 @@ public class UserService {
     }
 
     public void insertUser(User user) {
+        if(user.getUserType() == UserType.FREE && user.isDifferentDays()) {
+            throw new IllegalStateException(
+                    "A felhasználó nem lehet FREE és különböző napos egyszerre!"
+            );
+        }
+
         userRepository.save(user);
     }
 

@@ -41,6 +41,19 @@ Content-Type: application/json
 
 ###
 
+POST localhost:8080/users
+Content-Type: application/json
+
+{
+  "name" : "Betolakodó",
+  "height": 190.0,
+  "weight": 84.0,
+  "userType": "FREE",
+  "differentDays": true
+}
+
+###
+
 ###DELETE localhost:8080/users/2
 
 ###
