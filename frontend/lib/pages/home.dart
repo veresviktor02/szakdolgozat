@@ -42,20 +42,20 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     super.initState();
-    refreshPage();
 
-    //Ez a kettő azért kell ide, mert rövid időre Error lenne nélküle!
-    foodFuture = foodService.fetchFoods();
-    dayFuture = dayService.fetchDays();
+    refreshPage();
   }
 
   Future<void> refreshPage() async {
-    final days = await dayService.fetchDays();
-
+    //Külön setState kell, mert nem lenne inicializálva másképpen!
     setState(() {
       foodFuture = foodService.fetchFoods();
       dayFuture = dayService.fetchDays();
+    });
 
+    final days = await dayService.fetchDays();
+
+    setState(() {
       myCalendar.daysMap.clear();
 
       for(final day in days) {
