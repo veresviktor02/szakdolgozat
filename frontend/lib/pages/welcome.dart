@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 import '../user/user_service.dart';
 import '../user/user_type.dart';
@@ -36,20 +37,30 @@ class _WelcomePageState extends State<WelcomePage> {
 
       backgroundColor: Colors.white,
 
-      body: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+      body: SizedBox(
+        child: SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
 
-        children: [
-          _greeting(),
+            children: [
+              _greeting(),
 
-          _fillData(),
+              const SizedBox(height: 10,),
 
-          _navigateToHomePage(context,),
+              _fillData(),
 
-          _saveUserButton(),
-        ],
+              const SizedBox(height: 10,),
+
+              _navigateToHomePage(context,),
+
+              const SizedBox(height: 10,),
+
+              _saveUserButton(),
+            ],
 
 
+          ),
+        ),
       ),
     );
   }
@@ -69,19 +80,39 @@ class _WelcomePageState extends State<WelcomePage> {
             crossAxisAlignment: CrossAxisAlignment.center,
 
             children: [
-              _userDataInput(nameController, 'Név:', 'Név',),
+              _userDataInput(
+                nameController,
+                'Név:',
+                'Név',
+                FilteringTextInputFormatter.allow(RegExp(r'.*'),),
+              ),
 
               const SizedBox(height: 10,),
 
-              _userDataInput(weightController, 'Testtömeg (kg):', 'Testtömeg',),
+              _userDataInput(
+                weightController,
+                'Testtömeg (kg):',
+                'Testtömeg',
+                FilteringTextInputFormatter.allow(RegExp(r'[\d\.]')),
+              ),
 
               const SizedBox(height: 10,),
 
-              _userDataInput(heightController, 'Magasság (cm):', 'Magasság',),
+              _userDataInput(
+                heightController,
+                'Magasság (cm):',
+                'Magasság',
+                FilteringTextInputFormatter.allow(RegExp(r'[\d\.]')),
+              ),
 
               const SizedBox(height: 10,),
 
-              _userDataInput(couponController, 'Kuponkód:', 'Kuponkód',),
+              _userDataInput(
+                couponController,
+                'Kuponkód:',
+                'Kuponkód',
+                FilteringTextInputFormatter.allow(RegExp(r'.*'),),
+              ),
 
               const SizedBox(height: 10,),
 
@@ -101,10 +132,20 @@ class _WelcomePageState extends State<WelcomePage> {
 
     //Nem jogosult a prémium funkcióra az ingyenes felhasználó!
     if(userType == UserType.FREE && differentDays) {
+      _mySnackBar(
+        'FREE felhasználó (Név: ${nameController.text}) nem jogosult különböző napokra!',
+        Colors.red,
+      );
+
       throw Exception(
-        "FREE felhasználó (Név: ${nameController.text}) nem jogosult különböző napokra!",
+        'FREE felhasználó (Név: ${nameController.text}) nem jogosult különböző napokra!',
       );
     }
+
+    _mySnackBar(
+      'Felhasználó sikeresen létrehozva! (Név: ${nameController.text})',
+      Colors.green,
+    );
 
     await userService.sendUser(
       nameController.text,
@@ -127,25 +168,46 @@ class _WelcomePageState extends State<WelcomePage> {
     );
   }
 
+  void _mySnackBar(String message, Color color) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(message),
+
+        backgroundColor: color,
+
+        duration: Duration(seconds: 2),
+      ),
+    );
+  }
+
   SwitchListTile _differentDaysSwitch() {
     return SwitchListTile(
-      title: const Text("Különböző napok"),
+      title: Text(
+        'Különböző napok (csak PREMIUM-oknak!)',
+
+        style: TextStyle(
+          fontSize: 14,
+        ),
+      ),
 
       value: differentDays,
       onChanged: (bool value) {
-        setState(() {
-          differentDays = value;
-        });
+        setState(() => differentDays = value);
       },
     );
   }
 
 }
 
-SizedBox _userDataInput(TextEditingController controller, String labelText, String hintText,) {
+SizedBox _userDataInput(
+    TextEditingController controller,
+    String labelText,
+    String hintText,
+    FilteringTextInputFormatter format,
+    ) {
   return SizedBox(
     child: Container(
-     decoration: BoxDecoration(
+      decoration: BoxDecoration(
         border: Border.all(color: Colors.blueAccent),
       ),
 
@@ -169,6 +231,11 @@ SizedBox _userDataInput(TextEditingController controller, String labelText, Stri
 
             child: TextField(
               controller: controller,
+
+
+              inputFormatters: [
+                format
+              ],
 
               decoration: InputDecoration(
                 filled: true,
