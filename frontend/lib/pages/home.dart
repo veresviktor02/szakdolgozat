@@ -5,6 +5,8 @@ import 'package:flutter_svg/flutter_svg.dart';
 
 import 'package:table_calendar/table_calendar.dart';
 
+import 'package:percent_indicator/percent_indicator.dart';
+
 import '../day/day_model.dart';
 import '../day/day_service.dart';
 
@@ -81,6 +83,8 @@ class _HomePageState extends State<HomePage> {
             crossAxisAlignment: CrossAxisAlignment.start,
           
             children: [
+              _dailyTarget(),
+
               _calendar(),
 
               const SizedBox(height: 5,),
@@ -357,6 +361,43 @@ class _HomePageState extends State<HomePage> {
             },
           ),
         ],
+      ),
+    );
+  }
+
+  Center _dailyTarget() {
+    return Center(
+      child: Container(
+        width: 500,
+        height: 500,
+
+        decoration: BoxDecoration(
+          border: Border.all(color: Colors.blueAccent,),
+        ),
+
+        child: Column(
+          children: [
+            Text(
+              'Napi cél:',
+
+              style: TextStyle(
+                fontSize: 18,
+              ),
+            ),
+
+            const SizedBox(height: 10,),
+
+            Text('2000 Kcal',),
+            Text('200 g Zsír',),
+            Text('150 g Szénhidrát',),
+            Text('100 g Fehérje',),
+
+            const SizedBox(height: 10,),
+
+            //TODO: Percent Indicator ide!!!
+
+          ],
+        ),
       ),
     );
   }
