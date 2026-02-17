@@ -25,7 +25,7 @@ public class UserService {
     public void updateUserById(Integer id, User newUser) {
         User oldUser = userRepository.findById(id).orElseThrow(
                 () -> new IllegalStateException(
-                        "A frissíteni kívánt étel nem található! (ID: " + id + ')'
+                        "A frissíteni kívánt felhasználó nem található! (ID: " + id + ')'
                 ));
 
         oldUser.setName(newUser.getName());

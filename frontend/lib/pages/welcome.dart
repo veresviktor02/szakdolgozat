@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 
+import '../user/user_service.dart';
+import '../user/user_type.dart';
+
 class WelcomePage extends StatefulWidget {
   const WelcomePage({super.key});
 
@@ -8,9 +11,18 @@ class WelcomePage extends StatefulWidget {
 }
 
 class _WelcomePageState extends State<WelcomePage> {
+  final UserService userService = UserService();
+
+  //Beviteli mezők
   final nameController = TextEditingController();
   final weightController = TextEditingController();
   final heightController = TextEditingController();
+  //
+
+  @override
+  void initState() {
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -28,6 +40,8 @@ class _WelcomePageState extends State<WelcomePage> {
           _fillData(),
 
           _navigateToHomePage(context,),
+
+          _saveUserButton(),
         ],
 
 
@@ -50,9 +64,9 @@ class _WelcomePageState extends State<WelcomePage> {
             crossAxisAlignment: CrossAxisAlignment.center,
 
             children: [
-              _userDataInput(heightController, 'Név:', 'Név',),
+              _userDataInput(nameController, 'Név:', 'Név',),
 
-              _userDataInput(heightController, 'Testtömeg (kg):', 'Testtömeg',),
+              _userDataInput(weightController, 'Testtömeg (kg):', 'Testtömeg',),
 
               _userDataInput(heightController, 'Magasság (cm):', 'Magasság',),
             ],
@@ -61,7 +75,32 @@ class _WelcomePageState extends State<WelcomePage> {
       ),
     );
   }
+
+  Future<void> sendUser() async {
+    await userService.sendUser(
+      nameController.text,
+      double.parse(heightController.text),
+      double.parse(weightController.text),
+      UserType.FREE,
+      false,
+    );
+  }
+
+  ElevatedButton _saveUserButton() {
+    return ElevatedButton(
+      onPressed: () {
+        print('Regisztrációs gomb lenyomva! (User elmentése.)',);
+
+        sendUser();
+      },
+
+      child: const Text('User mentése'),
+    );
+  }
+
 }
+
+
 
 SizedBox _userDataInput(TextEditingController controller, String labelText, String hintText,) {
   return SizedBox(
