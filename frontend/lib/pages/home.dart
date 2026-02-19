@@ -411,16 +411,18 @@ class _HomePageState extends State<HomePage> {
   }
 
   Widget _circularPercentIndicator() {
-    if(totalFuture == null) {
-      return const Text('Nincs kiválasztott nap (totalFuture == null).',);
-    }
-
     return FutureBuilder<KcalAndNutrients>(
       future: totalFuture,
 
       builder: (context, totalSnapshot) {
-        if(totalSnapshot.connectionState == ConnectionState.waiting) {
-          return const CircularProgressIndicator();
+        if(totalFuture == null || totalSnapshot.connectionState == ConnectionState.waiting) {
+          //Ideiglenes CircularPercentIndicator, amíg betölt / értéket kap a totalFuture!
+          return CircularPercentIndicator(
+            radius: 100,
+            lineWidth: 15,
+            percent: 0,
+            backgroundColor: Colors.grey.shade300,
+          );
         }
         else if(totalSnapshot.hasError) {
           return Text('Hiba: ${totalSnapshot.error}',);
