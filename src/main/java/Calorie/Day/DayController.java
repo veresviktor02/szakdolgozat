@@ -53,4 +53,9 @@ public class DayController {
     public KcalAndNutrients getTotalKcalAndNutrients(@PathVariable Integer dayId) {
         return dayService.getTotalKcalAndNutrients(dayId);
     }
+
+    @PostMapping("/create-empty-days")
+    public void createEmptyDays() {
+        dayService.createEmptyDays();
+    }
 }

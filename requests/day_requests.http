@@ -6,7 +6,7 @@ POST localhost:8080/days
 Content-Type: application/json
 
 {
-  "date": "2026-02-12",
+  "date": "2026-02-20",
   "foodList": [
     {
       "name": "Banana in Day",
@@ -98,3 +98,8 @@ GET localhost:8080/days/1/total
 GET localhost:8080/days/3/total
 
 ###
+
+###Automatikusan létrejön a DayService.java -> init() függvényében!
+###POST localhost:8080/days/create-empty-days
+###Content-Type: application/json
+

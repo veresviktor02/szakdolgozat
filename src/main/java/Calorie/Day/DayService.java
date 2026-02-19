@@ -1,13 +1,20 @@
 package Calorie.Day;
 
 import Calorie.Food.KcalAndNutrients;
+import jakarta.annotation.PostConstruct;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Service
 public class DayService {
+
+    @PostConstruct
+    public void init() {
+        createEmptyDays();
+    }
     private final DayRepository dayRepository;
 
     public DayService(DayRepository dayRepository) {
@@ -88,5 +95,23 @@ public class DayService {
         );
 
         return totalKcalAndNutrients;
+    }
+
+    public void createEmptyDays() {
+        LocalDate start = LocalDate.of(2026, 1, 1);
+        LocalDate end = LocalDate.of(2026, 12, 31);
+
+        LocalDate current = start;
+
+        while(!current.isAfter(end)) {
+            if(!dayRepository.existsByDate(current)) {
+                Day day = new Day();
+                day.setDate(current);
+
+                dayRepository.save(day);
+            }
+
+            current = current.plusDays(1);
+        }
     }
 }
