@@ -33,6 +33,9 @@ class _HomePageState extends State<HomePage> {
   late Future<List<Day>> dayFuture;
   Future<KcalAndNutrients>? totalFuture;
 
+  //TODO: Felhasználótól bekérni!
+  KcalAndNutrients dailyTarget = KcalAndNutrients(kcal: 2000.0, fat: 50.0, carb: 100.0, protein: 200.0);
+
   //Beviteli mezők
   final nameController = TextEditingController();
   final kcalController = TextEditingController();
@@ -64,9 +67,12 @@ class _HomePageState extends State<HomePage> {
         myCalendar.daysMap[myCalendar.dayOnly(day.date)] = day;
       }
 
-      final today = myCalendar.daysMap[myCalendar.dayOnly(DateTime.now())];
-
-      totalFuture = dayService.getTotalKcalAndNutrients(today!.id);
+      //Kijelölt nap összes adata
+      totalFuture = dayService.getTotalKcalAndNutrients(
+          myCalendar.daysMap[
+            myCalendar.dayOnly(myCalendar.selectedDay)
+          ]!.id
+      );
     });
   }
 
@@ -105,7 +111,7 @@ class _HomePageState extends State<HomePage> {
           
               const SizedBox(height: 20,),
           
-              _futureDayBuilder(dayFuture),
+              //_futureDayBuilder(dayFuture), //Picit belassul tőle!
           
               const SizedBox(height: 20,),
           
@@ -182,6 +188,8 @@ class _HomePageState extends State<HomePage> {
                   myCalendar.selectedDay = selectedDay;
                   myCalendar.focusedDay = focusedDay;
                 });
+
+                refreshPage();
               },
 
               calendarFormat: myCalendar.calendarFormat,
@@ -387,20 +395,97 @@ class _HomePageState extends State<HomePage> {
 
             const SizedBox(height: 10,),
 
-            Text('2000 Kcal',),
-            Text('200 g Zsír',),
-            Text('150 g Szénhidrát',),
-            Text('100 g Fehérje',),
+            Text('${dailyTarget.kcal.toString()} Kcal',),
+            Text('${dailyTarget.fat.toString()} g Zsír',),
+            Text('${dailyTarget.carb.toString()} g Szénhidrát',),
+            Text('${dailyTarget.protein.toString()} g Fehérje',),
 
             const SizedBox(height: 10,),
 
-            //TODO: Percent Indicator ide!!!
+            _circularPercentIndicator(),
 
           ],
         ),
       ),
     );
   }
+
+  Widget _circularPercentIndicator() {
+    if(totalFuture == null) {
+      return const Text('Nincs kiválasztott nap (totalFuture == null).',);
+    }
+
+    return FutureBuilder<KcalAndNutrients>(
+      future: totalFuture,
+
+      builder: (context, totalSnapshot) {
+        if(totalSnapshot.connectionState == ConnectionState.waiting) {
+          return const CircularProgressIndicator();
+        }
+        else if(totalSnapshot.hasError) {
+          return Text('Hiba: ${totalSnapshot.error}',);
+        }
+        else if(!totalSnapshot.hasData) {
+          return const Text('Nincs adat.',);
+        }
+
+        return CircularPercentIndicator(
+          radius: 100,
+          lineWidth: 15,
+          percent: (totalSnapshot.data!.kcal / dailyTarget.kcal).clamp(0.0, 1.0),
+
+          animation: true,
+          //1000 = 1 sec
+          animationDuration: 800,
+
+          backgroundColor: Colors.grey.shade300,
+          progressColor: totalSnapshot.data!.kcal > dailyTarget.kcal
+            ? Colors.orange
+            : Colors.green,
+
+          circularStrokeCap: CircularStrokeCap.round,
+
+          center: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+
+            children: [
+              Text(
+                totalSnapshot.data!.kcal.toString(),
+
+                style: const TextStyle(
+                  fontSize: 28,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+
+              const Text('Kcal',),
+
+              Text(
+                '${(
+                    (totalSnapshot.data!.kcal / dailyTarget.kcal).clamp(0.0, 1.0) * 100
+                  ).toStringAsFixed(1)} %',
+                style: TextStyle(
+                    color: totalSnapshot.data!.kcal > dailyTarget.kcal
+                      ? Colors.red
+                      : Colors.green,
+                ),
+              ),
+
+              Text(
+                '${totalSnapshot.data!.kcal - dailyTarget.kcal}',
+                style: TextStyle(
+                  color: totalSnapshot.data!.kcal > dailyTarget.kcal
+                    ? Colors.red
+                    : Colors.green,
+                ),
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
 }
 
 
