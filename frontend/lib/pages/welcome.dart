@@ -116,7 +116,7 @@ class _WelcomePageState extends State<WelcomePage> {
                 weightController,
                 'Testtömeg (kg):',
                 'Testtömeg',
-                FilteringTextInputFormatter.allow(RegExp(r'[\d\.]')),
+                FilteringTextInputFormatter.allow(RegExp(r'^\d*\.?\d*')),
               ),
 
               const SizedBox(height: 10,),
@@ -125,7 +125,7 @@ class _WelcomePageState extends State<WelcomePage> {
                 heightController,
                 'Magasság (cm):',
                 'Magasság',
-                FilteringTextInputFormatter.allow(RegExp(r'[\d\.]')),
+                FilteringTextInputFormatter.allow(RegExp(r'^\d*\.?\d*')),
               ),
 
               const SizedBox(height: 10,),
@@ -185,6 +185,8 @@ class _WelcomePageState extends State<WelcomePage> {
         print('Regisztrációs gomb lenyomva! (User elmentése.)',);
 
         sendUser();
+
+        zeroAllTextFields();
       },
 
       child: const Text('User mentése',),
@@ -350,6 +352,8 @@ class _WelcomePageState extends State<WelcomePage> {
                     for(int i = 0; i < 7; i++) {
                       print('${weekdays[i]}: ${dailyTargetValues[i]}',);
                     }
+
+                    zeroAllTextFields();
                   });
                 },
 
@@ -481,6 +485,10 @@ class _WelcomePageState extends State<WelcomePage> {
             child: TextField(
               keyboardType: TextInputType.number,
 
+              inputFormatters: [
+                FilteringTextInputFormatter.allow(RegExp(r'^\d*\.?\d*')),
+              ],
+
               decoration: const InputDecoration(
                 filled: true,
                 fillColor: Colors.white,
@@ -504,6 +512,19 @@ class _WelcomePageState extends State<WelcomePage> {
         ],
       ),
     );
+  }
+
+  void zeroAllTextFields() {
+    for(int day = 0; day < 7; day++) {
+      for(int nutrient = 0; nutrient < 4; nutrient++) {
+        controllers[day][nutrient].text = '';
+      }
+    }
+
+    nameController.text = '';
+    weightController.text = '';
+    heightController.text = '';
+    couponController.text = '';
   }
 
 }

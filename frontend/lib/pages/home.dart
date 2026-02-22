@@ -572,7 +572,7 @@ Column _textFieldColumn(String textData, TextEditingController controller) {
 
           inputFormatters: [
             //Csak számok!
-            FilteringTextInputFormatter.allow(RegExp(r'[\d\.]')),
+            FilteringTextInputFormatter.allow(RegExp(r'^\d*\.?\d*')),
           ],
 
           keyboardType: TextInputType.number,
