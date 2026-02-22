@@ -192,6 +192,8 @@ class _WelcomePageState extends State<WelcomePage> {
   }
 
   void _mySnackBar(String message, Color color) {
+    ScaffoldMessenger.of(context).removeCurrentSnackBar();
+
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text(message,),
