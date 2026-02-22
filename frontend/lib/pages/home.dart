@@ -396,10 +396,10 @@ class _HomePageState extends State<HomePage> {
 
             const SizedBox(height: 10,),
 
-            Text('${dailyTarget.kcal.toString()} Kcal',),
-            Text('${dailyTarget.fat.toString()} g Zsír',),
-            Text('${dailyTarget.carb.toString()} g Szénhidrát',),
-            Text('${dailyTarget.protein.toString()} g Fehérje',),
+            Text('${dailyTargetForSelectedDay().kcal} Kcal',),
+            Text('${dailyTargetForSelectedDay().fat} g Zsír',),
+            Text('${dailyTargetForSelectedDay().carb} g Szénhidrát',),
+            Text('${dailyTargetForSelectedDay().protein} g Fehérje',),
 
             const SizedBox(height: 10,),
 
@@ -409,6 +409,24 @@ class _HomePageState extends State<HomePage> {
         ),
       ),
     );
+  }
+
+  KcalAndNutrients dailyTargetForSelectedDay() {
+    switch(myCalendar.selectedDay.weekday) {
+      case DateTime.monday:
+        return KcalAndNutrients(kcal: 2000, fat: 50, carb: 200, protein: 100);
+      case DateTime.tuesday:
+        return KcalAndNutrients(kcal: 1500, fat: 40, carb: 100, protein: 100);
+      case DateTime.wednesday:
+        return KcalAndNutrients(kcal: 2000, fat: 50, carb: 200, protein: 100);
+      case DateTime.thursday:
+        return KcalAndNutrients(kcal: 1500, fat: 40, carb: 100, protein: 100);
+      case DateTime.friday:
+        return KcalAndNutrients(kcal: 2000, fat: 50, carb: 200, protein: 100);
+      case DateTime.saturday:
+        return KcalAndNutrients(kcal: 1500, fat: 40, carb: 100, protein: 100);
+    }
+    return KcalAndNutrients(kcal: 2000, fat: 50, carb: 200, protein: 100);
   }
 
   Widget _circularPercentIndicator() {
