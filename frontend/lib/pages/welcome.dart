@@ -194,18 +194,18 @@ class _WelcomePageState extends State<WelcomePage> {
   void _mySnackBar(String message, Color color) {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
-        content: Text(message),
+        content: Text(message,),
 
         backgroundColor: color,
 
-        duration: Duration(seconds: 2),
+        duration: Duration(seconds: 2,),
       ),
     );
   }
 
   SwitchListTile _differentDaysSwitch() {
     return SwitchListTile(
-      title: Text(
+      title: const Text(
         'Különböző napok (csak PREMIUM-oknak!)',
 
         style: TextStyle(
@@ -265,14 +265,14 @@ class _WelcomePageState extends State<WelcomePage> {
     'Vasárnap',
   ];
 
-  Widget _fillDailyTarget() {
+  Center _fillDailyTarget() {
     if(differentDays) {
       return Center(
         child: Container(
           width: 500,
           height: 700,
 
-          padding: const EdgeInsets.all(10),
+          padding: const EdgeInsets.all(10.0,),
 
           decoration: BoxDecoration(
             border: Border.all(color: Colors.blueAccent),
@@ -286,11 +286,11 @@ class _WelcomePageState extends State<WelcomePage> {
 
                   itemBuilder: (context, dayIndex) {
                     return Container(
-                      margin: const EdgeInsets.symmetric(vertical: 5),
-                      padding: const EdgeInsets.all(5),
+                      margin: const EdgeInsets.symmetric(vertical: 5.0,),
+                      padding: const EdgeInsets.all(5.0,),
 
                       decoration: BoxDecoration(
-                        border: Border.all(color: Colors.blueAccent),
+                        border: Border.all(color: Colors.blueAccent,),
                       ),
 
                       child: Row(
@@ -302,31 +302,32 @@ class _WelcomePageState extends State<WelcomePage> {
                               weekdays[dayIndex],
 
                               style: const TextStyle(
-                                  fontSize: 20,
-                                  fontWeight: FontWeight.bold
+                                fontSize: 20,
+
+                                fontWeight: FontWeight.bold,
                               ),
                             ),
                           ),
 
-                          _buildNutrientField(
+                          _nutrientField(
                             'Kcal',
                             controllers[dayIndex][0],
                             (val) => dailyTargetValues[dayIndex][0] = double.tryParse(val)!,
                           ),
 
-                          _buildNutrientField(
+                          _nutrientField(
                             'Zsír',
                             controllers[dayIndex][1],
                             (val) => dailyTargetValues[dayIndex][1] = double.tryParse(val)!,
                           ),
 
-                          _buildNutrientField(
+                          _nutrientField(
                             'Szénhidrát',
                             controllers[dayIndex][2],
                             (val) => dailyTargetValues[dayIndex][2] = double.tryParse(val)!,
                           ),
 
-                          _buildNutrientField(
+                          _nutrientField(
                             'Fehérje',
                             controllers[dayIndex][3],
                             (val) => dailyTargetValues[dayIndex][3] = double.tryParse(val)!,
@@ -341,6 +342,7 @@ class _WelcomePageState extends State<WelcomePage> {
               ElevatedButton(
                 onPressed: () {
                   setState(() {
+                    //TODO: Elmenteni User-hez!
                     print('Napi célok (differentDays == true):',);
 
                     for(int i = 0; i < 7; i++) {
@@ -362,7 +364,7 @@ class _WelcomePageState extends State<WelcomePage> {
         width: 500,
         height: 700,
 
-        padding: const EdgeInsets.all(10),
+        padding: const EdgeInsets.all(10.0,),
 
         decoration: BoxDecoration(
           border: Border.all(color: Colors.blueAccent),
@@ -373,9 +375,9 @@ class _WelcomePageState extends State<WelcomePage> {
 
           children: [
             Padding(
-              padding: const EdgeInsets.all(15.0),
+              padding: const EdgeInsets.all(15.0,),
 
-              child: Text(
+              child: const Text(
                 'Minden napra ugyannyi tápanyagot tudsz beálllítani! \n'
                 'Ha nem tetszik, használd a PREMIUM kódot!',
 
@@ -393,18 +395,17 @@ class _WelcomePageState extends State<WelcomePage> {
               mainAxisAlignment: MainAxisAlignment.center,
 
               children: [
-                _buildNutrientField(
+                _nutrientField(
                   'Kcal',
                   controllers[0][0],
                   (val) {
                     for(int day = 0; day < 7; day++) {
                       dailyTargetValues[day][0] = double.tryParse(val)!;
-                      print('Kcal ciklus változó: ${day} - Kcal értéke: ${dailyTargetValues[day][0]}',);
                     }
                   }
                 ),
 
-                _buildNutrientField(
+                _nutrientField(
                   'zsír',
                   controllers[0][1],
                   (val) {
@@ -414,7 +415,7 @@ class _WelcomePageState extends State<WelcomePage> {
                   }
                 ),
 
-                _buildNutrientField(
+                _nutrientField(
                   'Szénhidrát',
                   controllers[0][2],
                   (val) {
@@ -424,7 +425,7 @@ class _WelcomePageState extends State<WelcomePage> {
                   }
                 ),
 
-                _buildNutrientField(
+                _nutrientField(
                   'Fehérje',
                   controllers[0][3],
                   (val) {
@@ -437,11 +438,12 @@ class _WelcomePageState extends State<WelcomePage> {
             ),
 
             Padding(
-              padding: const EdgeInsets.all(20.0),
+              padding: const EdgeInsets.all(20.0,),
 
               child: ElevatedButton(
                 onPressed: () {
                   setState(() {
+                    //TODO: Elmenteni User-hez!
                     print('Napi célok (differentDays == false):',);
 
                     for(int i = 0; i < 7; i++) {
@@ -459,13 +461,13 @@ class _WelcomePageState extends State<WelcomePage> {
     );
   }
 
-  Widget _buildNutrientField(
-      String label,
-      TextEditingController controller,
-      Function(String) onChanged,
+  Padding _nutrientField(
+    String label,
+    TextEditingController controller,
+    Function(String) onChanged,
   ) {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 5),
+      padding: const EdgeInsets.symmetric(horizontal: 5.0,),
 
       child: Column(
         children: [
@@ -481,7 +483,7 @@ class _WelcomePageState extends State<WelcomePage> {
                 filled: true,
                 fillColor: Colors.white,
 
-                contentPadding: EdgeInsets.all(10),
+                contentPadding: EdgeInsets.all(10.0,),
 
                 hintText: '0',
 
@@ -504,14 +506,14 @@ class _WelcomePageState extends State<WelcomePage> {
 
 }
 
-SizedBox _userDataInput(
-    TextEditingController controller,
-    String labelText,
-    String hintText,
-    FilteringTextInputFormatter format,
+Container _userDataInput(
+  TextEditingController controller,
+  String labelText,
+  String hintText,
+  FilteringTextInputFormatter format,
     ) {
-  return SizedBox(
-    child: Container(
+  return
+    Container(
       decoration: BoxDecoration(
         border: Border.all(color: Colors.blueAccent),
       ),
@@ -537,7 +539,6 @@ SizedBox _userDataInput(
             child: TextField(
               controller: controller,
 
-
               inputFormatters: [
                 format
               ],
@@ -546,7 +547,7 @@ SizedBox _userDataInput(
                 filled: true,
                 fillColor: Colors.white,
 
-                contentPadding: EdgeInsets.all(15),
+                contentPadding: EdgeInsets.all(15.0,),
 
                 hintText: hintText,
 
@@ -560,19 +561,18 @@ SizedBox _userDataInput(
           ),
         ],
       ),
-    ),
   );
 }
 
 Padding _greeting() {
   return Padding(
-    padding: const EdgeInsets.all(8.0),
+    padding: const EdgeInsets.all(8.0,),
 
     child: Row(
       mainAxisAlignment: MainAxisAlignment.center,
 
       children: [
-        Text(
+        const Text(
           'Ez a bejelentkezési oldal. Kérlek, töltsd ki az alábbi adatokat a kezdéshez!',
 
           style: TextStyle(
