@@ -103,3 +103,31 @@ GET localhost:8080/days/3/total
 ###POST localhost:8080/days/create-empty-days
 ###Content-Type: application/json
 
+###2026-02-22
+POST localhost:8080/days/53
+Content-Type: application/json
+
+{
+  "name": "New added food",
+  "kcalAndNutrients": {
+    "kcal": 2000.0,
+    "fat": 6.9,
+    "carb": 6.7,
+    "protein": 18.0
+  }
+}
+
+###
+
+POST localhost:8080/days/53
+Content-Type: application/json
+
+{
+  "name": "New added food",
+  "kcalAndNutrients": {
+    "kcal": 200.0,
+    "fat": 6.9,
+    "carb": 6.7,
+    "protein": 18.0
+  }
+}

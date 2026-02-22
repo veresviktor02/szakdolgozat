@@ -352,6 +352,7 @@ class _HomePageState extends State<HomePage> {
                 children: [
                   const Text(
                     'Napi összes Tápérték:',
+
                     style: TextStyle(
                       fontSize: 18,
                       fontWeight: FontWeight.bold,
@@ -421,6 +422,7 @@ class _HomePageState extends State<HomePage> {
             radius: 100,
             lineWidth: 15,
             percent: 0,
+
             backgroundColor: Colors.grey.shade300,
           );
         }
@@ -441,9 +443,7 @@ class _HomePageState extends State<HomePage> {
           animationDuration: 800,
 
           backgroundColor: Colors.grey.shade300,
-          progressColor: totalSnapshot.data!.kcal > dailyTarget.kcal
-            ? Colors.orange
-            : Colors.green,
+          progressColor: progressColor(totalSnapshot),
 
           circularStrokeCap: CircularStrokeCap.round,
 
@@ -464,21 +464,17 @@ class _HomePageState extends State<HomePage> {
 
               Text(
                 '${(
-                    (totalSnapshot.data!.kcal / dailyTarget.kcal).clamp(0.0, 1.0) * 100
+                    (totalSnapshot.data!.kcal / dailyTarget.kcal) * 100
                   ).toStringAsFixed(1)} %',
                 style: TextStyle(
-                    color: totalSnapshot.data!.kcal > dailyTarget.kcal
-                      ? Colors.red
-                      : Colors.green,
+                    color: progressColor(totalSnapshot),
                 ),
               ),
 
               Text(
                 '${totalSnapshot.data!.kcal - dailyTarget.kcal}',
                 style: TextStyle(
-                  color: totalSnapshot.data!.kcal > dailyTarget.kcal
-                    ? Colors.red
-                    : Colors.green,
+                  color: progressColor(totalSnapshot),
                 ),
               ),
             ],
@@ -488,9 +484,23 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
+  Color progressColor(AsyncSnapshot<KcalAndNutrients> totalSnapshot) {
+    //A célon belül van a felhasználó.
+    if(totalSnapshot.data!.kcal <= dailyTarget.kcal) {
+      return Colors.green;
+    }
+    //20%-os túllépés.
+    else if(totalSnapshot.data!.kcal<= dailyTarget.kcal * 1.2) {
+      return Colors.yellowAccent;
+    }
+    //40%-os túllépés
+    else if(totalSnapshot.data!.kcal <= dailyTarget.kcal * 1.4) {
+      return Colors.orange;
+    }
+    //Több, mint 40%-os túllépés
+    return Colors.red;
+  }
 }
-
-
 
 Container _nameTextField(TextEditingController nameController) {
   return Container(
