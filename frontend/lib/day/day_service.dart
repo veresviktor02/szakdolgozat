@@ -1,4 +1,5 @@
 import 'package:flutter_application/day/day_model.dart';
+import 'package:flutter_application/food/food_model.dart';
 import 'package:flutter_application/food/kcal_and_nutrients_model.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
@@ -25,9 +26,11 @@ class DayService {
   }
 
   Future<void> removeFoodFromDay(int dayId, int foodId) async {
-    final response = await http.delete(Uri.parse(
-      '$_baseUrl/days/$dayId/foods/$foodId',
-    ));
+    final response = await http.delete(
+      Uri.parse(
+        '$_baseUrl/days/$dayId/foods/$foodId',
+      ),
+    );
 
     //HTTP 204: No content! - Delete sikeres, de nincs válasz!
     if(response.statusCode != 204 && response.statusCode != 200) {
@@ -48,5 +51,26 @@ class DayService {
     throw Exception("Kcal és tápanyagok lekérése sikertelen! (Válasz: ${response.statusCode})");
   }
 
+  Future<void> addFoodToDay(int dayId, String name, KcalAndNutrients kcalAndNutrients) async {
+    final response = await http.post(
+      Uri.parse(
+        '$_baseUrl/days/$dayId',
+      ),
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: jsonEncode({
+        'name': name,
+        'kcalAndNutrients': kcalAndNutrients.toJson(),
+      }),
+    );
 
+    if(response.statusCode == 200) {
+      //TODO
+    }
+
+    throw Exception(
+        "Étel hozzáadása a naphoz (ID: ${dayId}) sikertelen! (Válasz: ${response.statusCode})",
+    );
+  }
 }

@@ -265,8 +265,18 @@ class _HomePageState extends State<HomePage> {
 
   Widget _dayDetails() {
     //Nincs étel a napban
-    if (myCalendar.selectedFoods.isEmpty) {
-      return const Center(child: Text('A napod üres! (myCalendar.selectedFoods.isEmpty == true)',),);
+    if(myCalendar.selectedFoods.isEmpty) {
+      return Column(
+        children: [
+          const Center(
+            child: Text(
+              'A napod üres! (myCalendar.selectedFoods.isEmpty == true)',
+            ),
+          ),
+
+          _foodSender(),
+        ],
+      );
     }
 
     return Column(
@@ -275,6 +285,7 @@ class _HomePageState extends State<HomePage> {
       children: [
         ListView.builder(
           shrinkWrap: true,
+
           itemCount: myCalendar.selectedFoods.length,
 
           itemBuilder: (context, index) {
@@ -314,7 +325,49 @@ class _HomePageState extends State<HomePage> {
             );
           },
         ),
+
+        _foodSender(),
       ],
+    );
+  }
+
+  Container _foodSender() {
+    return Container(
+      decoration: BoxDecoration(
+        border: Border.all(color: Colors.blueAccent),
+      ),
+
+      child: Column(
+        children: [
+          Center(
+            child: ElevatedButton(
+              onPressed: () {
+                dayService.addFoodToDay(
+                  //TODO: Étel megadása TextField-ekben!
+                  myCalendar.daysMap[myCalendar.dayOnly(myCalendar.selectedDay)]!.id,
+                  'Test Food',
+                  KcalAndNutrients(
+                    kcal: 500,
+                    fat: 25,
+                    carb: 100,
+                    protein: 50,
+                  ),
+                );
+
+                refreshPage();
+              },
+
+              child: const Text(
+                'Hozzáadás',
+
+                style: TextStyle(
+                  fontSize: 12,
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
     );
   }
 
@@ -598,15 +651,13 @@ Column _textFieldColumn(String textData, TextEditingController controller) {
   );
 }
 
-Container _futureFoodSender() {
-  return Container(
-    //TODO: Ha kész az adatküldés, akkor áthelyezni ide!!!
-  );
-}
-
 Container _futureFoodBuilder(Future<List<Food>> foodFuture) {
   return Container(
     padding: const EdgeInsets.all(20),
+
+    decoration: BoxDecoration(
+      border: Border.all(color: Colors.blueAccent),
+    ),
 
     child: FutureBuilder<List<Food>>(
       future: foodFuture,
