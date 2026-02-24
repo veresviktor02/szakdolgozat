@@ -218,7 +218,15 @@ class _HomePageState extends State<HomePage> {
 
   Container _dataSenderContainer() {
     return Container(
+        width: 500,
+        height: 300,
+
         padding: const EdgeInsets.all(20),
+
+        decoration: BoxDecoration(
+          border: Border.all(color: Colors.blueAccent),
+        ),
+
 
         child: Column(
           children: [
@@ -358,14 +366,15 @@ class _HomePageState extends State<HomePage> {
             child: ElevatedButton(
               onPressed: () {
                 dayService.addFoodToDay(
-                  //TODO: Étel megadása TextField-ekben!
                   myCalendar.daysMap[myCalendar.dayOnly(myCalendar.selectedDay)]!.id,
-                  'Test Food',
+
+                  nameController.text,
+
                   KcalAndNutrients(
-                    kcal: 500,
-                    fat: 25,
-                    carb: 100,
-                    protein: 50,
+                    kcal: double.parse(kcalController.text),
+                    fat: double.parse(fatController.text),
+                    carb: double.parse(carbController.text),
+                    protein: double.parse(proteinController.text),
                   ),
                 );
 
@@ -520,6 +529,9 @@ class _HomePageState extends State<HomePage> {
         }
 
         return CircularPercentIndicator(
+          //Enélkül nem az animationDuration alatt rajzolná ki a kört, hanem egyből!
+          key: const ValueKey("kcal_indicator"),
+
           radius: 100,
           lineWidth: 15,
           percent: (totalSnapshot.data!.kcal / dailyTarget.kcal).clamp(0.0, 1.0),
