@@ -132,8 +132,9 @@ class _HomePageState extends State<HomePage> {
 
       child: SizedBox(
         width: 600,
-        //TODO: Megcsinálni a magasságot!
-        height: 500,
+        //Itt NE legyen magasság, mert az alatta lévő SingleChildScrollView
+        //nem tudja magát üzemeltetni!
+        //height: 500,
 
         child: Column(
           children: [
@@ -268,9 +269,13 @@ class _HomePageState extends State<HomePage> {
     if(myCalendar.selectedFoods.isEmpty) {
       return Column(
         children: [
-          const Center(
-            child: Text(
-              'A napod üres! (myCalendar.selectedFoods.isEmpty == true)',
+          SizedBox(
+            height: 500,
+
+            child: const Center(
+              child: Text(
+                'A napod üres! (myCalendar.selectedFoods.isEmpty == true)',
+              ),
             ),
           ),
 
@@ -283,47 +288,57 @@ class _HomePageState extends State<HomePage> {
       crossAxisAlignment: CrossAxisAlignment.end,
 
       children: [
-        ListView.builder(
-          shrinkWrap: true,
+        SizedBox(
+          //Fixelt magasság kell, mert a Flutter nem tudja kezelni a
+          //görgethető Widgeten belüli görgethető Widgetet másképpen!
+          height: 500,
 
-          itemCount: myCalendar.selectedFoods.length,
+          child: SingleChildScrollView(
+            child: Scrollbar(
+              child: ListView.builder(
+                shrinkWrap: true,
 
-          itemBuilder: (context, index) {
-            final food = myCalendar.selectedFoods[index];
+                itemCount: myCalendar.selectedFoods.length,
 
-            return Card(
-              color: Colors.blue,
-              shadowColor: Colors.greenAccent,
-              elevation: 8,
+                itemBuilder: (context, index) {
+                  final food = myCalendar.selectedFoods[index];
 
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
+                  return Card(
+                    color: Colors.blue,
+                    shadowColor: Colors.greenAccent,
+                    elevation: 8,
 
-                children: [
-                  ElevatedButton(
-                    onPressed: () async {
-                      final day = myCalendar.daysMap[myCalendar.dayOnly(myCalendar.selectedDay)];
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.center,
 
-                      await dayService.removeFoodFromDay(day!.id, food.id);
+                      children: [
+                        ElevatedButton(
+                          onPressed: () async {
+                            final day = myCalendar.daysMap[myCalendar.dayOnly(myCalendar.selectedDay)];
 
-                      print('Étel sikeresen törölve! (ID: ${food.id}, Név: ${food.name})',);
+                            await dayService.removeFoodFromDay(day!.id, food.id);
 
-                      await refreshPage();
-                    },
+                            print('Étel sikeresen törölve! (ID: ${food.id}, Név: ${food.name})',);
 
-                    child: const Text('Törlés',),
-                  ),
+                            await refreshPage();
+                          },
 
-                  Text('ID: ${food.id}',),
-                  Text('Név: ${food.name}',),
-                  Text('Kcal: ${food.kcalAndNutrients.kcal}',),
-                  Text('Zsír: ${food.kcalAndNutrients.fat}',),
-                  Text('Szénhidrát: ${food.kcalAndNutrients.carb}',),
-                  Text('Fehérje: ${food.kcalAndNutrients.protein}',),
-                ],
+                          child: const Text('Törlés',),
+                        ),
+
+                        Text('ID: ${food.id}',),
+                        Text('Név: ${food.name}',),
+                        Text('Kcal: ${food.kcalAndNutrients.kcal}',),
+                        Text('Zsír: ${food.kcalAndNutrients.fat}',),
+                        Text('Szénhidrát: ${food.kcalAndNutrients.carb}',),
+                        Text('Fehérje: ${food.kcalAndNutrients.protein}',),
+                      ],
+                    ),
+                  );
+                },
               ),
-            );
-          },
+            ),
+          ),
         ),
 
         _foodSender(),
@@ -799,6 +814,7 @@ Column _dayColumn(AsyncSnapshot<List<Day>> daySnapshot) {
 
                 ListView.builder(
                   shrinkWrap: true,
+
                   itemCount: day.foodList.length,
 
                   itemBuilder: (context, index) {
