@@ -12,6 +12,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 
 //@DataJpaTest
+//Dockert be kell lapcsolni hozzá!
 @SpringBootTest
 class FoodRepositoryTest {
     @Autowired

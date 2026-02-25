@@ -25,9 +25,10 @@ class FoodControllerTest {
                 1,
                 "Apple",
                 new KcalAndNutrients(
-                        52.0,
+                        100.0,
                         0.2,
-                        14.0, 0.3
+                        14.0,
+                        0.3
                 )
         );
 
@@ -36,6 +37,7 @@ class FoodControllerTest {
         List<Food> foodList = controller.getFoods();
 
         assertEquals(food.getId(), foodList.size());
+
         assertEquals(food.getName(), foodList.get(0).getName());
     }
 }

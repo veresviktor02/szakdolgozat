@@ -157,7 +157,7 @@ class FoodServiceTest {
                 2,
                 "Banana",
                 new KcalAndNutrients(
-                        89.0,
+                        189.0,
                         0.3,
                         23.0,
                         1.1
