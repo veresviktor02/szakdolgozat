@@ -5,9 +5,11 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
+@CrossOrigin(origins = "*")
 @RequestMapping("foods")
 public class FoodController {
     private final FoodService foodService;
+
     public FoodController(FoodService foodService) {
         this.foodService = foodService;
     }

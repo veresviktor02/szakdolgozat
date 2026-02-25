@@ -15,6 +15,7 @@ public class DayService {
     public void init() {
         createEmptyDays();
     }
+
     private final DayRepository dayRepository;
 
     public DayService(DayRepository dayRepository) {

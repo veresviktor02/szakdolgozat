@@ -19,7 +19,7 @@ public class Food {
 
     public Food(Integer id, String name, KcalAndNutrients kcalAndNutrients) {
         this.id = id;
-        this.name = name;
+        setName(name);
         this.kcalAndNutrients = kcalAndNutrients;
     }
 
@@ -40,6 +40,12 @@ public class Food {
     }
 
     public void setName(String name) {
+        if(name.length() < 2 || name.length() > 40) {
+            throw new IllegalArgumentException(
+                    "A névnek 2 és 40 karakter között kell lennie!"
+            );
+        }
+
         this.name = name;
     }
 
@@ -63,7 +69,7 @@ public class Food {
     public String toString() {
         return "Food: " + '\n' +
                 "id = " + id + '\n' +
-                "name='" + name + '\n' +
+                "name = " + name + '\n' +
                 kcalAndNutrients;
     }
 }
