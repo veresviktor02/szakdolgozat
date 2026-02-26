@@ -14,10 +14,17 @@ import '../food/food_model.dart';
 import '../food/food_service.dart';
 import '../food/kcal_and_nutrients_model.dart';
 
+import '../user/user_model.dart';
+
 import '../my_calendar.dart';
 
 class HomePage extends StatefulWidget {
-  const HomePage({super.key});
+  final User user;
+
+  const HomePage({
+    super.key,
+    required this.user,
+  });
 
   @override
   State<HomePage> createState() => _HomePageState();
@@ -33,8 +40,7 @@ class _HomePageState extends State<HomePage> {
   late Future<List<Day>> dayFuture;
   Future<KcalAndNutrients>? totalFuture;
 
-  //TODO: Felhasználótól bekérni!
-  KcalAndNutrients dailyTarget = KcalAndNutrients(kcal: 2000.0, fat: 50.0, carb: 100.0, protein: 200.0);
+  late final User user;
 
   //Beviteli mezők
   final nameController = TextEditingController();
@@ -47,6 +53,8 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     super.initState();
+
+    user = widget.user;
 
     refreshPage();
   }
@@ -364,7 +372,7 @@ class _HomePageState extends State<HomePage> {
         children: [
           Center(
             child: ElevatedButton(
-              onPressed: () {
+              onPressed: () async {
                 dayService.addFoodToDay(
                   myCalendar.daysMap[myCalendar.dayOnly(myCalendar.selectedDay)]!.id,
 
@@ -378,7 +386,7 @@ class _HomePageState extends State<HomePage> {
                   ),
                 );
 
-                refreshPage();
+                await refreshPage();
               },
 
               child: const Text(
@@ -491,19 +499,19 @@ class _HomePageState extends State<HomePage> {
   KcalAndNutrients dailyTargetForSelectedDay() {
     switch(myCalendar.selectedDay.weekday) {
       case DateTime.monday:
-        return KcalAndNutrients(kcal: 2000, fat: 50, carb: 200, protein: 100);
+        return user.dailyTarget[0];
       case DateTime.tuesday:
-        return KcalAndNutrients(kcal: 1500, fat: 40, carb: 100, protein: 100);
+        return user.dailyTarget[1];
       case DateTime.wednesday:
-        return KcalAndNutrients(kcal: 2000, fat: 50, carb: 200, protein: 100);
+        return user.dailyTarget[2];
       case DateTime.thursday:
-        return KcalAndNutrients(kcal: 1500, fat: 40, carb: 100, protein: 100);
+        return user.dailyTarget[3];
       case DateTime.friday:
-        return KcalAndNutrients(kcal: 2000, fat: 50, carb: 200, protein: 100);
+        return user.dailyTarget[4];
       case DateTime.saturday:
-        return KcalAndNutrients(kcal: 1500, fat: 40, carb: 100, protein: 100);
+        return user.dailyTarget[5];
     }
-    return KcalAndNutrients(kcal: 2000, fat: 50, carb: 200, protein: 100);
+    return user.dailyTarget[6];
   }
 
   Widget _circularPercentIndicator() {
@@ -534,7 +542,7 @@ class _HomePageState extends State<HomePage> {
 
           radius: 100,
           lineWidth: 15,
-          percent: (totalSnapshot.data!.kcal / dailyTarget.kcal).clamp(0.0, 1.0),
+          percent: (totalSnapshot.data!.kcal / dailyTargetForSelectedDay().kcal).clamp(0.0, 1.0),
 
           animation: true,
           //1000 = 1 sec
@@ -562,7 +570,7 @@ class _HomePageState extends State<HomePage> {
 
               Text(
                 '${(
-                    (totalSnapshot.data!.kcal / dailyTarget.kcal) * 100
+                    (totalSnapshot.data!.kcal / dailyTargetForSelectedDay().kcal) * 100
                   ).toStringAsFixed(1)} %',
                 style: TextStyle(
                     color: progressColor(totalSnapshot),
@@ -570,7 +578,7 @@ class _HomePageState extends State<HomePage> {
               ),
 
               Text(
-                '${totalSnapshot.data!.kcal - dailyTarget.kcal}',
+                '${totalSnapshot.data!.kcal - dailyTargetForSelectedDay().kcal}',
                 style: TextStyle(
                   color: progressColor(totalSnapshot),
                 ),
@@ -584,15 +592,15 @@ class _HomePageState extends State<HomePage> {
 
   Color progressColor(AsyncSnapshot<KcalAndNutrients> totalSnapshot) {
     //A célon belül van a felhasználó.
-    if(totalSnapshot.data!.kcal <= dailyTarget.kcal) {
+    if(totalSnapshot.data!.kcal <= dailyTargetForSelectedDay().kcal) {
       return Colors.green;
     }
     //20%-os túllépés.
-    else if(totalSnapshot.data!.kcal<= dailyTarget.kcal * 1.2) {
+    else if(totalSnapshot.data!.kcal <= dailyTargetForSelectedDay().kcal * 1.2) {
       return Colors.yellowAccent;
     }
     //40%-os túllépés
-    else if(totalSnapshot.data!.kcal <= dailyTarget.kcal * 1.4) {
+    else if(totalSnapshot.data!.kcal <= dailyTargetForSelectedDay().kcal * 1.4) {
       return Colors.orange;
     }
     //Több, mint 40%-os túllépés

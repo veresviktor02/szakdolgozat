@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_application/food/kcal_and_nutrients_model.dart';
 
 import '../my_calendar.dart';
+import '../user/user_model.dart';
 import '../user/user_service.dart';
 import '../user/user_type.dart';
 
@@ -19,6 +20,8 @@ class _WelcomePageState extends State<WelcomePage> {
   bool differentDays = false;
 
   UserType userType = UserType.FREE;
+
+  late User tempUser;
 
   //Beviteli mezők
   final nameController = TextEditingController();
@@ -81,6 +84,8 @@ class _WelcomePageState extends State<WelcomePage> {
               _saveUserButton(),
 
               _navigateToHomePage(context,),
+
+              _navigateUserToHomePage(context,),
             ],
 
 
@@ -170,6 +175,22 @@ class _WelcomePageState extends State<WelcomePage> {
     _mySnackBar(
       'Felhasználó sikeresen létrehozva! (Név: ${nameController.text})',
       Colors.green,
+    );
+
+    tempUser = User(
+        id: 1,
+        name: nameController.text,
+        height: double.parse(heightController.text),
+        weight: double.parse(weightController.text),
+        userType: userType,
+        differentDays: differentDays,
+        dailyTarget: List.generate(7, (index) => KcalAndNutrients(
+            kcal: dailyTargetValues[index][0],
+            fat: dailyTargetValues[index][1],
+            carb: dailyTargetValues[index][2],
+            protein: dailyTargetValues[index][3],
+          ),
+        ),
     );
 
     await userService.sendUser(
@@ -498,6 +519,27 @@ class _WelcomePageState extends State<WelcomePage> {
     couponController.text = '';
   }
 
+  Widget _navigateUserToHomePage(BuildContext context,) {
+    return Padding(
+      padding: const EdgeInsets.all(12.0,),
+
+      child: Center(
+        child: ElevatedButton(
+          onPressed: () {
+            print('Gomb lenyomva! (User ${tempUser.name} oldal gombja)',);
+
+            Navigator.of(context).pushNamed(
+              '/home',
+
+              arguments: tempUser,
+            );
+          },
+
+          child: const Text('Belépés',),
+        ),
+      ),
+    );
+  }
 }
 
 Container _userDataInput(

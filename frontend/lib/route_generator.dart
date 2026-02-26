@@ -4,6 +4,7 @@ import 'package:flutter_application/pages/welcome.dart';
 import 'package:flutter_application/pages/home.dart';
 import 'package:flutter_application/pages/second_page.dart';
 import 'package:flutter_application/pages/third_page.dart';
+import 'package:flutter_application/user/user_model.dart';
 
 class RouteGenerator {
   static Route<dynamic> generateRoute(RouteSettings settings) {
@@ -14,7 +15,9 @@ class RouteGenerator {
 
       //Főoldal
       case '/home':
-        return MaterialPageRoute(builder: (_) => HomePage());
+        final user = settings.arguments as User;
+
+        return MaterialPageRoute(builder: (_) => HomePage(user: user,),);
 
       //Második oldal: Feltétel szükséges
       case '/second':
