@@ -21,7 +21,7 @@ class _WelcomePageState extends State<WelcomePage> {
 
   UserType userType = UserType.FREE;
 
-  late User tempUser;
+  User? tempUser;
 
   //Beviteli mezők
   final nameController = TextEditingController();
@@ -526,13 +526,21 @@ class _WelcomePageState extends State<WelcomePage> {
       child: Center(
         child: ElevatedButton(
           onPressed: () {
-            print('Gomb lenyomva! (User ${tempUser.name} oldal gombja)',);
+            //Adatok megadása nélkül ne tudja lenyomni a 'Belépés' gombot.
+            if(tempUser == null) {
+              _mySnackBar(
+                  'Még nem adtál meg adatokat! Töltsd ki a fentebbi mezőket!',
+                  Colors.red,
+              );
+            } else {
+              print('Gomb lenyomva! (User ${tempUser?.name} oldal gombja)',);
 
-            Navigator.of(context).pushNamed(
-              '/home',
+              Navigator.of(context).pushNamed(
+                '/home',
 
-              arguments: tempUser,
-            );
+                arguments: tempUser,
+              );
+            }
           },
 
           child: const Text('Belépés',),
@@ -630,6 +638,23 @@ Widget _navigateToHomePage(BuildContext context,) {
 
             Navigator.of(context).pushNamed(
               '/home',
+
+              arguments: User(
+                id: 0,
+                name: 'Unnamed User',
+                height: 190.0,
+                weight: 81.0,
+                userType: UserType.FREE,
+                differentDays: false,
+                dailyTarget: List.generate(
+                  7, (_) => KcalAndNutrients(
+                    kcal: 2000.0,
+                    fat: 40.0,
+                    carb: 250.0,
+                    protein: 160.0
+                  ),
+                ),
+              ),
             );
           },
 
