@@ -20,7 +20,17 @@ class MyCalendar {
     return daysMap[dayOnly(selectedDay)]?.foodList ?? [];
   }
 
-  String hungarianNameOfMonths(DateTime date) {
+  static List<String> nameOfDays = [
+    'Hétfő',
+    'Kedd',
+    'Szerda',
+    'Csütörtök',
+    'Péntek',
+    'Szombat',
+    'Vasárnap',
+  ];
+
+  static String hungarianNameOfMonths(DateTime date) {
     switch(date.month) {
       case DateTime.january:
         return '${date.year} Január';
@@ -49,7 +59,7 @@ class MyCalendar {
     }
   }
 
-  String hungarianNameOfDays(DateTime day) {
+  static String hungarianNameOfDays(DateTime day) {
     switch(day.weekday) {
       case DateTime.monday:
         return 'H';

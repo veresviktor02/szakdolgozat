@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_application/food/kcal_and_nutrients_model.dart';
 
+import '../my_calendar.dart';
 import '../user/user_service.dart';
 import '../user/user_type.dart';
 
@@ -273,15 +274,7 @@ class _WelcomePageState extends State<WelcomePage> {
     );
   }
 
-  final List<String> weekdays = [
-    'Hétfő',
-    'Kedd',
-    'Szerda',
-    'Csütörtök',
-    'Péntek',
-    'Szombat',
-    'Vasárnap',
-  ];
+
 
   Center _fillDailyTarget() {
     if(differentDays) {
@@ -317,7 +310,7 @@ class _WelcomePageState extends State<WelcomePage> {
                             width: 100,
 
                             child: Text(
-                              weekdays[dayIndex],
+                              MyCalendar.nameOfDays[dayIndex],
 
                               style: const TextStyle(
                                 fontSize: 20,
@@ -512,56 +505,55 @@ Container _userDataInput(
   String labelText,
   String hintText,
   FilteringTextInputFormatter format,
-    ) {
-  return
-    Container(
-      decoration: BoxDecoration(
-        border: Border.all(color: Colors.blueAccent),
-      ),
+  ) {
+  return Container(
+    decoration: BoxDecoration(
+      border: Border.all(color: Colors.blueAccent),
+    ),
 
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+    child: Row(
+      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
 
-        children: [
-          SizedBox(
-            width: 150,
+      children: [
+        SizedBox(
+          width: 150,
 
-            child: Text(labelText,),
-          ),
+          child: Text(labelText,),
+        ),
 
-          const SizedBox(width: 10,),
+        const SizedBox(width: 10,),
 
-          Container(
-            width: 140,
-            height: 100,
+        Container(
+          width: 140,
+          height: 100,
 
-            alignment: Alignment.center,
+          alignment: Alignment.center,
 
-            child: TextField(
-              controller: controller,
+          child: TextField(
+            controller: controller,
 
-              inputFormatters: [
-                format
-              ],
+            inputFormatters: [
+              format,
+            ],
 
-              decoration: InputDecoration(
-                filled: true,
-                fillColor: Colors.white,
+            decoration: InputDecoration(
+              filled: true,
+              fillColor: Colors.white,
 
-                contentPadding: EdgeInsets.all(15.0,),
+              contentPadding: EdgeInsets.all(15.0,),
 
-                hintText: hintText,
+              hintText: hintText,
 
-                hintStyle: TextStyle(
-                  color: Colors.grey,
+              hintStyle: TextStyle(
+                color: Colors.grey,
 
-                  fontSize: 14,
-                ),
+                fontSize: 14,
               ),
             ),
           ),
-        ],
-      ),
+        ),
+      ],
+    ),
   );
 }
 
@@ -613,6 +605,7 @@ AppBar _appbar() {
 
       style: TextStyle(
         color: Colors.red,
+
         fontSize: 34,
         fontWeight: FontWeight.bold,
       ),
@@ -620,7 +613,9 @@ AppBar _appbar() {
     ),
 
     backgroundColor: Colors.green,
+
     elevation: 0.0,
+
     centerTitle: true,
   );
 }

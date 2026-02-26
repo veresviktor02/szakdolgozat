@@ -144,13 +144,13 @@ class _HomePageState extends State<HomePage> {
               formatButtonVisible: false,
 
               //Hónapok testreszabása
-              titleTextFormatter: (date, locale) => myCalendar.hungarianNameOfMonths(date),
+              titleTextFormatter: (date, locale) => MyCalendar.hungarianNameOfMonths(date),
 
             ),
 
               //Hét napjainak testreszabása
               calendarBuilders: CalendarBuilders(
-                dowBuilder: (context, day) => Center(child: Text(myCalendar.hungarianNameOfDays(day),),),
+                dowBuilder: (context, day) => Center(child: Text(MyCalendar.hungarianNameOfDays(day),),),
               ),
 
               calendarStyle: CalendarStyle(
