@@ -8,6 +8,7 @@ import java.util.List;
 @RequestMapping("users")
 public class UserController {
     private final UserService userService;
+
     public UserController(UserService userService) {
         this.userService = userService;
     }
@@ -28,12 +29,12 @@ public class UserController {
     }
 
     @DeleteMapping("{id}")
-    public void deleteFoodById(@PathVariable Integer id) {
+    public void deleteUserById(@PathVariable Integer id) {
         userService.deleteUserById(id);
     }
 
     @PutMapping("{id}")
-    public void updateFoodById(@PathVariable Integer id, @RequestBody User user) {
+    public void updateUserById(@PathVariable Integer id, @RequestBody User user) {
         userService.updateUserById(id, user);
     }
 }

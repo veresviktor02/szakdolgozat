@@ -1,3 +1,5 @@
+import 'package:flutter_application/food/kcal_and_nutrients_model.dart';
+
 import 'package:flutter_application/user/user_type.dart';
 
 class User {
@@ -7,6 +9,7 @@ class User {
   final double weight;
   final UserType userType;
   final bool differentDays;
+  final List<KcalAndNutrients> dailyTarget;
 
   User({
     required this.id,
@@ -14,7 +17,8 @@ class User {
     required this.height,
     required this.weight,
     required this.userType,
-    required this.differentDays
+    required this.differentDays,
+    required this.dailyTarget,
   });
 
   factory User.fromJson(Map<String, dynamic> json) {
@@ -25,7 +29,9 @@ class User {
       weight: json['weight'],
       userType: json['userType'],
       differentDays: json['differentDays'],
-
+      dailyTarget: (json['dailyTarget'] as List<dynamic>)
+          .map((item) => KcalAndNutrients.fromJson(item))
+          .toList(),
     );
   }
 
@@ -37,6 +43,7 @@ class User {
       'weight': weight,
       'userType': userType,
       'differentDays': differentDays,
+      'dailyTarget': dailyTarget,
     };
   }
 }

@@ -1,3 +1,5 @@
+import 'package:flutter_application/food/kcal_and_nutrients_model.dart';
+
 import 'package:flutter_application/user/user_model.dart';
 import 'package:flutter_application/user/user_type.dart';
 
@@ -16,7 +18,7 @@ class UserService {
       },
     );
 
-    if (response.statusCode == 200) {
+    if(response.statusCode == 200) {
       final List<dynamic> jsonList = json.decode(response.body);
 
       return jsonList.map((jsonItem) => User.fromJson(jsonItem)).toList();
@@ -31,8 +33,9 @@ class UserService {
       double height,
       double weight,
       UserType userType,
-      bool differentDays
-      ) async {
+      bool differentDays,
+      List<KcalAndNutrients> dailyTarget,
+  ) async {
     final response = await http.post(
       Uri.parse('$_baseUrl/users'),
       headers: {
@@ -44,9 +47,16 @@ class UserService {
         'weight': weight,
         'userType': userType.name, //sima userType hibás!
         'differentDays': differentDays,
-      })
+        'dailyTarget': dailyTarget,
+      }),
     );
 
     print(response.body);
+
+    if(response.statusCode != 200) {
+      throw Exception(
+        'Felhasználó küldése sikertelen! (${response.statusCode})',
+      );
+    }
   }
 }

@@ -1,6 +1,7 @@
 package Calorie.User;
 
 import jakarta.transaction.Transactional;
+
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -39,14 +40,23 @@ public class UserService {
         oldUser.setWeight(newUser.getWeight());
         oldUser.setUserType(newUser.getUserType());
         oldUser.setDifferentDays(newUser.isDifferentDays());
+        oldUser.setDailyTarget(newUser.getDailyTarget());
     }
 
     public void deleteUserById(Integer id) {
+        if(!userRepository.existsById(id)) {
+            throw new IllegalStateException(
+                    "A frissíteni kívánt felhasználó nem található! (ID: " + id + ')'
+            );
+        }
+
         userRepository.deleteById(id);
     }
 
     public User getUserById(Integer id) {
         return userRepository.findById(id)
-                .orElseThrow(() -> new IllegalStateException(id + " not found."));
+                .orElseThrow(() -> new IllegalStateException(
+                        "A kért felhasználó nem található! (ID: " + id + ')'
+                ));
     }
 }
