@@ -61,7 +61,7 @@ class UserTest {
                 IllegalArgumentException.class,
                 () -> new User(
                         1,
-                        "",
+                        "Teszt",
                         10.0,
                         100.0,
                         UserType.FREE,
@@ -75,7 +75,7 @@ class UserTest {
                 IllegalArgumentException.class,
                 () -> new User(
                         1,
-                        "",
+                        "Teszt",
                         100.0,
                         1000.0,
                         UserType.FREE,
@@ -89,7 +89,7 @@ class UserTest {
                 IllegalArgumentException.class,
                 () -> new User(
                         1,
-                        "",
+                        "teszt",
                         100.0,
                         10.0,
                         UserType.FREE,
@@ -103,7 +103,7 @@ class UserTest {
                 IllegalArgumentException.class,
                 () -> new User(
                         1,
-                        "",
+                        "Teszt",
                         100.0,
                         100.0,
                         UserType.FREE,
@@ -162,6 +162,37 @@ class UserTest {
         for(int i = 0; i < user.getDailyTarget().toArray().length; i++) {
             assertEquals(
                     new KcalAndNutrients(0.0, 0.0, 0.0, 0.0),
+                    user.getDailyTarget().get(i)
+            );
+        }
+
+        //Minden nap különböző a dailyTarget értéke.
+        user = new User(
+                1,
+                "Teszt 2",
+                100.0,
+                100.0,
+                UserType.PREMIUM,
+                true,
+                List.of(
+                        new KcalAndNutrients(100.0, 1.0, 1.0, 1.0),
+                        new KcalAndNutrients(200.0, 2.0, 2.0, 2.0),
+                        new KcalAndNutrients(300.0, 3.0, 3.0, 3.0),
+                        new KcalAndNutrients(400.0, 4.0, 4.0, 4.0),
+                        new KcalAndNutrients(500.0, 5.0, 5.0, 5.0),
+                        new KcalAndNutrients(600.0, 6.0, 6.0, 6.0),
+                        new KcalAndNutrients(700.0, 7.0, 7.0, 7.0)
+                )
+        );
+
+        for(int i = 0; i < user.getDailyTarget().toArray().length; i++) {
+            assertEquals(
+                    new KcalAndNutrients(
+                            (double) (i + 1) * 100,
+                            (double) i + 1,
+                            (double) i + 1,
+                            (double) i + 1
+                    ),
                     user.getDailyTarget().get(i)
             );
         }

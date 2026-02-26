@@ -4,9 +4,11 @@ import Calorie.Food.Food;
 import Calorie.Food.FoodRepository;
 import Calorie.Food.FoodService;
 import Calorie.Food.KcalAndNutrients;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -146,6 +148,8 @@ class FoodServiceTest {
 
     @Test
     void deleteFoodShouldCallDelete() {
+        when(foodRepository.existsById(1)).thenReturn(true);
+
         foodService.deleteFoodById(1);
 
         verify(foodRepository).deleteById(1);

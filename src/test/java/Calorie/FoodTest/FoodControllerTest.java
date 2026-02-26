@@ -4,18 +4,18 @@ import Calorie.Food.Food;
 import Calorie.Food.FoodController;
 import Calorie.Food.FoodService;
 import Calorie.Food.KcalAndNutrients;
+
 import org.junit.jupiter.api.Test;
-
-import java.util.List;
-
 import static org.junit.jupiter.api.Assertions.assertEquals;
+
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-class FoodControllerTest {
+import java.util.List;
 
+class FoodControllerTest {
     @Test
-    void getFoods_shouldReturnList() {
+    void getFoodsShouldReturnList() {
 
         FoodService service = mock(FoodService.class);
 

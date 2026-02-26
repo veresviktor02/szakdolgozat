@@ -7,7 +7,7 @@ import java.util.List;
 
 @Service
 public class FoodService {
-    private FoodRepository foodRepository;
+    private final FoodRepository foodRepository;
 
     public FoodService(FoodRepository foodRepository) {
         this.foodRepository = foodRepository;
@@ -35,6 +35,12 @@ public class FoodService {
     }
 
     public void deleteFoodById(Integer id) {
+        if(!foodRepository.existsById(id)) {
+            throw new IllegalStateException(
+                    "A törölni kívánt étel nem található! (ID: " + id + ')'
+            );
+        }
+
         foodRepository.deleteById(id);
     }
 

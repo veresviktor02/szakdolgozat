@@ -46,7 +46,7 @@ public class UserService {
     public void deleteUserById(Integer id) {
         if(!userRepository.existsById(id)) {
             throw new IllegalStateException(
-                    "A frissíteni kívánt felhasználó nem található! (ID: " + id + ')'
+                    "A törölni kívánt felhasználó nem található! (ID: " + id + ')'
             );
         }
 
