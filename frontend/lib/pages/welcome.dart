@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_application/food/kcal_and_nutrients_model.dart';
 
 import '../user/user_service.dart';
 import '../user/user_type.dart';
@@ -70,8 +71,6 @@ class _WelcomePageState extends State<WelcomePage> {
 
               const SizedBox(height: 10,),
 
-              _navigateToHomePage(context,),
-
               const SizedBox(height: 10,),
 
               _fillDailyTarget(),
@@ -79,6 +78,8 @@ class _WelcomePageState extends State<WelcomePage> {
               const SizedBox(height: 10,),
 
               _saveUserButton(),
+
+              _navigateToHomePage(context,),
             ],
 
 
@@ -147,7 +148,7 @@ class _WelcomePageState extends State<WelcomePage> {
     );
   }
 
-  Future<void> sendUser() async {
+  Future<void> sendUserFromWelcome() async {
     //PREMIUM kuponkóddal prémium felhasználói szint!
     if(couponController.text == 'PREMIUM') {
       userType = UserType.PREMIUM;
@@ -176,20 +177,33 @@ class _WelcomePageState extends State<WelcomePage> {
       double.parse(weightController.text),
       userType,
       differentDays,
+      List.generate(7, (index) => KcalAndNutrients(
+          kcal: dailyTargetValues[index][0],
+          fat: dailyTargetValues[index][1],
+          carb: dailyTargetValues[index][2],
+          protein: dailyTargetValues[index][3],
+        ),
+      ),
     );
+
+    zeroAllTextFields();
   }
 
-  ElevatedButton _saveUserButton() {
-    return ElevatedButton(
-      onPressed: () {
-        print('Regisztrációs gomb lenyomva! (User elmentése.)',);
+  Widget _saveUserButton() {
+    return Padding(
+      padding: const EdgeInsets.all(15.0,),
 
-        sendUser();
+      child: Center(
+        child: ElevatedButton(
+          onPressed: () {
+            sendUserFromWelcome();
 
-        zeroAllTextFields();
-      },
+            zeroAllTextFields();
+          },
 
-      child: const Text('User mentése',),
+          child: const Text('User mentése',),
+        ),
+      ),
     );
   }
 
@@ -342,23 +356,6 @@ class _WelcomePageState extends State<WelcomePage> {
                   },
                 ),
               ),
-
-              ElevatedButton(
-                onPressed: () {
-                  setState(() {
-                    //TODO: Elmenteni User-hez!
-                    print('Napi célok (differentDays == true):',);
-
-                    for(int i = 0; i < 7; i++) {
-                      print('${weekdays[i]}: ${dailyTargetValues[i]}',);
-                    }
-
-                    zeroAllTextFields();
-                  });
-                },
-
-                child: const Text('Mentés a napi célhoz',),
-              ),
             ],
           ),
         ),
@@ -441,25 +438,6 @@ class _WelcomePageState extends State<WelcomePage> {
                   }
                 ),
               ],
-            ),
-
-            Padding(
-              padding: const EdgeInsets.all(20.0,),
-
-              child: ElevatedButton(
-                onPressed: () {
-                  setState(() {
-                    //TODO: Elmenteni User-hez!
-                    print('Napi célok (differentDays == false):',);
-
-                    for(int i = 0; i < 7; i++) {
-                      print('${weekdays[i]}: ${dailyTargetValues[i]}',);
-                    }
-                  });
-                },
-
-                child: const Text('Mentés a napi célhoz',),
-              ),
             ),
           ],
         ),
@@ -607,17 +585,23 @@ Padding _greeting() {
   );
 }
 
-ElevatedButton _navigateToHomePage(BuildContext context,) {
-  return ElevatedButton(
-      onPressed: () {
-        print('Gomb lenyomva! (Home oldal gombja)',);
+Widget _navigateToHomePage(BuildContext context,) {
+  return Padding(
+    padding: const EdgeInsets.all(12.0,),
 
-        Navigator.of(context).pushNamed(
-          '/home',
-        );
-      },
+    child: Center(
+      child: ElevatedButton(
+          onPressed: () {
+            print('Gomb lenyomva! (Home oldal gombja)',);
 
-      child: const Text('Home Page'),
+            Navigator.of(context).pushNamed(
+              '/home',
+            );
+          },
+
+          child: const Text('Home Page',),
+      ),
+    ),
   );
 }
 

@@ -10,7 +10,8 @@ Content-Type: application/json
   "height": 190.0,
   "weight": 84.0,
   "userType": "PREMIUM",
-  "differentDays": true
+  "differentDays": true,
+  "dailyTarget": []
 }
 
 ###
@@ -23,7 +24,8 @@ Content-Type: application/json
   "height": 160.0,
   "weight": 64.0,
   "userType": "FREE",
-  "differentDays": false
+  "differentDays": false,
+  "dailyTarget": []
 }
 
 ###
@@ -36,7 +38,8 @@ Content-Type: application/json
   "height": 169.0,
   "weight": 67.0,
   "userType": "PREMIUM",
-  "differentDays": true
+  "differentDays": true,
+  "dailyTarget": []
 }
 
 ###
@@ -49,12 +52,13 @@ Content-Type: application/json
   "height": 190.0,
   "weight": 84.0,
   "userType": "FREE",
-  "differentDays": true
+  "differentDays": true,
+  "dailyTarget": []
 }
 
 ###
 
-###DELETE localhost:8080/users/2
+DELETE localhost:8080/users/100
 
 ###
 
