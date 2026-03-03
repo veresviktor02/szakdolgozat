@@ -21,9 +21,17 @@ import '../my_calendar.dart';
 class HomePage extends StatefulWidget {
   final User user;
 
+  //Függőségbefecskendezés: tesztekhez kell!
+  final FoodService? foodService;
+  final DayService? dayService;
+
   const HomePage({
     super.key,
+
     required this.user,
+
+    this.foodService,
+    this.dayService,
   });
 
   @override
@@ -31,8 +39,8 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  final FoodService foodService = FoodService();
-  final DayService dayService = DayService();
+  late final FoodService foodService;
+  late final DayService dayService;
 
   final MyCalendar myCalendar = MyCalendar();
 
@@ -56,6 +64,10 @@ class _HomePageState extends State<HomePage> {
 
     user = widget.user;
 
+    //Itt fecskendezzük be a függőséget.
+    foodService = widget.foodService ?? FoodService();
+    dayService = widget.dayService ?? DayService();
+
     refreshPage();
   }
 
@@ -75,12 +87,15 @@ class _HomePageState extends State<HomePage> {
         myCalendar.daysMap[myCalendar.dayOnly(day.date)] = day;
       }
 
+      //null crash mellőzése!
+      final selected = myCalendar.daysMap[myCalendar.dayOnly(myCalendar.selectedDay)];
+
       //Kijelölt nap összes adata
-      totalFuture = dayService.getTotalKcalAndNutrients(
-          myCalendar.daysMap[
-            myCalendar.dayOnly(myCalendar.selectedDay)
-          ]!.id
-      );
+      if(selected != null) {
+        totalFuture = dayService.getTotalKcalAndNutrients(selected.id);
+      } else {
+        totalFuture = null;
+      }
     });
   }
 
@@ -226,8 +241,8 @@ class _HomePageState extends State<HomePage> {
 
   Container _dataSenderContainer() {
     return Container(
-        width: 500,
-        height: 300,
+        width: 600,
+        height: 400,
 
         padding: const EdgeInsets.all(20),
 
