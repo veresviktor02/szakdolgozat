@@ -150,6 +150,31 @@ class _HomePageState extends State<HomePage> {
   }
 
   Container _calendar() {
+    //Ha nincs check, akkor egy rövid pillanatra hiba: 'Bad state: No element'.
+    if(myCalendar.daysMap.isEmpty) {
+      return Container(
+        alignment: Alignment.center,
+
+        child: const SizedBox(
+          width: 600,
+          height: 200,
+
+          child: Center(child: CircularProgressIndicator(),),
+        ),
+      );
+    }
+
+    //Első és utolsó dátum kiolvasása myCalendar.daysMap-ből.
+    //Ez az adat a backendről érkezik!
+    final firstDay = myCalendar.daysMap.keys.reduce(
+        //Sorrendbe rakása a dátumoknak, ha nem kronológiai sorrendben lennének!
+        (a, b) => a.isBefore(b) ? a : b,
+    );
+
+    final lastDay = myCalendar.daysMap.keys.reduce(
+        (a, b) => a.isAfter(b) ? a : b,
+    );
+
     return Container(
       alignment: Alignment.center,
 
@@ -192,8 +217,8 @@ class _HomePageState extends State<HomePage> {
                 outsideTextStyle: TextStyle(color: Colors.grey.shade400),
               ),
 
-              firstDay: DateTime(2024, 1, 1),
-              lastDay: DateTime(2027, 12, 31),
+              firstDay: firstDay,
+              lastDay: lastDay,
               focusedDay: myCalendar.focusedDay,
 
               //default: Vasárnap!
