@@ -78,7 +78,7 @@ class _HomePageState extends State<HomePage> {
       dayFuture = dayService.fetchDays();
     });
 
-    final days = await dayService.fetchDays();
+    final days = await dayFuture;
 
     setState(() {
       myCalendar.daysMap.clear();
