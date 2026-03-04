@@ -5,26 +5,23 @@ import 'package:http/http.dart' as http;
 import 'nutrition_response.dart';
 
 class APIService {
-  final String baseUrl;
+  final String _baseUrl = 'http://localhost:8080';
 
-  APIService(this.baseUrl);
-
-  Future<NutritionResponse> fetchNutrition(String query) async {
-
+  Future<NutritionResponse> fetchNutritions(String query) async {
     //Kicserélni a space-eket +-ra
     final normalizedQuery = query.trim().replaceAll(' ', '+');
 
     //Space encode (%20), mert + jellel nem működik ez az API!
     final encodedQuery = Uri.encodeComponent(normalizedQuery);
 
-    final uri = Uri.parse('$baseUrl/api?query=$encodedQuery');
+    final uri = Uri.parse('$_baseUrl/api?query=$encodedQuery');
 
     final response = await http.get(uri);
 
     if (response.statusCode == 200) {
       return NutritionResponse.fromJson(jsonDecode(response.body));
     } else {
-      throw Exception("Failed to load nutrition data");
+      throw Exception('Nem sikerült az adatokat lekérni az API-tól!');
     }
   }
 }

@@ -16,6 +16,9 @@ import '../food/kcal_and_nutrients_model.dart';
 
 import '../user/user_model.dart';
 
+import '../API/api_service.dart';
+import '../API/api_food_model.dart';
+
 import '../my_calendar.dart';
 
 class HomePage extends StatefulWidget {
@@ -56,6 +59,14 @@ class _HomePageState extends State<HomePage> {
   final fatController = TextEditingController();
   final carbController = TextEditingController();
   final proteinController = TextEditingController();
+  //
+
+  //API
+  final apiQueryController = TextEditingController();
+  late final APIService apiService = APIService();
+  bool apiLoading = false;
+  String? apiError;
+  List<APIFood> apiFoodList = [];
   //
 
   @override
@@ -141,10 +152,175 @@ class _HomePageState extends State<HomePage> {
               _dataSenderContainer(),
           
               const SizedBox(height: 20,),
+
+              _apiFoodSearch(),
+
+              const SizedBox(height: 20,),
           
             ],
           ),
         ),
+      ),
+    );
+  }
+
+  Widget _apiFoodSearch() {
+    Future<void> searchFromApi() async {
+      final query = apiQueryController.text.trim();
+
+      if(query.isEmpty) {
+        return;
+      }
+
+      setState(() {
+        apiLoading = true;
+
+        apiError = null;
+
+        apiFoodList = [];
+      });
+
+      try {
+        final response = await apiService.fetchNutritions(query);
+
+        setState(() {
+          apiFoodList = response.items;
+        });
+
+      } catch(error) {
+        setState(() {
+          apiError = error.toString();
+        });
+      } finally {
+        setState(() {
+          apiLoading = false;
+        });
+      }
+    }
+
+    String format(double value) => value.toStringAsFixed(1);
+
+    Widget foodCard(APIFood food) {
+      return Card(
+        elevation: 3,
+
+        margin: const EdgeInsets.symmetric(vertical: 8,),
+
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12,),),
+
+        child: Padding(
+          padding: const EdgeInsets.all(12,),
+
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+
+            children: [
+              Text(
+                food.name,
+
+                style: const TextStyle(
+                  fontSize: 16,
+
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+
+              const SizedBox(height: 10,),
+
+              Text('Calories: ${format(food.calories)} kcal'),
+              Text('Serving size: ${format(food.servingSizeG)} g'),
+              Text('Protein: ${format(food.proteinG)} g'),
+              Text('Fat: ${format(food.fatTotalG)} g'),
+              Text('Carbs: ${format(food.carbohydratesTotalG)} g'),
+            ],
+          ),
+        ),
+      );
+    }
+
+    return Container(
+      width: 600,
+
+      padding: const EdgeInsets.all(20,),
+
+      decoration: BoxDecoration(
+        border: Border.all(color: Colors.blueAccent,),
+      ),
+
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+
+        children: [
+          const Text(
+            'CalorieNinjas API ételkeresés',
+
+            style: TextStyle(
+              fontSize: 16,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+
+          const SizedBox(height: 10),
+
+          Row(
+            children: [
+              Expanded(
+                child: TextField(
+                  controller: apiQueryController,
+
+                  decoration: const InputDecoration(
+                    labelText: 'Írj be egy vagy több ételt (pl. "banana 100g")',
+
+                    border: OutlineInputBorder(),
+                  ),
+
+                  onSubmitted: (_) => apiLoading ? null : searchFromApi(),
+                ),
+              ),
+
+              const SizedBox(width: 10,),
+
+              ElevatedButton(
+                onPressed: apiLoading ? null : searchFromApi,
+
+                child: const Text('Keresés',),
+              ),
+            ],
+          ),
+
+          const SizedBox(height: 10,),
+
+          if(apiLoading)
+            const Center(child: CircularProgressIndicator(),),
+
+          if(!apiLoading && apiError != null)
+            Text(
+              'Hiba: $apiError',
+
+              style: const TextStyle(color: Colors.red,),
+            ),
+
+          if(!apiLoading && apiError == null && apiFoodList.isEmpty)
+            const Text(
+              'Nincs találat!',
+
+              style: TextStyle(fontSize: 16,),
+            ),
+
+          if(apiFoodList.isNotEmpty) ...[
+            const SizedBox(height: 10,),
+
+            ListView.builder(
+              shrinkWrap: true,
+
+              physics: const NeverScrollableScrollPhysics(),
+
+              itemCount: apiFoodList.length,
+
+              itemBuilder: (context, index) => foodCard(apiFoodList[index]),
+            ),
+          ],
+        ],
       ),
     );
   }
