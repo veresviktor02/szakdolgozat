@@ -2,11 +2,11 @@ import 'dart:convert';
 
 import 'package:http/http.dart' as http;
 
+import '../shared.dart';
+
 import 'nutrition_response.dart';
 
 class APIService {
-  final String _baseUrl = 'http://localhost:8080';
-
   Future<NutritionResponse> fetchNutritions(String query) async {
     //Kicserélni a space-eket +-ra
     final normalizedQuery = query.trim().replaceAll(' ', '+');
@@ -14,7 +14,7 @@ class APIService {
     //Space encode (%20), mert + jellel nem működik ez az API!
     final encodedQuery = Uri.encodeComponent(normalizedQuery);
 
-    final uri = Uri.parse('$_baseUrl/api?query=$encodedQuery');
+    final uri = Uri.parse('${Shared.baseUrl}/api?query=$encodedQuery');
 
     final response = await http.get(uri);
 

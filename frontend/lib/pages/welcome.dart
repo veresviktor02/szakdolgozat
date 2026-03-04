@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_application/food/kcal_and_nutrients_model.dart';
 
 import '../my_calendar.dart';
+import '../shared.dart';
 import '../user/user_model.dart';
 import '../user/user_service.dart';
 import '../user/user_type.dart';
@@ -162,9 +163,10 @@ class _WelcomePageState extends State<WelcomePage> {
 
     //Nem jogosult a prémium funkcióra az ingyenes felhasználó!
     if(userType == UserType.FREE && differentDays) {
-      _mySnackBar(
+      Shared.mySnackBar(
         'FREE felhasználó (Név: ${nameController.text}) nem jogosult különböző napokra!',
         Colors.red,
+        context,
       );
 
       throw Exception(
@@ -172,9 +174,10 @@ class _WelcomePageState extends State<WelcomePage> {
       );
     }
 
-    _mySnackBar(
+    Shared.mySnackBar(
       'Felhasználó sikeresen létrehozva! (Név: ${nameController.text})',
       Colors.green,
+      context,
     );
 
     tempUser = User(
@@ -229,20 +232,6 @@ class _WelcomePageState extends State<WelcomePage> {
     );
   }
 
-  void _mySnackBar(String message, Color color) {
-    ScaffoldMessenger.of(context).removeCurrentSnackBar();
-
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(message,),
-
-        backgroundColor: color,
-
-        duration: Duration(seconds: 2,),
-      ),
-    );
-  }
-
   SwitchListTile _differentDaysSwitch() {
     return SwitchListTile(
       title: const Text(
@@ -258,9 +247,10 @@ class _WelcomePageState extends State<WelcomePage> {
       onChanged: (bool value) {
         //Jó a kuponkód ÉS még nincs bekapcsolva.
         if(couponController.text == 'PREMIUM' && value) {
-          _mySnackBar(
+          Shared.mySnackBar(
             'Milyen érzés PREMIUM ügyfélnek lenni? szerintünk nagyon jó!',
             Colors.green,
+            context,
           );
 
           setState(() => differentDays = value);
@@ -269,9 +259,10 @@ class _WelcomePageState extends State<WelcomePage> {
         //Azért kell, mert ha a PREMIUM kóddal bekapcsolja,
         //akkor a kód törlése után nem tudja kikapcsolni!
         else if(!value) {
-          _mySnackBar(
+          Shared.mySnackBar(
             'Biztos kikapcsolod? Ez egy nagyon jó funkció!',
             Colors.orangeAccent,
+            context,
           );
 
           //Ha átváltja a felhasználó különböző napokra és elmenti az adatokat,
@@ -286,9 +277,10 @@ class _WelcomePageState extends State<WelcomePage> {
         }
         //Rossz a kuponkód ÉS ki van kapcsolva.
         else {
-          _mySnackBar(
+          Shared.mySnackBar(
             'Csak PREMIUM felhasználóknak! Te nem vagy az!',
             Colors.red,
+            context,
           );
         }
       },
@@ -528,9 +520,10 @@ class _WelcomePageState extends State<WelcomePage> {
           onPressed: () {
             //Adatok megadása nélkül ne tudja lenyomni a 'Belépés' gombot.
             if(tempUser == null) {
-              _mySnackBar(
-                  'Még nem adtál meg adatokat! Töltsd ki a fentebbi mezőket!',
-                  Colors.red,
+              Shared.mySnackBar(
+                'Még nem adtál meg adatokat! Töltsd ki a fentebbi mezőket!',
+                Colors.red,
+                context,
               );
             } else {
               print('Gomb lenyomva! (User ${tempUser?.name} oldal gombja)',);

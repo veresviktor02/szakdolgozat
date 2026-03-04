@@ -1,15 +1,17 @@
 import 'package:http/http.dart' as http;
+
 import 'dart:convert';
+
+import '../shared.dart';
+
 import 'food_model.dart';
+
 import 'kcal_and_nutrients_model.dart';
 
 class FoodService {
-  static const String _baseUrl = 'http://localhost:8080';
-
-  //GET request
   Future<List<Food>> fetchFoods() async {
     final response = await http.get(
-      Uri.parse('$_baseUrl/foods'),
+      Uri.parse('${Shared.baseUrl}/foods'),
       headers: {
         'Content-Type': 'application/json',
       },
@@ -27,10 +29,9 @@ class FoodService {
     );
   }
 
-  //POST request
   Future<void> sendFood(String name, KcalAndNutrients kcalAndNutrients) async {
     final response = await http.post(
-      Uri.parse('$_baseUrl/foods'),
+      Uri.parse('${Shared.baseUrl}/foods'),
       headers: {
         'Content-Type': 'application/json',
       },

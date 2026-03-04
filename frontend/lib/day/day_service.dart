@@ -1,15 +1,18 @@
 import 'package:flutter_application/day/day_model.dart';
+
 import 'package:flutter_application/food/food_model.dart';
 import 'package:flutter_application/food/kcal_and_nutrients_model.dart';
+
+import '../shared.dart';
+
 import 'package:http/http.dart' as http;
+
 import 'dart:convert';
 
 class DayService {
-  static const String _baseUrl = 'http://localhost:8080';
-
   Future<List<Day>> fetchDays() async {
     final response = await http.get(
-      Uri.parse('$_baseUrl/days'),
+      Uri.parse('${Shared.baseUrl}/days'),
       headers: {
         'Content-Type': 'application/json',
       },
@@ -28,7 +31,7 @@ class DayService {
   Future<void> removeFoodFromDay(int dayId, int foodId) async {
     final response = await http.delete(
       Uri.parse(
-        '$_baseUrl/days/$dayId/foods/$foodId',
+        '${Shared.baseUrl}/days/$dayId/foods/$foodId',
       ),
     );
 
@@ -40,7 +43,7 @@ class DayService {
 
   Future<KcalAndNutrients> getTotalKcalAndNutrients(int dayId) async {
     final response = await http.get(
-      Uri.parse('$_baseUrl/days/$dayId/total'),
+      Uri.parse('${Shared.baseUrl}/days/$dayId/total'),
     );
 
     if(response.statusCode == 200) {
@@ -54,7 +57,7 @@ class DayService {
   Future<void> addFoodToDay(int dayId, String name, KcalAndNutrients kcalAndNutrients) async {
     final response = await http.post(
       Uri.parse(
-        '$_baseUrl/days/$dayId',
+        '${Shared.baseUrl}/days/$dayId',
       ),
       headers: {
         'Content-Type': 'application/json',

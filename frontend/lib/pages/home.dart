@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_application/shared.dart';
 
 import 'package:flutter_svg/flutter_svg.dart';
 
@@ -169,6 +170,12 @@ class _HomePageState extends State<HomePage> {
       final query = apiQueryController.text.trim();
 
       if(query.isEmpty) {
+        Shared.mySnackBar(
+          'Üres a keresési mező!',
+          Colors.red,
+          context,
+        );
+
         return;
       }
 

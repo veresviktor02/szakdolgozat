@@ -3,16 +3,16 @@ import 'package:flutter_application/food/kcal_and_nutrients_model.dart';
 import 'package:flutter_application/user/user_model.dart';
 import 'package:flutter_application/user/user_type.dart';
 
+import '../shared.dart';
+
 import 'package:http/http.dart' as http;
 
 import 'dart:convert';
 
 class UserService {
-  static const String _baseUrl = 'http://localhost:8080';
-
   Future<List<User>> fetchUsers() async {
     final response = await http.get(
-      Uri.parse('$_baseUrl/users'),
+      Uri.parse('${Shared.baseUrl}/users'),
       headers: {
         'Content-Type': 'application/json',
       },
@@ -37,7 +37,7 @@ class UserService {
       List<KcalAndNutrients> dailyTarget,
   ) async {
     final response = await http.post(
-      Uri.parse('$_baseUrl/users'),
+      Uri.parse('${Shared.baseUrl}/users'),
       headers: {
         'Content-Type': 'application/json',
       },
