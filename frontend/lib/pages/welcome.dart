@@ -1,9 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+
 import 'package:flutter_application/food/kcal_and_nutrients_model.dart';
 
+import '../coupon/coupon_service.dart';
+import '../coupon/coupon_status.dart';
+
 import '../my_calendar.dart';
+
 import '../shared.dart';
+
 import '../user/user_model.dart';
 import '../user/user_service.dart';
 import '../user/user_type.dart';
@@ -29,6 +35,13 @@ class _WelcomePageState extends State<WelcomePage> {
   final weightController = TextEditingController();
   final heightController = TextEditingController();
   final couponController = TextEditingController();
+  //
+
+  //Kupon check
+  final CouponService couponService = CouponService();
+
+  bool couponChecking = false;
+  bool isCouponValid = false;
   //
 
   //7x4 TextEditingController
@@ -76,8 +89,6 @@ class _WelcomePageState extends State<WelcomePage> {
 
               const SizedBox(height: 10,),
 
-              const SizedBox(height: 10,),
-
               _fillDailyTarget(),
 
               const SizedBox(height: 10,),
@@ -94,6 +105,96 @@ class _WelcomePageState extends State<WelcomePage> {
         ),
       ),
     );
+  }
+
+  Future<void> validateCouponCode() async {
+    final couponCode = couponController.text.trim();
+
+    if(couponCode.isEmpty) {
+      Shared.mySnackBar(
+        'Adj meg egy kuponkódot!',
+        Colors.red,
+        context,
+      );
+
+      setState(() {
+        isCouponValid = false;
+      });
+
+      return;
+    }
+
+    setState(() {
+      couponChecking = true;
+    });
+
+    try {
+      final couponStatus = await couponService.validateCoupon(couponCode);
+
+      if(!mounted) {
+        return;
+      }
+
+      switch(couponStatus) {
+        case CouponStatus.VALID:
+          Shared.mySnackBar(
+            'Kupon érvényes!',
+            Colors.green,
+            context,
+          );
+
+          setState(() {
+            isCouponValid = true;
+          });
+
+        case CouponStatus.USED:
+          Shared.mySnackBar(
+            'Már felhasználták ezt a kupont!',
+            Colors.red,
+            context,
+          );
+
+          setState(() {
+            isCouponValid = false;
+          });
+
+        case CouponStatus.NOT_FOUND:
+          Shared.mySnackBar(
+            'A megadott kupon érvénytelen!',
+            Colors.red,
+            context,
+          );
+
+          setState(() {
+            isCouponValid = false;
+          });
+
+        case CouponStatus.EXPIRED:
+          Shared.mySnackBar(
+            'A megadott kupon érvényességi ideje már lejárt!',
+            Colors.red,
+            context,
+          );
+
+          setState(() {
+            isCouponValid = false;
+          });
+      }
+    } catch (error) {
+      if(!mounted) {
+        return;
+      }
+
+      Shared.mySnackBar(
+        'Hiba kupon ellenőrzésnél: $error',
+        Colors.red,
+        context
+      );
+    } finally {
+      setState(() {
+        couponChecking = false;
+      });
+    }
   }
 
   Center _fillData() {
@@ -145,6 +246,16 @@ class _WelcomePageState extends State<WelcomePage> {
                 FilteringTextInputFormatter.allow(RegExp(r'.*'),),
               ),
 
+              Padding(
+                padding: const EdgeInsets.all(10.0,),
+
+                child: ElevatedButton(
+                  onPressed: validateCouponCode,
+
+                  child: Text('Kupon ellenőrzése',),
+                ),
+              ),
+
               const SizedBox(height: 10,),
 
               _differentDaysSwitch(),
@@ -157,7 +268,7 @@ class _WelcomePageState extends State<WelcomePage> {
 
   Future<void> sendUserFromWelcome() async {
     //PREMIUM kuponkóddal prémium felhasználói szint!
-    if(couponController.text == 'PREMIUM') {
+    if(isCouponValid) {
       userType = UserType.PREMIUM;
     }
 
@@ -246,7 +357,7 @@ class _WelcomePageState extends State<WelcomePage> {
 
       onChanged: (bool value) {
         //Jó a kuponkód ÉS még nincs bekapcsolva.
-        if(couponController.text == 'PREMIUM' && value) {
+        if(isCouponValid) {
           Shared.mySnackBar(
             'Milyen érzés PREMIUM ügyfélnek lenni? szerintünk nagyon jó!',
             Colors.green,
