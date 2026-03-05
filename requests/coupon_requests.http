@@ -1,0 +1,29 @@
+GET localhost:8080/coupons
+
+###
+
+GET localhost:8080/coupons/validate?couponCode=PREMIUM1
+
+###
+
+GET localhost:8080/coupons/validate?couponCode=PREMIUM7
+
+###
+
+GET localhost:8080/coupons/validate?couponCode=premium1
+
+###
+
+GET localhost:8080/coupons/validate?couponCode=premium7
+
+###
+
+GET localhost:8080/coupons/validate?couponCode=PREmium1
+
+###
+
+GET localhost:8080/coupons/validate?couponCode=preMIUM7
+
+###
+
+GET localhost:8080/coupons/validate?couponCode=NOTREALCODE
