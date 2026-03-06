@@ -69,6 +69,22 @@ class _WelcomePageState extends State<WelcomePage> {
   }
 
   @override
+  void dispose() {
+    super.dispose();
+
+    nameController.dispose();
+    weightController.dispose();
+    heightController.dispose();
+    couponController.dispose();
+
+    for(int days = 0; days < 7; days++) {
+      for(int nutrient = 0; nutrient < 4; nutrient++) {
+        controllers[days][nutrient].dispose();
+      }
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: _appbar(),

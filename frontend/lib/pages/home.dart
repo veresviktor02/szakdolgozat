@@ -83,6 +83,17 @@ class _HomePageState extends State<HomePage> {
     refreshPage();
   }
 
+  @override
+  void dispose() {
+    super.dispose();
+
+    nameController.dispose();
+    kcalController.dispose();
+    fatController.dispose();
+    carbController.dispose();
+    proteinController.dispose();
+  }
+
   Future<void> refreshPage() async {
     //Külön setState kell, mert nem lenne inicializálva másképpen!
     setState(() {
