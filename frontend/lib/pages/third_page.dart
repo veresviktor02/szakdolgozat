@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../shared.dart';
+
 class ThirdPage extends StatefulWidget {
 
   const ThirdPage({super.key});
@@ -14,7 +16,7 @@ class _SecondPageState extends State<ThirdPage> {
   Widget build(BuildContext context) {
 
     return Scaffold(
-      appBar: appbar(),
+      appBar: Shared.myAppBar('Harmadik oldal',),
 
       backgroundColor: Colors.white,
 
@@ -26,23 +28,4 @@ class _SecondPageState extends State<ThirdPage> {
     );
   }
 
-}
-
-AppBar appbar() {
-  return AppBar(
-
-    title: Text(
-      'Harmadik oldal',
-      style: TextStyle(
-        color: Colors.red,
-        fontSize: 34,
-        fontWeight: FontWeight.bold,
-      ),
-    ),
-
-    backgroundColor: Colors.green,
-    elevation: 0.0,
-    centerTitle: true,
-
-  );
 }

@@ -125,7 +125,7 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: _appbar(),
+      appBar: Shared.myAppBar('Kalóriaszámláló alkalmazás',),
 
       backgroundColor: Colors.white,
 
@@ -222,12 +222,12 @@ class _HomePageState extends State<HomePage> {
       return Card(
         elevation: 3,
 
-        margin: const EdgeInsets.symmetric(vertical: 8,),
+        margin: const EdgeInsets.symmetric(vertical: 8.0,),
 
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12,),),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12.0,),),
 
         child: Padding(
-          padding: const EdgeInsets.all(12,),
+          padding: const EdgeInsets.all(12.0,),
 
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -259,7 +259,7 @@ class _HomePageState extends State<HomePage> {
     return Container(
       width: 600,
 
-      padding: const EdgeInsets.all(20,),
+      padding: const EdgeInsets.all(20.0,),
 
       decoration: BoxDecoration(
         border: Border.all(color: Colors.blueAccent,),
@@ -309,7 +309,7 @@ class _HomePageState extends State<HomePage> {
           const SizedBox(height: 10,),
 
           if(apiLoading)
-            const Center(child: CircularProgressIndicator(),),
+            Center(child: Shared.myCircularProgressIndicator(),),
 
           if(!apiLoading && apiError != null)
             Text(
@@ -349,11 +349,11 @@ class _HomePageState extends State<HomePage> {
       return Container(
         alignment: Alignment.center,
 
-        child: const SizedBox(
+        child: SizedBox(
           width: 600,
           height: 200,
 
-          child: Center(child: CircularProgressIndicator(),),
+          child: Center(child: Shared.myCircularProgressIndicator(),),
         ),
       );
     }
@@ -463,7 +463,7 @@ class _HomePageState extends State<HomePage> {
         width: 600,
         height: 400,
 
-        padding: const EdgeInsets.all(20),
+        padding: const EdgeInsets.all(20.0,),
 
         decoration: BoxDecoration(
           border: Border.all(color: Colors.blueAccent),
@@ -656,7 +656,7 @@ class _HomePageState extends State<HomePage> {
                 return const Text('Válassz ki egy napot!',);
               }
               else if(totalSnapshot.connectionState == ConnectionState.waiting) {
-                return const CircularProgressIndicator();
+                return Shared.myCircularProgressIndicator();
               }
               else if(totalSnapshot.hasError) {
                 return Text(
@@ -772,7 +772,7 @@ class _HomePageState extends State<HomePage> {
 
         return CircularPercentIndicator(
           //Enélkül nem az animationDuration alatt rajzolná ki a kört, hanem egyből!
-          key: const ValueKey("kcal_indicator"),
+          key: const ValueKey('kcal_indicator'),
 
           radius: 100,
           lineWidth: 15,
@@ -856,7 +856,7 @@ Container _nameTextField(TextEditingController nameController) {
           filled: true,
           fillColor: Colors.white,
 
-          contentPadding: const EdgeInsets.all(15),
+          contentPadding: const EdgeInsets.all(15.0,),
 
           hintText: 'Étel neve:',
 
@@ -903,7 +903,7 @@ Column _textFieldColumn(String textData, TextEditingController controller) {
             filled: true,
             fillColor: Colors.white,
 
-            contentPadding: const EdgeInsets.all(15),
+            contentPadding: const EdgeInsets.all(15.0,),
 
             hintText: '0',
 
@@ -922,7 +922,7 @@ Column _textFieldColumn(String textData, TextEditingController controller) {
 
 Container _futureFoodBuilder(Future<List<Food>> foodFuture) {
   return Container(
-    padding: const EdgeInsets.all(20),
+    padding: const EdgeInsets.all(20.0,),
 
     decoration: BoxDecoration(
       border: Border.all(color: Colors.blueAccent),
@@ -934,7 +934,7 @@ Container _futureFoodBuilder(Future<List<Food>> foodFuture) {
       builder: (context, foodSnapshot) {
         //Várakozik a kapcsolatra
         if(foodSnapshot.connectionState == ConnectionState.waiting) {
-          return const Center(child: CircularProgressIndicator());
+          return Center(child: Shared.myCircularProgressIndicator());
         }
         //Hiba történt
         else if(foodSnapshot.hasError) {
@@ -967,14 +967,14 @@ Column _foodColumn(AsyncSnapshot<List<Food>> foodSnapshot) {
 
           child: Card(
             elevation: 3,
-            margin: const EdgeInsets.symmetric(vertical: 8),
+            margin: const EdgeInsets.symmetric(vertical: 8.0,),
 
             shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(12),
+              borderRadius: BorderRadius.circular(12.0,),
             ),
 
             child: Padding(
-              padding: const EdgeInsets.all(16),
+              padding: const EdgeInsets.all(16.0,),
 
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -1004,7 +1004,7 @@ Column _foodColumn(AsyncSnapshot<List<Food>> foodSnapshot) {
 
 Container _futureDayBuilder(Future<List<Day>> dayFuture) {
   return Container(
-    padding: const EdgeInsets.all(20),
+    padding: const EdgeInsets.all(20.0,),
 
     child: FutureBuilder<List<Day>>(
       future: dayFuture,
@@ -1012,7 +1012,7 @@ Container _futureDayBuilder(Future<List<Day>> dayFuture) {
       builder: (context, daySnapshot) {
         //Várakozik a kapcsolatra
         if(daySnapshot.connectionState == ConnectionState.waiting) {
-          return const Center(child: CircularProgressIndicator());
+          return Center(child: Shared.myCircularProgressIndicator());
         }
         //Hiba történt
         else if(daySnapshot.hasError) {
@@ -1042,14 +1042,14 @@ Column _dayColumn(AsyncSnapshot<List<Day>> daySnapshot) {
         return Card(
           elevation: 3,
 
-          margin: const EdgeInsets.symmetric(vertical: 8),
+          margin: const EdgeInsets.symmetric(vertical: 8.0,),
 
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(12),
           ),
 
           child: Padding(
-            padding: const EdgeInsets.all(16),
+            padding: const EdgeInsets.all(16.0,),
 
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -1123,25 +1123,5 @@ ElevatedButton _navigateToThirdPage(BuildContext context) {
       },
 
       child: const Text('3. oldal',),
-  );
-}
-
-AppBar _appbar() {
-  return AppBar(
-
-    title: Text(
-      'Kalóriaszámláló alkalmazás',
-
-      style: const TextStyle(
-        color: Colors.red,
-        fontSize: 34,
-        fontWeight: FontWeight.bold,
-      ),
-
-    ),
-
-    backgroundColor: Colors.green,
-    elevation: 0.0,
-    centerTitle: true,
   );
 }

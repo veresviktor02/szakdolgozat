@@ -16,4 +16,42 @@ class Shared {
   }
 
   static String baseUrl = 'http://localhost:8080';
+
+  //Csak a stílus! Méretezéshez SizedBox-ba kell rakni!
+  static CircularProgressIndicator myCircularProgressIndicator() {
+    return CircularProgressIndicator(
+      color: Colors.amber,
+      backgroundColor: Colors.greenAccent,
+
+      padding: EdgeInsetsGeometry.all(10.0,),
+
+      strokeWidth: 5.0,
+      strokeCap: StrokeCap.round,
+
+      semanticsLabel: "Töltődés",
+    );
+  }
+
+  static AppBar myAppBar(String titleText) {
+    return AppBar(
+      title: Text(
+        titleText,
+
+        style: TextStyle(
+          color: Colors.red,
+
+          fontSize: 34,
+
+          fontWeight: FontWeight.bold,
+        ),
+
+      ),
+
+      backgroundColor: Colors.green,
+
+      elevation: 0.0,
+
+      centerTitle: true,
+    );
+  }
 }

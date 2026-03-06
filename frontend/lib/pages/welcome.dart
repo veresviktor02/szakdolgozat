@@ -87,7 +87,7 @@ class _WelcomePageState extends State<WelcomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: _appbar(),
+      appBar: Shared.myAppBar('Üdvözöllek a Kalóriaszámláló alkalmazásban!',),
 
       backgroundColor: Colors.white,
 
@@ -151,51 +151,8 @@ class _WelcomePageState extends State<WelcomePage> {
         return;
       }
 
-      switch(couponStatus) {
-        case CouponStatus.VALID:
-          Shared.mySnackBar(
-            'Kupon érvényes!',
-            Colors.green,
-            context,
-          );
+      checkCouponStatus(couponStatus);
 
-          setState(() {
-            isCouponValid = true;
-          });
-
-        case CouponStatus.USED:
-          Shared.mySnackBar(
-            'A megadott kupont már felhasználták!',
-            Colors.red,
-            context,
-          );
-
-          setState(() {
-            isCouponValid = false;
-          });
-
-        case CouponStatus.NOT_FOUND:
-          Shared.mySnackBar(
-            'A megadott kupon nem létezik!',
-            Colors.red,
-            context,
-          );
-
-          setState(() {
-            isCouponValid = false;
-          });
-
-        case CouponStatus.EXPIRED:
-          Shared.mySnackBar(
-            'A megadott kupon érvényességi ideje már lejárt!',
-            Colors.red,
-            context,
-          );
-
-          setState(() {
-            isCouponValid = false;
-          });
-      }
     } catch (error) {
       if(!mounted) {
         return;
@@ -210,6 +167,54 @@ class _WelcomePageState extends State<WelcomePage> {
       setState(() {
         couponChecking = false;
       });
+    }
+  }
+
+  void checkCouponStatus(CouponStatus couponStatus) {
+    switch(couponStatus) {
+      case CouponStatus.VALID:
+        Shared.mySnackBar(
+          'Kupon érvényes!',
+          Colors.green,
+          context,
+        );
+
+        setState(() {
+          isCouponValid = true;
+        });
+
+      case CouponStatus.USED:
+        Shared.mySnackBar(
+          'A megadott kupont már felhasználták!',
+          Colors.red,
+          context,
+        );
+
+        setState(() {
+          isCouponValid = false;
+        });
+
+      case CouponStatus.NOT_FOUND:
+        Shared.mySnackBar(
+          'A megadott kupon nem létezik!',
+          Colors.red,
+          context,
+        );
+
+        setState(() {
+          isCouponValid = false;
+        });
+
+      case CouponStatus.EXPIRED:
+        Shared.mySnackBar(
+          'A megadott kupon érvényességi ideje már lejárt!',
+          Colors.red,
+          context,
+        );
+
+        setState(() {
+          isCouponValid = false;
+        });
     }
   }
 
@@ -408,9 +413,8 @@ class _WelcomePageState extends State<WelcomePage> {
           }
 
           setState(() => differentDays = value);
-        }
-        //Rossz a kuponkód ÉS ki van kapcsolva.
-        else {
+        } else {
+          //Rossz a kuponkód ÉS ki van kapcsolva.
           Shared.mySnackBar(
             'Csak PREMIUM felhasználóknak! Te nem vagy az!',
             Colors.red,
@@ -790,28 +794,5 @@ Widget _navigateToHomePage(BuildContext context,) {
           child: const Text('Home Page',),
       ),
     ),
-  );
-}
-
-AppBar _appbar() {
-  return AppBar(
-
-    title: Text(
-      'Üdvözöllek a Kalóriaszámláló alkalmazásban!',
-
-      style: TextStyle(
-        color: Colors.red,
-
-        fontSize: 34,
-        fontWeight: FontWeight.bold,
-      ),
-
-    ),
-
-    backgroundColor: Colors.green,
-
-    elevation: 0.0,
-
-    centerTitle: true,
   );
 }

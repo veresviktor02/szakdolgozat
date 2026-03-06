@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../shared.dart';
+
 class SecondPage extends StatefulWidget {
   //Ezt adta át az előző oldal!
   final String data;
@@ -18,7 +20,7 @@ class _SecondPageState extends State<SecondPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: appbar(),
+      appBar: Shared.myAppBar('Második oldal',),
 
       backgroundColor: Colors.white,
 
@@ -30,22 +32,4 @@ class _SecondPageState extends State<SecondPage> {
       ),
     );
   }
-}
-
-AppBar appbar() {
-  return AppBar(
-
-    title: Text(
-      'Második oldal',
-      style: TextStyle(
-        color: Colors.red,
-        fontSize: 34,
-        fontWeight: FontWeight.bold,
-      ),
-    ),
-
-    backgroundColor: Colors.green,
-    elevation: 0.0,
-    centerTitle: true,
-  );
 }
