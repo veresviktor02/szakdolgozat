@@ -113,7 +113,7 @@ class _WelcomePageState extends State<WelcomePage> {
     if(couponCode.isEmpty) {
       Shared.mySnackBar(
         'Adj meg egy kuponkódot!',
-        Colors.red,
+        Colors.blueAccent,
         context,
       );
 
@@ -149,7 +149,7 @@ class _WelcomePageState extends State<WelcomePage> {
 
         case CouponStatus.USED:
           Shared.mySnackBar(
-            'Már felhasználták ezt a kupont!',
+            'A megadott kupont már felhasználták!',
             Colors.red,
             context,
           );
@@ -160,7 +160,7 @@ class _WelcomePageState extends State<WelcomePage> {
 
         case CouponStatus.NOT_FOUND:
           Shared.mySnackBar(
-            'A megadott kupon érvénytelen!',
+            'A megadott kupon nem létezik!',
             Colors.red,
             context,
           );
@@ -213,37 +213,38 @@ class _WelcomePageState extends State<WelcomePage> {
 
             children: [
               _userDataInput(
-                nameController,
-                'Név:',
-                'Név',
-                FilteringTextInputFormatter.allow(RegExp(r'.*'),),
+                controller: nameController,
+                labelText: 'Név:',
+                hintText: 'Név',
+                format: FilteringTextInputFormatter.allow(RegExp(r'.*'),),
               ),
 
               const SizedBox(height: 10,),
 
               _userDataInput(
-                weightController,
-                'Testtömeg (kg):',
-                'Testtömeg',
-                FilteringTextInputFormatter.allow(RegExp(r'^\d*\.?\d*')),
+                controller: weightController,
+                labelText: 'Testtömeg (kg):',
+                hintText: 'Testtömeg',
+                format: FilteringTextInputFormatter.allow(RegExp(r'^\d*\.?\d*')),
               ),
 
               const SizedBox(height: 10,),
 
               _userDataInput(
-                heightController,
-                'Magasság (cm):',
-                'Magasság',
-                FilteringTextInputFormatter.allow(RegExp(r'^\d*\.?\d*')),
+                controller: heightController,
+                labelText: 'Magasság (cm):',
+                hintText: 'Magasság',
+                format: FilteringTextInputFormatter.allow(RegExp(r'^\d*\.?\d*')),
               ),
 
               const SizedBox(height: 10,),
 
               _userDataInput(
-                couponController,
-                'Kuponkód:',
-                'Kuponkód',
-                FilteringTextInputFormatter.allow(RegExp(r'.*'),),
+                controller: couponController,
+                labelText: 'Kuponkód:',
+                hintText: 'Kuponkód',
+                format: FilteringTextInputFormatter.allow(RegExp(r'.*'),),
+                isEnabled: !isCouponValid
               ),
 
               Padding(
@@ -334,6 +335,10 @@ class _WelcomePageState extends State<WelcomePage> {
           onPressed: () {
             sendUserFromWelcome();
 
+            if(isCouponValid) {
+              couponService.useCoupon(couponController.text, tempUser!.id);
+            }
+
             zeroAllTextFields();
           },
 
@@ -357,7 +362,7 @@ class _WelcomePageState extends State<WelcomePage> {
 
       onChanged: (bool value) {
         //Jó a kuponkód ÉS még nincs bekapcsolva.
-        if(isCouponValid) {
+        if(isCouponValid && value) {
           Shared.mySnackBar(
             'Milyen érzés PREMIUM ügyfélnek lenni? szerintünk nagyon jó!',
             Colors.green,
@@ -370,6 +375,8 @@ class _WelcomePageState extends State<WelcomePage> {
         //Azért kell, mert ha a PREMIUM kóddal bekapcsolja,
         //akkor a kód törlése után nem tudja kikapcsolni!
         else if(!value) {
+          differentDays = false;
+
           Shared.mySnackBar(
             'Biztos kikapcsolod? Ez egy nagyon jó funkció!',
             Colors.orangeAccent,
@@ -654,12 +661,13 @@ class _WelcomePageState extends State<WelcomePage> {
   }
 }
 
-Container _userDataInput(
-  TextEditingController controller,
-  String labelText,
-  String hintText,
-  FilteringTextInputFormatter format,
-  ) {
+Container _userDataInput({
+  required TextEditingController controller,
+  required String labelText,
+  required String hintText,
+  required FilteringTextInputFormatter format,
+  bool isEnabled = true,
+}) {
   return Container(
     decoration: BoxDecoration(
       border: Border.all(color: Colors.blueAccent),
@@ -685,6 +693,7 @@ Container _userDataInput(
 
           child: TextField(
             controller: controller,
+            enabled: isEnabled,
 
             inputFormatters: [
               format,

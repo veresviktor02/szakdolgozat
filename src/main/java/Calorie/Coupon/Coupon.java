@@ -4,6 +4,8 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.*;
 
+import java.time.LocalDate;
+
 @Entity
 public class Coupon {
     @Id
@@ -14,14 +16,19 @@ public class Coupon {
     private String couponCode;
 
     //Ha "null", akkor nem volt felhasználva, nem kell külön "boolean used" mező!
+    //Ne jelenlen meg a JSON kérésben, mint mező! Elég az "isUsed" függvény!
+    @JsonIgnore
     private Integer usedByUserId;
+
+    private LocalDate expirationDate;
 
     public Coupon() {}
 
-    public Coupon(Integer id, String couponCode, Integer usedByUserId) {
+    public Coupon(Integer id, String couponCode, Integer usedByUserId, LocalDate expirationDate) {
         this.id = id;
         setCouponCode(couponCode);
         this.usedByUserId = usedByUserId;
+        this.expirationDate = expirationDate;
     }
 
     public Integer getId() {
@@ -34,6 +41,10 @@ public class Coupon {
 
     public Integer getUsedByUserId() {
         return usedByUserId;
+    }
+
+    public LocalDate getExpirationDate() {
+        return expirationDate;
     }
 
     public void setId(Integer id) {
@@ -54,10 +65,18 @@ public class Coupon {
         this.usedByUserId = usedByUserId;
     }
 
-    //Csak a JSON kérésben jelenik meg, adatbázisban nem!
-    @JsonIgnore
+    public void setExpirationDate(LocalDate expirationDate) {
+        this.expirationDate = expirationDate;
+    }
+
+
     public boolean isUsed() {
         return getUsedByUserId() != null;
+    }
+
+    @JsonIgnore
+    public boolean isExpired() {
+        return getExpirationDate().isBefore(LocalDate.now());
     }
 
     @Override

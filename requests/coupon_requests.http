@@ -2,28 +2,44 @@ GET localhost:8080/coupons
 
 ###
 
-GET localhost:8080/coupons/validate?couponCode=PREMIUM1
+PUT localhost:8080/coupons/PREMIUM1/use/68
 
 ###
 
-GET localhost:8080/coupons/validate?couponCode=PREMIUM7
+GET localhost:8080/coupons/validate/PREMIUM1
 
 ###
 
-GET localhost:8080/coupons/validate?couponCode=premium1
+GET localhost:8080/coupons/validate/PREMIUM7
 
 ###
 
-GET localhost:8080/coupons/validate?couponCode=premium7
+GET localhost:8080/coupons/validate/PREMIUM10
 
 ###
 
-GET localhost:8080/coupons/validate?couponCode=PREmium1
+GET localhost:8080/coupons/validate/premium1
 
 ###
 
-GET localhost:8080/coupons/validate?couponCode=preMIUM7
+GET localhost:8080/coupons/validate/premium7
 
 ###
 
-GET localhost:8080/coupons/validate?couponCode=NOTREALCODE
+GET localhost:8080/coupons/validate/premium10
+
+###
+
+GET localhost:8080/coupons/validate/PREmium1
+
+###
+
+GET localhost:8080/coupons/validate/preMIUM7
+
+###
+
+GET localhost:8080/coupons/validate/PRemiUM10
+
+###
+
+GET localhost:8080/coupons/validate/NOTREALCODE

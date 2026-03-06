@@ -6,6 +6,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Service
@@ -21,18 +22,48 @@ public class CouponService {
         this.couponRepository = couponRepository;
     }
 
-    public ResponseEntity<Boolean> checkIfCouponIsValid(String couponCode) {
+    public ResponseEntity<CouponStatus> checkIfCouponIsValid(String couponCode) {
         couponCode = couponCode.trim().toUpperCase();
 
         //Kupon nem létezik
         if(!couponRepository.existsByCouponCode(couponCode)) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(false);
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(CouponStatus.NOT_FOUND);
         }
 
         Coupon coupon = couponRepository.findCouponByCouponCode(couponCode);
 
-        //Kupon létezik (használt vagy nem használt)
-        return ResponseEntity.ok(!coupon.isUsed());
+        //Kupon létezik, de lejárt.
+        if(coupon.isExpired()) {
+            return ResponseEntity.ok(CouponStatus.EXPIRED);
+        }
+
+        //Kupon létezik, de használt.
+        if(coupon.isUsed()) {
+            return ResponseEntity.ok(CouponStatus.USED);
+        }
+
+        //Kupon aktív.
+        return ResponseEntity.ok(CouponStatus.VALID);
+    }
+
+    public void useCoupon(String couponCode, Integer userId) {
+        Coupon coupon = couponRepository
+                .findByCouponCode(couponCode.trim().toUpperCase())
+                .orElseThrow(
+                        () -> new RuntimeException("Kupon nem található!")
+                );
+
+        if(coupon.isExpired()) {
+            throw new IllegalStateException("A kupon lejárt!");
+        }
+
+        if(coupon.isUsed()) {
+            throw new IllegalStateException("A kupon már fel lett használva!");
+        }
+
+        coupon.setUsedByUserId(userId);
+
+        couponRepository.save(coupon);
     }
 
     public List<Coupon> getAllCoupons() {
@@ -51,6 +82,13 @@ public class CouponService {
                 coupon.setUsedByUserId(68);
             } else {
                 coupon.setUsedByUserId(null);
+            }
+
+            //Teszteléshez, hogy tudjuk tesztelni a lejárt kuponkódok beváltását!
+            if(i == 10) {
+                coupon.setExpirationDate(LocalDate.of(2020, 1, 1));
+            } else {
+                coupon.setExpirationDate(LocalDate.of(2030, 12, 31));
             }
 
             couponRepository.save(coupon);

@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:http/http.dart' as http;
 
 import 'package:flutter_application/coupon/coupon_status.dart';
@@ -9,29 +11,38 @@ class CouponService {
     couponCode = couponCode.trim().toUpperCase();
 
     final uri = Uri.parse(
-        '${Shared.baseUrl}/coupons/validate?couponCode=$couponCode'
+        '${Shared.baseUrl}/coupons/validate/$couponCode'
     );
 
     final response = await http.get(uri);
 
-    if(response.statusCode == 200 && response.body == "true") {
-      return CouponStatus.VALID;
+    if(response.statusCode == 200 || response.statusCode == 404) {
+      return CouponStatusParser.fromString(response.body);
     }
-    if(response.statusCode == 200 && response.body == "false") {
-      return CouponStatus.USED;
-    }
-    if(response.statusCode == 404) {
-      return CouponStatus.NOT_FOUND;
-    }
-    //TODO: Lejárt kuponok kezelése!
-    /*
-    if(response.statusCode == ???) {
-      return CouponStatus.EXPIRED;
-    }
-    */
 
     throw Exception(
       'Kupon ellenőrzés sikertelen! (${response.statusCode})',
     );
+  }
+
+  Future<void> useCoupon(String couponCode, int userId) async {
+    final uri = Uri.parse(
+        '${Shared.baseUrl}/coupons/$couponCode/use/$userId'
+    );
+
+    final response = await http.put(
+      uri,
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: jsonEncode({
+        "couponCode": couponCode,
+        "userId": userId,
+      }),
+    );
+
+    if(response.statusCode != 200) {
+      throw Exception('Kupon felhasználása sikertelen! (${response.statusCode})');
+    }
   }
 }

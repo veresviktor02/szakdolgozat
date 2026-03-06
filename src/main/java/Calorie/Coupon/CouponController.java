@@ -15,9 +15,19 @@ public class CouponController {
         this.couponService = couponService;
     }
 
-    @GetMapping("/validate")
-    public ResponseEntity<Boolean> checkIfCouponIsValid(@RequestParam String couponCode) {
+    @GetMapping("/validate/{couponCode}")
+    public ResponseEntity<CouponStatus> checkIfCouponIsValid(@PathVariable String couponCode) {
         return couponService.checkIfCouponIsValid(couponCode.trim().toUpperCase());
+    }
+
+    @PutMapping("{couponCode}/use/{userId}")
+    public ResponseEntity<String> useCoupon(
+            @PathVariable String couponCode,
+            @PathVariable Integer userId
+    ) {
+        couponService.useCoupon(couponCode, userId);
+
+        return ResponseEntity.ok("USED");
     }
 
     //Csak tesztelésre!
