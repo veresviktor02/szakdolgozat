@@ -394,63 +394,257 @@ class _HomePageState extends State<HomePage> {
         child: Column(
           children: [
             TableCalendar(
+              //Csak egy hetet lehet léptetni a naptárt.
+              //(Telefonon működik, gépen touchpaddel nem!)
+              pageAnimationEnabled: false,
+
+              availableGestures: AvailableGestures.horizontalSwipe,
+
+              //Visszavált a mai napra kattintás esetén!
+              onHeaderTapped: (focusedDay) {
+                setState(() {
+                  final today = DateTime.now();
+                  myCalendar.focusedDay = today;
+                  myCalendar.selectedDay = today;
+                });
+              },
+
               rowHeight: 75,
 
-            headerStyle: HeaderStyle(
-              titleCentered: true,
-              formatButtonVisible: false,
+              //TODO: headerVisible = false és saját headert csinálni?
+              //headerVisible: false,
 
-              //Hónapok testreszabása
-              titleTextFormatter: (date, locale) => MyCalendar.hungarianNameOfMonths(date),
-            ),
+              headerStyle: HeaderStyle(
+                titleCentered: true,
 
-              //Hét napjainak testreszabása
+                formatButtonVisible: false,
+
+                headerPadding: EdgeInsets.all(4.0,),
+
+                decoration: BoxDecoration(
+                  border: Border.all(color: Colors.blueAccent,),
+                ),
+
+                titleTextStyle: TextStyle(
+                  fontSize: 20,
+
+                  fontWeight: FontWeight.bold,
+                ),
+
+                //Hónapok testreszabása
+                titleTextFormatter: (date, locale) => MyCalendar.hungarianNameOfMonths(date),
+              ),
+
+              daysOfWeekVisible: false,
+
               calendarBuilders: CalendarBuilders(
-                dowBuilder: (context, day) => Center(child: Text(MyCalendar.hungarianNameOfDays(day),),),
+                //TODO: Refaktorálni -> ne kelljen megadni a stílust mindenhol!
+                defaultBuilder: (context, day, focusedDay) {
+                  return Container(
+                    width: 70,
+
+                    margin: const EdgeInsets.all(0.0),
+
+                    padding: const EdgeInsets.all(0.0),
+
+                    decoration: BoxDecoration(
+                      color: Colors.grey,
+
+                      border: Border.all(
+                        color: Colors.blueAccent,
+
+                        width: 2.5,
+                      ),
+
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+
+                      children: [
+                        Text(
+                          MyCalendar.hungarianNameOfDays(day),
+
+                          style: const TextStyle(
+                            fontSize: 24,
+
+                            color: Colors.black,
+                          ),
+                        ),
+
+                        Text(
+                          day.day.toString().padLeft(2, '0'),
+
+                          style: const TextStyle(
+                            fontSize: 24,
+
+                            fontWeight: FontWeight.bold,
+
+                            color: Colors.black,
+                          ),
+                        ),
+                      ],
+                    ),
+                  );
+                },
+
+                todayBuilder: (context, day, focusedDay) {
+                  return Container(
+                    width: 70,
+
+                    margin: const EdgeInsets.all(0.0),
+
+                    padding: const EdgeInsets.all(0.0),
+
+                    decoration: BoxDecoration(
+                      color: Colors.orange,
+
+                      border: Border.all(
+                        color: Colors.blueAccent,
+
+                        width: 2.5,
+                      ),
+
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+
+                      children: [
+                        Text(
+                          MyCalendar.hungarianNameOfDays(day),
+
+                          style: const TextStyle(
+                            fontSize: 24,
+
+                            color: Colors.black,
+                          ),
+                        ),
+
+                        Text(
+                          day.day.toString().padLeft(2, '0'),
+
+                          style: const TextStyle(
+                            fontSize: 24,
+
+                            fontWeight: FontWeight.bold,
+
+                            color: Colors.black,
+                          ),
+                        ),
+                      ],
+                    ),
+                  );
+                },
+
+                selectedBuilder: (context, day, focusedDay) {
+                  return Container(
+                    width: 70,
+
+                    margin: const EdgeInsets.all(0.0),
+
+                    padding: const EdgeInsets.all(0.0),
+
+                    decoration: BoxDecoration(
+                      color: Colors.green,
+
+                      border: Border.all(
+                        color: Colors.blueAccent,
+
+                        width: 2.5,
+                      ),
+
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+
+                      children: [
+                        Text(
+                          MyCalendar.hungarianNameOfDays(day),
+
+                          style: const TextStyle(
+                            fontSize: 24,
+
+                            color: Colors.black,
+                          ),
+                        ),
+
+                        Text(
+                          day.day.toString().padLeft(2, '0'),
+
+                          style: const TextStyle(
+                            fontSize: 24,
+
+                            fontWeight: FontWeight.bold,
+
+                            color: Colors.black,
+                          ),
+                        ),
+                      ],
+                    ),
+                  );
+                },
+                outsideBuilder: (context, day, focusedDay) {
+                  return Container(
+                    width: 70,
+
+                    margin: const EdgeInsets.all(0.0),
+
+                    padding: const EdgeInsets.all(0.0),
+
+                    decoration: BoxDecoration(
+                      color: Colors.grey,
+
+                      border: Border.all(
+                        color: Colors.blueAccent,
+
+                        width: 2.5,
+                      ),
+
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+
+                      children: [
+                        Text(
+                          MyCalendar.hungarianNameOfDays(day),
+
+                          style: const TextStyle(
+                            fontSize: 24,
+
+                            color: Colors.black,
+                          ),
+                        ),
+
+                        Text(
+                          day.day.toString().padLeft(2, '0'),
+
+                          style: const TextStyle(
+                            fontSize: 24,
+
+                            fontWeight: FontWeight.bold,
+
+                            color: Colors.black,
+                          ),
+                        ),
+                      ],
+                    ),
+                  );
+                },
               ),
 
               calendarStyle: CalendarStyle(
-                defaultDecoration: BoxDecoration(
-                  color: Colors.grey,
-
-                  border: Border.all(
-                    color: Colors.blueAccent,
-
-                    width: 2.5,
-                  ),
-
-                  borderRadius: BorderRadius.circular(8),
-                ),
-
-                defaultTextStyle: TextStyle(
-                  color: Colors.black,
-
-                  //fontWeight: FontWeight.bold,
-                ),
-
-                todayDecoration: BoxDecoration(
-                  color: Colors.orange,
-
-                  //Ha nincs itt is hozzáadva, akkor visszavált sima téglalappá!
-                  borderRadius: BorderRadius.circular(8),
-                ),
-
-                selectedDecoration: BoxDecoration(
-                  color: Colors.green,
-
-                  //Ha nincs itt is hozzáadva, akkor visszavált sima téglalappá!
-                  borderRadius: BorderRadius.circular(8),
-                ),
-
-                weekendDecoration: BoxDecoration(
-                  //Ide is hozzá kell adni, mert ha nem, akkor Assertion Failed
-                  borderRadius: BorderRadius.circular(8),
-                ),
-
                 outsideTextStyle: TextStyle(color: Colors.grey.shade400),
 
-                cellMargin: EdgeInsets.all(6.0),
-                cellPadding: EdgeInsets.all(10.0),
+                cellMargin: EdgeInsets.zero,
+
+                cellPadding: EdgeInsets.zero,
               ),
 
               firstDay: firstDay,
