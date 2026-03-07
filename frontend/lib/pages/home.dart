@@ -515,58 +515,7 @@ class _HomePageState extends State<HomePage> {
               ],
             ),
 
-            //TODO: Refaktorálni! + Küldésnél küldeni!
-            Align(
-              alignment: Alignment.centerLeft,
-
-              child: Padding(
-                padding: const EdgeInsets.all(5.0,),
-
-                child: SizedBox(
-                  width: 440,
-
-                  child: FutureBuilder<List<MeasurementUnit>>(
-                    future: measurementUnitFuture,
-
-                    builder: (context, measurementUnitSnapshot) {
-                      if(measurementUnitSnapshot.connectionState == ConnectionState.waiting) {
-                        return Shared.myCircularProgressIndicator();
-                      }
-                      else if(measurementUnitSnapshot.hasError) {
-                        return Text('Hiba történt: ${measurementUnitSnapshot.error}');
-                      }
-                      else if(!measurementUnitSnapshot.hasData || measurementUnitSnapshot.data!.isEmpty) {
-                        return const Text('Nincs elérhető mértékegység.');
-                      }
-
-                      final measurementUnits = measurementUnitSnapshot.data!;
-
-                      return DropdownButtonFormField<MeasurementUnit>(
-                        hint: const Text('Mértékegység'),
-
-                        decoration: const InputDecoration(
-                          border: OutlineInputBorder(),
-                        ),
-
-                        items: measurementUnits.map((measurementUnit) {
-                          return DropdownMenuItem<MeasurementUnit>(
-                            value: measurementUnit,
-
-                            child: Text(measurementUnit.measurementUnitName),
-                          );
-                        }).toList(),
-
-                        onChanged: (MeasurementUnit? value) {
-                          setState(() {
-                            selectedMeasurementUnit = value;
-                          });
-                        },
-                      );
-                    },
-                  ),
-                ),
-              ),
-            ),
+            _myDropdown(),
 
             const SizedBox(height: 10,),
 
@@ -601,6 +550,60 @@ class _HomePageState extends State<HomePage> {
 
           ],
         )
+    );
+  }
+
+  Widget _myDropdown() {
+    return Align(
+      alignment: Alignment.centerLeft,
+
+      child: Padding(
+        padding: const EdgeInsets.all(5.0,),
+
+        child: SizedBox(
+          width: 440,
+
+          child: FutureBuilder<List<MeasurementUnit>>(
+            future: measurementUnitFuture,
+
+            builder: (context, measurementUnitSnapshot) {
+              if(measurementUnitSnapshot.connectionState == ConnectionState.waiting) {
+                return Shared.myCircularProgressIndicator();
+              }
+              else if(measurementUnitSnapshot.hasError) {
+                return Text('Hiba történt: ${measurementUnitSnapshot.error}');
+              }
+              else if(!measurementUnitSnapshot.hasData || measurementUnitSnapshot.data!.isEmpty) {
+                return const Text('Nincs elérhető mértékegység.');
+              }
+
+              //final measurementUnits =
+
+              return DropdownButtonFormField<MeasurementUnit>(
+                hint: const Text('Mértékegység'),
+
+                decoration: const InputDecoration(
+                  border: OutlineInputBorder(),
+                ),
+
+                items: measurementUnitSnapshot.data!.map((measurementUnit) {
+                  return DropdownMenuItem<MeasurementUnit>(
+                    value: measurementUnit,
+
+                    child: Text(measurementUnit.measurementUnitName),
+                  );
+                }).toList(),
+
+                onChanged: (MeasurementUnit? value) {
+                  setState(() {
+                    selectedMeasurementUnit = value;
+                  });
+                },
+              );
+            },
+          ),
+        ),
+      ),
     );
   }
 
@@ -659,8 +662,6 @@ class _HomePageState extends State<HomePage> {
 
                             await dayService.removeFoodFromDay(day!.id, food.id);
 
-                            print('Étel sikeresen törölve! (ID: ${food.id}, Név: ${food.name})',);
-
                             await refreshPage();
                           },
 
@@ -673,7 +674,7 @@ class _HomePageState extends State<HomePage> {
                         Text('Zsír: ${food.kcalAndNutrients.fat}',),
                         Text('Szénhidrát: ${food.kcalAndNutrients.carb}',),
                         Text('Fehérje: ${food.kcalAndNutrients.protein}',),
-                        Text('Tömeg: ${food.foodWeight}',),
+                        Text('Tömeg: ${food.foodWeight} ${food.measurementUnit.measurementUnitName}',),
                       ],
                     ),
                   );
@@ -699,6 +700,16 @@ class _HomePageState extends State<HomePage> {
           Center(
             child: ElevatedButton(
               onPressed: () async {
+                if(selectedMeasurementUnit == null) {
+                  Shared.mySnackBar(
+                    'Nem választottál mértékegységet!',
+                    Colors.red,
+                    context,
+                  );
+
+                  return;
+                }
+
                 dayService.addFoodToDay(
                   myCalendar.daysMap[myCalendar.dayOnly(myCalendar.selectedDay)]!.id,
 
@@ -712,6 +723,8 @@ class _HomePageState extends State<HomePage> {
                   ),
 
                   double.parse(foodWeightController.text),
+
+                  selectedMeasurementUnit!
                 );
 
                 zeroAllTextFields();

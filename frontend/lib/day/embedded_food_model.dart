@@ -1,3 +1,5 @@
+import 'package:flutter_application/day/measurement_unit/measurement_unit_model.dart';
+
 import '../food/kcal_and_nutrients_model.dart';
 
 class EmbeddedFood {
@@ -5,12 +7,14 @@ class EmbeddedFood {
   final String name;
   final KcalAndNutrients kcalAndNutrients;
   final double foodWeight;
+  final MeasurementUnit measurementUnit;
 
   EmbeddedFood({
     required this.id,
     required this.name,
     required this.kcalAndNutrients,
     required this.foodWeight,
+    required this.measurementUnit,
   });
 
   @override
@@ -24,6 +28,7 @@ class EmbeddedFood {
       name: json['name'],
       kcalAndNutrients: KcalAndNutrients.fromJson(json['kcalAndNutrients']),
       foodWeight: (json['foodWeight'] as num).toDouble(),
+      measurementUnit: MeasurementUnit.fromJson(json['measurementUnit']),
     );
   }
 
@@ -33,6 +38,7 @@ class EmbeddedFood {
       'name': name,
       'kcalAndNutrients': kcalAndNutrients.toJson(),
       'foodWeight': foodWeight,
+      'measurementUnit': measurementUnit.toJson(),
     };
   }
 }

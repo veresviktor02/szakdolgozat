@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:flutter_application/day/measurement_unit/measurement_unit_model.dart';
 import 'package:http/http.dart' as http;
 
 import '../utils/shared.dart';
@@ -57,7 +58,8 @@ class DayService {
       int dayId,
       String name,
       KcalAndNutrients kcalAndNutrients,
-      double foodWeight
+      double foodWeight,
+      MeasurementUnit measurementUnit,
   ) async {
     final response = await http.post(
       Uri.parse(
@@ -70,12 +72,13 @@ class DayService {
         'name': name,
         'kcalAndNutrients': kcalAndNutrients.toJson(),
         'foodWeight': foodWeight,
+        'measurementUnit': measurementUnit.toJson(),
       }),
     );
 
     if(response.statusCode != 200) {
       throw Exception(
-        "Étel hozzáadása a naphoz (ID: ${dayId}) sikertelen! (Válasz: ${response.statusCode})",
+        "Étel hozzáadása a naphoz (ID: $dayId) sikertelen! (Válasz: ${response.statusCode})",
       );
     }
   }
