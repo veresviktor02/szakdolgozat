@@ -96,14 +96,14 @@ class _HomePageState extends State<HomePage> {
 
   @override
   void dispose() {
-    super.dispose();
-
     nameController.dispose();
     kcalController.dispose();
     fatController.dispose();
     carbController.dispose();
     proteinController.dispose();
     foodWeightController.dispose();
+
+    super.dispose();
   }
 
   Future<void> refreshPage() async {
@@ -438,205 +438,13 @@ class _HomePageState extends State<HomePage> {
               daysOfWeekVisible: false,
 
               calendarBuilders: CalendarBuilders(
-                //TODO: Refaktorálni -> ne kelljen megadni a stílust mindenhol!
-                defaultBuilder: (context, day, focusedDay) {
-                  return Container(
-                    width: 70,
+                defaultBuilder: (context, day, focusedDay) => MyCalendar.calendarDay(day, Colors.grey),
 
-                    margin: const EdgeInsets.all(0.0),
+                todayBuilder: (context, day, focusedDay) => MyCalendar.calendarDay(day, Colors.orange),
 
-                    padding: const EdgeInsets.all(0.0),
+                selectedBuilder: (context, day, focusedDay)  => MyCalendar.calendarDay(day, Colors.green),
 
-                    decoration: BoxDecoration(
-                      color: Colors.grey,
-
-                      border: Border.all(
-                        color: Colors.blueAccent,
-
-                        width: 2.5,
-                      ),
-
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-
-                      children: [
-                        Text(
-                          MyCalendar.hungarianNameOfDays(day),
-
-                          style: const TextStyle(
-                            fontSize: 24,
-
-                            color: Colors.black,
-                          ),
-                        ),
-
-                        Text(
-                          day.day.toString().padLeft(2, '0'),
-
-                          style: const TextStyle(
-                            fontSize: 24,
-
-                            fontWeight: FontWeight.bold,
-
-                            color: Colors.black,
-                          ),
-                        ),
-                      ],
-                    ),
-                  );
-                },
-
-                todayBuilder: (context, day, focusedDay) {
-                  return Container(
-                    width: 70,
-
-                    margin: const EdgeInsets.all(0.0),
-
-                    padding: const EdgeInsets.all(0.0),
-
-                    decoration: BoxDecoration(
-                      color: Colors.orange,
-
-                      border: Border.all(
-                        color: Colors.blueAccent,
-
-                        width: 2.5,
-                      ),
-
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-
-                      children: [
-                        Text(
-                          MyCalendar.hungarianNameOfDays(day),
-
-                          style: const TextStyle(
-                            fontSize: 24,
-
-                            color: Colors.black,
-                          ),
-                        ),
-
-                        Text(
-                          day.day.toString().padLeft(2, '0'),
-
-                          style: const TextStyle(
-                            fontSize: 24,
-
-                            fontWeight: FontWeight.bold,
-
-                            color: Colors.black,
-                          ),
-                        ),
-                      ],
-                    ),
-                  );
-                },
-
-                selectedBuilder: (context, day, focusedDay) {
-                  return Container(
-                    width: 70,
-
-                    margin: const EdgeInsets.all(0.0),
-
-                    padding: const EdgeInsets.all(0.0),
-
-                    decoration: BoxDecoration(
-                      color: Colors.green,
-
-                      border: Border.all(
-                        color: Colors.blueAccent,
-
-                        width: 2.5,
-                      ),
-
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-
-                      children: [
-                        Text(
-                          MyCalendar.hungarianNameOfDays(day),
-
-                          style: const TextStyle(
-                            fontSize: 24,
-
-                            color: Colors.black,
-                          ),
-                        ),
-
-                        Text(
-                          day.day.toString().padLeft(2, '0'),
-
-                          style: const TextStyle(
-                            fontSize: 24,
-
-                            fontWeight: FontWeight.bold,
-
-                            color: Colors.black,
-                          ),
-                        ),
-                      ],
-                    ),
-                  );
-                },
-                outsideBuilder: (context, day, focusedDay) {
-                  return Container(
-                    width: 70,
-
-                    margin: const EdgeInsets.all(0.0),
-
-                    padding: const EdgeInsets.all(0.0),
-
-                    decoration: BoxDecoration(
-                      color: Colors.grey,
-
-                      border: Border.all(
-                        color: Colors.blueAccent,
-
-                        width: 2.5,
-                      ),
-
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-
-                      children: [
-                        Text(
-                          MyCalendar.hungarianNameOfDays(day),
-
-                          style: const TextStyle(
-                            fontSize: 24,
-
-                            color: Colors.black,
-                          ),
-                        ),
-
-                        Text(
-                          day.day.toString().padLeft(2, '0'),
-
-                          style: const TextStyle(
-                            fontSize: 24,
-
-                            fontWeight: FontWeight.bold,
-
-                            color: Colors.black,
-                          ),
-                        ),
-                      ],
-                    ),
-                  );
-                },
+                outsideBuilder: (context, day, focusedDay)  => MyCalendar.calendarDay(day, Colors.grey),
               ),
 
               calendarStyle: CalendarStyle(
@@ -929,22 +737,7 @@ class _HomePageState extends State<HomePage> {
                   return;
                 }
 
-                dayService.addFoodToDay(
-                  myCalendar.daysMap[myCalendar.dayOnly(myCalendar.selectedDay)]!.id,
-
-                  nameController.text,
-
-                  KcalAndNutrients(
-                    kcal: double.parse(kcalController.text),
-                    fat: double.parse(fatController.text),
-                    carb: double.parse(carbController.text),
-                    protein: double.parse(proteinController.text),
-                  ),
-
-                  double.parse(foodWeightController.text),
-
-                  selectedMeasurementUnit!
-                );
+                addFoodToDay();
 
                 zeroAllTextFields();
 
@@ -962,6 +755,25 @@ class _HomePageState extends State<HomePage> {
           ),
         ],
       ),
+    );
+  }
+
+  Future<void> addFoodToDay() async {
+    await dayService.addFoodToDay(
+        myCalendar.daysMap[myCalendar.dayOnly(myCalendar.selectedDay)]!.id,
+
+        nameController.text,
+
+        KcalAndNutrients(
+          kcal: double.parse(kcalController.text),
+          fat: double.parse(fatController.text),
+          carb: double.parse(carbController.text),
+          protein: double.parse(proteinController.text),
+        ),
+
+        double.parse(foodWeightController.text),
+
+        selectedMeasurementUnit!
     );
   }
 
