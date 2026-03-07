@@ -15,12 +15,15 @@ public class EmbeddedFood {
     @Embedded
     private KcalAndNutrients kcalAndNutrients;
 
+    private double foodWeight;
+
     public EmbeddedFood() {}
 
-    public EmbeddedFood(Integer id, String name, KcalAndNutrients kcalAndNutrients) {
+    public EmbeddedFood(Integer id, String name, KcalAndNutrients kcalAndNutrients, double foodWeight) {
         this.id = id;
         this.name = name;
         this.kcalAndNutrients = kcalAndNutrients;
+        setFoodWeight(foodWeight);
     }
 
     public Integer getId() {
@@ -35,6 +38,10 @@ public class EmbeddedFood {
         return kcalAndNutrients;
     }
 
+    public double getFoodWeight() {
+        return foodWeight;
+    }
+
     public void setId(Integer id) {
         this.id = id;
     }
@@ -45,6 +52,15 @@ public class EmbeddedFood {
 
     public void setKcalAndNutrients(KcalAndNutrients kcalAndNutrients) {
         this.kcalAndNutrients = kcalAndNutrients;
+    }
+
+    public void setFoodWeight(double foodWeight) {
+        if(foodWeight < 0) {
+            throw new IllegalArgumentException(
+                    "Az étel súlya nem lehet negatív!"
+            );
+        }
+        this.foodWeight = foodWeight;
     }
 
     @Override
@@ -61,9 +77,10 @@ public class EmbeddedFood {
 
     @Override
     public String toString() {
-        return "Food in day: " + '\n' +
-                "id = " + id + '\n' +
-                "name = " + name + '\n' +
-                kcalAndNutrients;
+        return "Étel a napban: " + '\n' +
+                "ID = " + id + '\n' +
+                "Név = " + name + '\n' +
+                "Tápanyag információ: " + kcalAndNutrients + '\n' +
+                "Tömeg: " + foodWeight;
     }
 }

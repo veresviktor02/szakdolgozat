@@ -1,16 +1,18 @@
 package Calorie.Day;
 
 import Calorie.Food.KcalAndNutrients;
+
 import jakarta.annotation.PostConstruct;
 import jakarta.transaction.Transactional;
+
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+
 import java.util.List;
 
 @Service
 public class DayService {
-
     @PostConstruct
     public void init() {
         createEmptyDays();
@@ -88,10 +90,29 @@ public class DayService {
 
         getDayById(dayId).getFoodList().forEach(
                 food -> {
-                    totalKcalAndNutrients.setKcal(totalKcalAndNutrients.getKcal() + food.getKcalAndNutrients().getKcal());
-                    totalKcalAndNutrients.setFat(totalKcalAndNutrients.getFat() + food.getKcalAndNutrients().getFat());
-                    totalKcalAndNutrients.setCarb(totalKcalAndNutrients.getCarb() + food.getKcalAndNutrients().getCarb());
-                    totalKcalAndNutrients.setProtein(totalKcalAndNutrients.getProtein() + food.getKcalAndNutrients().getProtein());
+                    totalKcalAndNutrients.setKcal(
+                            totalKcalAndNutrients.getKcal() //1.) Eddigi összeg.
+                                    + food.getKcalAndNutrients().getKcal() // 3.) Végül hozzáadjuk.
+                                    * food.getFoodWeight() / 100.0 //2.) Megszorozzuk a tömeggel az adatokat.
+                    );
+
+                    totalKcalAndNutrients.setFat(
+                            totalKcalAndNutrients.getFat()
+                                    + food.getKcalAndNutrients().getFat()
+                                    * food.getFoodWeight() / 100.0
+                    );
+
+                    totalKcalAndNutrients.setCarb(
+                            totalKcalAndNutrients.getCarb()
+                                    + food.getKcalAndNutrients().getCarb()
+                                    * food.getFoodWeight() / 100.0
+                    );
+
+                    totalKcalAndNutrients.setProtein(
+                            totalKcalAndNutrients.getProtein()
+                                    + food.getKcalAndNutrients().getProtein()
+                                    * food.getFoodWeight() / 100.0
+                    );
                 }
         );
 
