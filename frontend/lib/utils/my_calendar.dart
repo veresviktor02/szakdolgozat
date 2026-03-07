@@ -16,7 +16,7 @@ class MyCalendar {
     return DateTime(date.year, date.month, date.day);
   }
 
-  CalendarFormat calendarFormat = CalendarFormat.week;
+  static CalendarFormat calendarFormat = CalendarFormat.week;
 
   List<EmbeddedFood> get selectedFoods {
     return daysMap[dayOnly(selectedDay)]?.foodList ?? [];

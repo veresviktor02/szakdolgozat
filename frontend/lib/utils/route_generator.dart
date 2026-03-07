@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:flutter_application/pages/welcome.dart';
-import 'package:flutter_application/pages/home.dart';
+import 'package:flutter_application/pages/home/home.dart';
 import 'package:flutter_application/pages/second_page.dart';
 import 'package:flutter_application/pages/third_page.dart';
 import 'package:flutter_application/user/user_model.dart';

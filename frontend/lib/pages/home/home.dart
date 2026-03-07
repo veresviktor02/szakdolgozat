@@ -1,29 +1,30 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-import '../utils/shared.dart';
-import '../utils/my_calendar.dart';
+import '../../utils/shared.dart';
+import '../../utils/my_calendar.dart';
+
+import 'api_food_search.dart';
+import 'daily_target.dart';
 
 import 'package:flutter_svg/flutter_svg.dart';
 
 import 'package:table_calendar/table_calendar.dart';
 
-import 'package:percent_indicator/percent_indicator.dart';
+import '../../day/day_model.dart';
+import '../../day/day_service.dart';
 
-import '../day/day_model.dart';
-import '../day/day_service.dart';
+import '../../day/measurement_unit/measurement_unit_model.dart';
+import '../../day/measurement_unit/measurement_unit_service.dart';
 
-import 'package:flutter_application/day/measurement_unit/measurement_unit_model.dart';
-import 'package:flutter_application/day/measurement_unit/measurement_unit_service.dart';
+import '../../food/food_model.dart';
+import '../../food/food_service.dart';
+import '../../food/kcal_and_nutrients_model.dart';
 
-import '../food/food_model.dart';
-import '../food/food_service.dart';
-import '../food/kcal_and_nutrients_model.dart';
+import '../../user/user_model.dart';
 
-import '../user/user_model.dart';
-
-import '../API/api_service.dart';
-import '../API/api_food_model.dart';
+import '../../API/api_service.dart';
+import '../../API/api_food_model.dart';
 
 class HomePage extends StatefulWidget {
   final User user;
@@ -148,7 +149,10 @@ class _HomePageState extends State<HomePage> {
             crossAxisAlignment: CrossAxisAlignment.start,
           
             children: [
-              _dailyTarget(),
+              DailyTarget(
+                dailyTargetForSelectedDay: dailyTargetForSelectedDay(),
+                totalFuture: totalFuture,
+              ),
 
               _calendar(),
 
@@ -178,180 +182,13 @@ class _HomePageState extends State<HomePage> {
           
               const SizedBox(height: 20,),
 
-              _apiFoodSearch(),
+              ApiFoodSearch(apiService: apiService,),
 
               const SizedBox(height: 20,),
           
             ],
           ),
         ),
-      ),
-    );
-  }
-
-  Widget _apiFoodSearch() {
-    Future<void> searchFromApi() async {
-      final query = apiQueryController.text.trim();
-
-      if(query.isEmpty) {
-        Shared.mySnackBar(
-          'Üres a keresési mező!',
-          Colors.red,
-          context,
-        );
-
-        return;
-      }
-
-      setState(() {
-        apiLoading = true;
-
-        apiError = null;
-
-        apiFoodList = [];
-      });
-
-      try {
-        final response = await apiService.fetchNutritions(query);
-
-        setState(() {
-          apiFoodList = response.items;
-        });
-
-      } catch(error) {
-        setState(() {
-          apiError = error.toString();
-        });
-      } finally {
-        setState(() {
-          apiLoading = false;
-        });
-      }
-    }
-
-    String format(double value) => value.toStringAsFixed(1);
-
-    Widget foodCard(APIFood food) {
-      return Card(
-        elevation: 3,
-
-        margin: const EdgeInsets.symmetric(vertical: 8.0,),
-
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12.0,),),
-
-        child: Padding(
-          padding: const EdgeInsets.all(12.0,),
-
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-
-            children: [
-              Text(
-                food.name,
-
-                style: const TextStyle(
-                  fontSize: 16,
-
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-
-              const SizedBox(height: 10,),
-
-              Text('Calories: ${format(food.calories)} kcal'),
-              Text('Serving size: ${format(food.servingSizeG)} g'),
-              Text('Protein: ${format(food.proteinG)} g'),
-              Text('Fat: ${format(food.fatTotalG)} g'),
-              Text('Carbs: ${format(food.carbohydratesTotalG)} g'),
-            ],
-          ),
-        ),
-      );
-    }
-
-    return Container(
-      width: 600,
-
-      padding: const EdgeInsets.all(20.0,),
-
-      decoration: BoxDecoration(
-        border: Border.all(color: Colors.blueAccent,),
-      ),
-
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-
-        children: [
-          const Text(
-            'CalorieNinjas API ételkeresés',
-
-            style: TextStyle(
-              fontSize: 16,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-
-          const SizedBox(height: 10),
-
-          Row(
-            children: [
-              Expanded(
-                child: TextField(
-                  controller: apiQueryController,
-
-                  decoration: const InputDecoration(
-                    labelText: 'Írj be egy vagy több ételt (pl. "banana 100g")',
-
-                    border: OutlineInputBorder(),
-                  ),
-
-                  onSubmitted: (_) => apiLoading ? null : searchFromApi(),
-                ),
-              ),
-
-              const SizedBox(width: 10,),
-
-              ElevatedButton(
-                onPressed: apiLoading ? null : searchFromApi,
-
-                child: const Text('Keresés',),
-              ),
-            ],
-          ),
-
-          const SizedBox(height: 10,),
-
-          if(apiLoading)
-            Center(child: Shared.myCircularProgressIndicator(),),
-
-          if(!apiLoading && apiError != null)
-            Text(
-              'Hiba: $apiError',
-
-              style: const TextStyle(color: Colors.red,),
-            ),
-
-          if(!apiLoading && apiError == null && apiFoodList.isEmpty)
-            const Text(
-              'Nincs találat!',
-
-              style: TextStyle(fontSize: 16,),
-            ),
-
-          if(apiFoodList.isNotEmpty) ...[
-            const SizedBox(height: 10,),
-
-            ListView.builder(
-              shrinkWrap: true,
-
-              physics: const NeverScrollableScrollPhysics(),
-
-              itemCount: apiFoodList.length,
-
-              itemBuilder: (context, index) => foodCard(apiFoodList[index]),
-            ),
-          ],
-        ],
       ),
     );
   }
@@ -475,7 +312,7 @@ class _HomePageState extends State<HomePage> {
                 refreshPage();
               },
 
-              calendarFormat: myCalendar.calendarFormat,
+              calendarFormat: MyCalendar.calendarFormat,
             ),
 
             _dayDetails(),
@@ -833,43 +670,6 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  Center _dailyTarget() {
-    return Center(
-      child: Container(
-        width: 500,
-        height: 500,
-
-        decoration: BoxDecoration(
-          border: Border.all(color: Colors.blueAccent,),
-        ),
-
-        child: Column(
-          children: [
-            Text(
-              'Napi cél:',
-
-              style: TextStyle(
-                fontSize: 18,
-              ),
-            ),
-
-            const SizedBox(height: 10,),
-
-            Text('${dailyTargetForSelectedDay().kcal} Kcal',),
-            Text('${dailyTargetForSelectedDay().fat} g Zsír',),
-            Text('${dailyTargetForSelectedDay().carb} g Szénhidrát',),
-            Text('${dailyTargetForSelectedDay().protein} g Fehérje',),
-
-            const SizedBox(height: 10,),
-
-            _circularPercentIndicator(),
-
-          ],
-        ),
-      ),
-    );
-  }
-
   KcalAndNutrients dailyTargetForSelectedDay() {
     switch(myCalendar.selectedDay.weekday) {
       case DateTime.monday:
@@ -886,99 +686,6 @@ class _HomePageState extends State<HomePage> {
         return user.dailyTarget[5];
     }
     return user.dailyTarget[6];
-  }
-
-  Widget _circularPercentIndicator() {
-    return FutureBuilder<KcalAndNutrients>(
-      future: totalFuture,
-
-      builder: (context, totalSnapshot) {
-        if(totalFuture == null || totalSnapshot.connectionState == ConnectionState.waiting) {
-          //Ideiglenes CircularPercentIndicator, amíg betölt / értéket kap a totalFuture!
-          return CircularPercentIndicator(
-            radius: 100,
-            lineWidth: 15,
-            percent: 0,
-
-            backgroundColor: Colors.grey.shade300,
-          );
-        }
-        else if(totalSnapshot.hasError) {
-          return Text('Hiba: ${totalSnapshot.error}',);
-        }
-        else if(!totalSnapshot.hasData) {
-          return const Text('Nincs adat.',);
-        }
-
-        return CircularPercentIndicator(
-          //Enélkül nem az animationDuration alatt rajzolná ki a kört, hanem egyből!
-          key: const ValueKey('kcal_indicator'),
-
-          radius: 100,
-          lineWidth: 15,
-          percent: (totalSnapshot.data!.kcal / dailyTargetForSelectedDay().kcal).clamp(0.0, 1.0),
-
-          animation: true,
-          //1000 = 1 sec
-          animationDuration: 800,
-
-          backgroundColor: Colors.grey.shade300,
-          progressColor: progressColor(totalSnapshot),
-
-          circularStrokeCap: CircularStrokeCap.round,
-
-          center: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-
-            children: [
-              Text(
-                totalSnapshot.data!.kcal.toString(),
-
-                style: const TextStyle(
-                  fontSize: 28,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-
-              const Text('Kcal',),
-
-              Text(
-                '${(
-                    (totalSnapshot.data!.kcal / dailyTargetForSelectedDay().kcal) * 100
-                  ).toStringAsFixed(1)} %',
-                style: TextStyle(
-                    color: progressColor(totalSnapshot),
-                ),
-              ),
-
-              Text(
-                '${totalSnapshot.data!.kcal - dailyTargetForSelectedDay().kcal}',
-                style: TextStyle(
-                  color: progressColor(totalSnapshot),
-                ),
-              ),
-            ],
-          ),
-        );
-      },
-    );
-  }
-
-  Color progressColor(AsyncSnapshot<KcalAndNutrients> totalSnapshot) {
-    //A célon belül van a felhasználó.
-    if(totalSnapshot.data!.kcal <= dailyTargetForSelectedDay().kcal) {
-      return Colors.green;
-    }
-    //20%-os túllépés.
-    else if(totalSnapshot.data!.kcal <= dailyTargetForSelectedDay().kcal * 1.2) {
-      return Colors.yellowAccent;
-    }
-    //40%-os túllépés
-    else if(totalSnapshot.data!.kcal <= dailyTargetForSelectedDay().kcal * 1.4) {
-      return Colors.orange;
-    }
-    //Több, mint 40%-os túllépés
-    return Colors.red;
   }
 
   void zeroAllTextFields() {
@@ -1263,8 +970,6 @@ Column _dayColumn(AsyncSnapshot<List<Day>> daySnapshot) {
 ElevatedButton _navigateToSecondPage(BuildContext context) {
   return ElevatedButton(
       onPressed: () {
-        print('Gomb lenyomva! (2. oldal gombja)');
-
         Navigator.of(context).pushNamed(
           '/second',
           arguments: 'Hello',
@@ -1279,8 +984,6 @@ ElevatedButton _navigateToSecondPage(BuildContext context) {
 ElevatedButton _navigateToThirdPage(BuildContext context) {
   return ElevatedButton(
       onPressed: () {
-        print('Gomb lenyomva! (3. oldal gombja)',);
-
         Navigator.of(context).pushNamed(
           '/third',
         );
