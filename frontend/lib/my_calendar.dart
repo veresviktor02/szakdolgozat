@@ -2,6 +2,7 @@ import 'package:table_calendar/table_calendar.dart';
 
 import 'day/day_model.dart';
 
+import 'day/embedded_food_model.dart';
 import 'food/food_model.dart';
 
 class MyCalendar {
@@ -16,7 +17,7 @@ class MyCalendar {
 
   CalendarFormat calendarFormat = CalendarFormat.week;
 
-  List<Food> get selectedFoods {
+  List<EmbeddedFood> get selectedFoods {
     return daysMap[dayOnly(selectedDay)]?.foodList ?? [];
   }
 

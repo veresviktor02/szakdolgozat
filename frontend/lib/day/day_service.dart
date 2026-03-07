@@ -1,13 +1,12 @@
-import 'package:flutter_application/day/day_model.dart';
-
-import 'package:flutter_application/food/food_model.dart';
-import 'package:flutter_application/food/kcal_and_nutrients_model.dart';
-
-import '../shared.dart';
+import 'dart:convert';
 
 import 'package:http/http.dart' as http;
 
-import 'dart:convert';
+import '../shared.dart';
+
+import 'package:flutter_application/day/day_model.dart';
+
+import 'package:flutter_application/food/kcal_and_nutrients_model.dart';
 
 class DayService {
   Future<List<Day>> fetchDays() async {
@@ -54,7 +53,12 @@ class DayService {
     throw Exception("Kcal és tápanyagok lekérése sikertelen! (Válasz: ${response.statusCode})");
   }
 
-  Future<void> addFoodToDay(int dayId, String name, KcalAndNutrients kcalAndNutrients) async {
+  Future<void> addFoodToDay(
+      int dayId,
+      String name,
+      KcalAndNutrients kcalAndNutrients,
+      double foodWeight
+  ) async {
     final response = await http.post(
       Uri.parse(
         '${Shared.baseUrl}/days/$dayId',
@@ -65,15 +69,14 @@ class DayService {
       body: jsonEncode({
         'name': name,
         'kcalAndNutrients': kcalAndNutrients.toJson(),
+        'foodWeight': foodWeight,
       }),
     );
 
-    if(response.statusCode == 200) {
-      //TODO
-    }
-
-    throw Exception(
+    if(response.statusCode != 200) {
+      throw Exception(
         "Étel hozzáadása a naphoz (ID: ${dayId}) sikertelen! (Válasz: ${response.statusCode})",
-    );
+      );
+    }
   }
 }

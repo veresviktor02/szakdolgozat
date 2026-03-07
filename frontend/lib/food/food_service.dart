@@ -17,8 +17,6 @@ class FoodService {
       },
     );
 
-    print(response.body);
-
     if(response.statusCode == 200) {
       final List<dynamic> jsonList = json.decode(response.body);
 

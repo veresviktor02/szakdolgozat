@@ -60,6 +60,7 @@ class _HomePageState extends State<HomePage> {
   final fatController = TextEditingController();
   final carbController = TextEditingController();
   final proteinController = TextEditingController();
+  final foodWeightController = TextEditingController();
   //
 
   //API
@@ -92,6 +93,7 @@ class _HomePageState extends State<HomePage> {
     fatController.dispose();
     carbController.dispose();
     proteinController.dispose();
+    foodWeightController.dispose();
   }
 
   Future<void> refreshPage() async {
@@ -474,7 +476,15 @@ class _HomePageState extends State<HomePage> {
           children: [
             Row(
               children: [
-                const Text('Add meg a bevinni kívánt adatokat!',),
+                const Text(
+                  'Add meg a bevinni kívánt adatokat!',
+
+                  style: TextStyle(
+                    fontSize: 17,
+
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
               ],
             ),
 
@@ -486,26 +496,39 @@ class _HomePageState extends State<HomePage> {
               mainAxisAlignment: MainAxisAlignment.start,
 
               children: [
-                _textFieldColumn('Kcal', kcalController), //TODO: Más legyen ez a mező (style)!!!
-                _textFieldColumn('Fat', fatController),
-                _textFieldColumn('Carb', carbController),
-                _textFieldColumn('Protein', proteinController),
+                _textFieldColumn('Kcal', kcalController),
+                _textFieldColumn('Zsír', fatController),
+                _textFieldColumn('Szénhidrát', carbController),
+                _textFieldColumn('Fehérje', proteinController),
+                _textFieldColumn('Tömeg', foodWeightController),
               ],
             ),
 
             Container(
               alignment: Alignment.centerLeft,
 
-              child: ElevatedButton(
-                onPressed: () {
-                  sendFood();
-                  refreshPage();
-                },
-                style: ButtonStyle(
-                  //TODO: style
-                ),
+              child: Column(
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.all(10.0,),
 
-                child: const Text('Kattints ide a küldéshez!',),
+                    child: ElevatedButton(
+                      onPressed: () {
+                        sendFood();
+                        refreshPage();
+                      },
+                      style: ButtonStyle(
+                        //TODO: style
+                      ),
+
+                      child: const Text('Add hozzá az ételeidhez!',),
+                    ),
+                  ),
+
+                  //TODO
+
+                  _foodSender(),
+                ],
               ),
             ),
 
@@ -556,6 +579,7 @@ class _HomePageState extends State<HomePage> {
                   return Card(
                     color: Colors.blue,
                     shadowColor: Colors.greenAccent,
+
                     elevation: 8,
 
                     child: Column(
@@ -582,6 +606,7 @@ class _HomePageState extends State<HomePage> {
                         Text('Zsír: ${food.kcalAndNutrients.fat}',),
                         Text('Szénhidrát: ${food.kcalAndNutrients.carb}',),
                         Text('Fehérje: ${food.kcalAndNutrients.protein}',),
+                        Text('Tömeg: ${food.foodWeight}',),
                       ],
                     ),
                   );
@@ -618,6 +643,8 @@ class _HomePageState extends State<HomePage> {
                     carb: double.parse(carbController.text),
                     protein: double.parse(proteinController.text),
                   ),
+
+                  double.parse(foodWeightController.text),
                 );
 
                 await refreshPage();
@@ -846,23 +873,34 @@ Container _nameTextField(TextEditingController nameController) {
   return Container(
     alignment: Alignment.topLeft,
 
+    padding: const EdgeInsets.all(5.0,),
+
     child: SizedBox(
-      width: 400,
+      //5 TextField alatta: 5x80-as szélesség + 5x8 (2x5 - 2 széle!) padding!
+      width: 440,
 
-      child: TextField(
-        controller: nameController,
+      child: Container(
+        decoration: BoxDecoration(
+          border: Border.all(color: Colors.blueAccent,),
+        ),
 
-        decoration: InputDecoration(
-          filled: true,
-          fillColor: Colors.white,
+        child: TextField(
+          controller: nameController,
 
-          contentPadding: const EdgeInsets.all(15.0,),
+          decoration: InputDecoration(
+            filled: true,
 
-          hintText: 'Étel neve:',
+            fillColor: Colors.white,
 
-          hintStyle: const TextStyle(
-            color: Color(0xffDDDADA),
-            fontSize: 14,
+            contentPadding: const EdgeInsets.all(15.0,),
+
+            labelText: 'Étel neve:',
+
+            hintStyle: const TextStyle(
+              color: Color(0xffDDDADA,),
+
+              fontSize: 13,
+            ),
           ),
         ),
       ),
@@ -870,53 +908,57 @@ Container _nameTextField(TextEditingController nameController) {
   );
 }
 
-Column _textFieldColumn(String textData, TextEditingController controller) {
-  return Column(
-    children: [
-      SizedBox(
-        width: 60, //Ugyanannyi, mint alatta a TextField körüli SizedBox-é!!!
+Widget _textFieldColumn(String textData, TextEditingController controller) {
+  return Padding(
+    padding: const EdgeInsets.all(5.0,),
 
-        child: Text(
-          textData,
-          textAlign: TextAlign.center,
-        ),
+    child: Column(
+      children: [
+        SizedBox(
+          width: 80, //Ugyanannyi, mint alatta a TextField körüli SizedBox-é!!!
 
-      ),
-
-      const SizedBox(height: 5,),
-
-      SizedBox(
-        width: 60,
-        height: 100,
-
-        child: TextField(
-          controller: controller,
-
-          inputFormatters: [
-            //Csak számok!
-            FilteringTextInputFormatter.allow(RegExp(r'^\d*\.?\d*')),
-          ],
-
-          keyboardType: TextInputType.number,
-
-          decoration: InputDecoration(
-            filled: true,
-            fillColor: Colors.white,
-
-            contentPadding: const EdgeInsets.all(15.0,),
-
-            hintText: '0',
-
-            hintStyle: const TextStyle(
-              color: Color(0xffDDDADA),
-              fontSize: 14,
-            ),
+          child: Text(
+            textData,
+            textAlign: TextAlign.center,
           ),
 
         ),
 
-      ),
-    ],
+        const SizedBox(height: 5,),
+
+        SizedBox(
+          width: 80,
+          height: 100,
+
+          child: TextField(
+            controller: controller,
+
+            inputFormatters: [
+              //Csak számok!
+              FilteringTextInputFormatter.allow(RegExp(r'^\d*\.?\d*')),
+            ],
+
+            keyboardType: TextInputType.number,
+
+            decoration: InputDecoration(
+              filled: true,
+              fillColor: Colors.white,
+
+              contentPadding: const EdgeInsets.all(15.0,),
+
+              hintText: '0',
+
+              hintStyle: const TextStyle(
+                color: Color(0xffDDDADA),
+                fontSize: 14,
+              ),
+            ),
+
+          ),
+
+        ),
+      ],
+    ),
   );
 }
 
