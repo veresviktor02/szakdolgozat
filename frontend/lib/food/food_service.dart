@@ -2,7 +2,7 @@ import 'package:http/http.dart' as http;
 
 import 'dart:convert';
 
-import '../shared.dart';
+import '../utils/shared.dart';
 
 import 'food_model.dart';
 

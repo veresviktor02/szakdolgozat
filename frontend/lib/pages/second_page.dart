@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../shared.dart';
+import '../utils/shared.dart';
 
 class SecondPage extends StatefulWidget {
   //Ezt adta át az előző oldal!

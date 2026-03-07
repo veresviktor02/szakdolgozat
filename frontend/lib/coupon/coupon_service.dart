@@ -4,7 +4,7 @@ import 'package:http/http.dart' as http;
 
 import 'package:flutter_application/coupon/coupon_status.dart';
 
-import '../shared.dart';
+import '../utils/shared.dart';
 
 class CouponService {
   Future<CouponStatus> validateCoupon(String couponCode) async {

@@ -6,9 +6,8 @@ import 'package:flutter_application/food/kcal_and_nutrients_model.dart';
 import '../coupon/coupon_service.dart';
 import '../coupon/coupon_status.dart';
 
-import '../my_calendar.dart';
-
-import '../shared.dart';
+import '../utils/my_calendar.dart';
+import '../utils/shared.dart';
 
 import '../user/user_model.dart';
 import '../user/user_service.dart';

@@ -3,7 +3,7 @@ import 'package:flutter_application/food/kcal_and_nutrients_model.dart';
 import 'package:flutter_application/user/user_model.dart';
 import 'package:flutter_application/user/user_type.dart';
 
-import '../shared.dart';
+import '../utils/shared.dart';
 
 import 'package:http/http.dart' as http;
 

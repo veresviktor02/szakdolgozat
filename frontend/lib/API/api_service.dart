@@ -2,7 +2,7 @@ import 'dart:convert';
 
 import 'package:http/http.dart' as http;
 
-import '../shared.dart';
+import '../utils/shared.dart';
 
 import 'nutrition_response.dart';
 

@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_application/shared.dart';
+
+import '../utils/shared.dart';
+import '../utils/my_calendar.dart';
 
 import 'package:flutter_svg/flutter_svg.dart';
 
@@ -19,8 +21,6 @@ import '../user/user_model.dart';
 
 import '../API/api_service.dart';
 import '../API/api_food_model.dart';
-
-import '../my_calendar.dart';
 
 class HomePage extends StatefulWidget {
   final User user;
