@@ -394,13 +394,14 @@ class _HomePageState extends State<HomePage> {
         child: Column(
           children: [
             TableCalendar(
+              rowHeight: 75,
+
             headerStyle: HeaderStyle(
               titleCentered: true,
               formatButtonVisible: false,
 
               //Hónapok testreszabása
               titleTextFormatter: (date, locale) => MyCalendar.hungarianNameOfMonths(date),
-
             ),
 
               //Hét napjainak testreszabása
@@ -409,19 +410,47 @@ class _HomePageState extends State<HomePage> {
               ),
 
               calendarStyle: CalendarStyle(
+                defaultDecoration: BoxDecoration(
+                  color: Colors.grey,
+
+                  border: Border.all(
+                    color: Colors.blueAccent,
+
+                    width: 2.5,
+                  ),
+
+                  borderRadius: BorderRadius.circular(8),
+                ),
+
+                defaultTextStyle: TextStyle(
+                  color: Colors.black,
+
+                  //fontWeight: FontWeight.bold,
+                ),
+
                 todayDecoration: BoxDecoration(
                   color: Colors.orange,
-                  shape: BoxShape.circle,
+
+                  //Ha nincs itt is hozzáadva, akkor visszavált sima téglalappá!
+                  borderRadius: BorderRadius.circular(8),
                 ),
 
                 selectedDecoration: BoxDecoration(
                   color: Colors.green,
-                  shape: BoxShape.circle,
+
+                  //Ha nincs itt is hozzáadva, akkor visszavált sima téglalappá!
+                  borderRadius: BorderRadius.circular(8),
                 ),
 
-                defaultTextStyle: const TextStyle(color: Colors.black),
+                weekendDecoration: BoxDecoration(
+                  //Ide is hozzá kell adni, mert ha nem, akkor Assertion Failed
+                  borderRadius: BorderRadius.circular(8),
+                ),
 
                 outsideTextStyle: TextStyle(color: Colors.grey.shade400),
+
+                cellMargin: EdgeInsets.all(6.0),
+                cellPadding: EdgeInsets.all(10.0),
               ),
 
               firstDay: firstDay,
@@ -433,10 +462,6 @@ class _HomePageState extends State<HomePage> {
 
               selectedDayPredicate: (day) {
                 return isSameDay(myCalendar.selectedDay, day);
-              },
-
-              eventLoader: (day) {
-                return myCalendar.daysMap[myCalendar.dayOnly(day)]?.foodList ?? [];
               },
 
               onDaySelected: (selectedDay, focusedDay) {
