@@ -1,4 +1,14 @@
+###
+### 1 - gramm - 1
+### 2 - 100 gramm - 100
+### 3 - kilogramm - 1000
+### 4 - lbs - 453
+
 GET localhost:8080/days
+
+###
+
+GET localhost:8080/days/360/total
 
 ###
 
@@ -13,7 +23,97 @@ Content-Type: application/json
     "carb": 20.0,
     "protein": 1.0
   },
-  "foodWeight": 150.0
+  "foodWeight": 150.0,
+  "measurementUnit": {
+    "id": 1,
+    "measurementUnitName": "gramm",
+    "measurementUnitInGrams": 1
+  }
+}
+
+###
+
+POST localhost:8080/days/360
+Content-Type: application/json
+
+{
+  "name": "Banana in Day",
+  "kcalAndNutrients": {
+    "kcal": 100.0,
+    "fat": 1.0,
+    "carb": 20.0,
+    "protein": 1.0
+  },
+  "foodWeight": 1.5,
+  "measurementUnit": {
+    "id": 2,
+    "measurementUnitName": "100 gramm",
+    "measurementUnitInGrams": 100
+  }
+}
+
+###
+
+POST localhost:8080/days/360
+Content-Type: application/json
+
+{
+  "name": "Banana in Day",
+  "kcalAndNutrients": {
+    "kcal": 100.0,
+    "fat": 1.0,
+    "carb": 20.0,
+    "protein": 1.0
+  },
+  "foodWeight": 0.5,
+  "measurementUnit": {
+    "id": 3,
+    "measurementUnitName": "kilogramm",
+    "measurementUnitInGrams": 1000
+  }
+}
+
+###
+
+POST localhost:8080/days/360
+Content-Type: application/json
+
+{
+  "name": "Banana in Day",
+  "kcalAndNutrients": {
+    "kcal": 100.0,
+    "fat": 1.0,
+    "carb": 20.0,
+    "protein": 1.0
+  },
+  "foodWeight": 1.0,
+  "measurementUnit": {
+    "id": 4,
+    "measurementUnitName": "lbs",
+    "measurementUnitInGrams": 453
+  }
+}
+
+###
+
+###Itt csak az ID-t nézi a JPA, mindegy, ha rosszat írunk be utána!
+POST localhost:8080/days/360
+Content-Type: application/json
+
+{
+  "name": "Wrong Food",
+  "kcalAndNutrients": {
+    "kcal": 100.0,
+    "fat": 1.0,
+    "carb": 20.0,
+    "protein": 1.0
+  },
+  "foodWeight": 150.0,
+  "measurementUnit": {
+    "id": 1,
+    "measurementUnitName": "nem létezik",
+    "measurementUnitInGrams": 1
+  }
 }
 
 ###
@@ -32,7 +132,12 @@ Content-Type: application/json
         "carb": 1.0,
         "protein": 1.0
       },
-      "foodWeight": 100.0
+      "foodWeight": 100.0,
+      "measurementUnit": {
+        "id": 1,
+        "measurementUnitName": "gramm",
+        "measurementUnitInGrams": 1
+      }
     },
     {
       "name": "New Apple in day",
@@ -42,7 +147,12 @@ Content-Type: application/json
         "carb": 1.0,
         "protein": 1.0
       },
-      "foodWeight": 100.0
+      "foodWeight": 100.0,
+      "measurementUnit": {
+        "id": 1,
+        "measurementUnitName": "gramm",
+        "measurementUnitInGrams": 1
+      }
     }
   ]
 }
@@ -63,6 +173,12 @@ Content-Type: application/json
     "fat": 6.9,
     "carb": 6.7,
     "protein": 18.0
+  },
+  "foodWeight": 100,
+  "measurementUnit": {
+    "id": 1,
+    "measurementUnitName": "gramm",
+    "measurementUnitInGrams": 1
   }
 }
 

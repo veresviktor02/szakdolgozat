@@ -1,6 +1,9 @@
 package Calorie.Day;
 
+import Calorie.Day.MeasurementUnit.MeasurementUnit;
+
 import Calorie.Food.KcalAndNutrients;
+
 import jakarta.persistence.*;
 
 import java.util.Objects;
@@ -10,20 +13,33 @@ public class EmbeddedFood {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
+
     private String name;
 
     @Embedded
+    //Ez 100 grammonként értendő!
     private KcalAndNutrients kcalAndNutrients;
 
     private double foodWeight;
 
+    @ManyToOne
+    @JoinColumn(name = "measurement_unit_id")
+    private MeasurementUnit measurementUnit;
+
     public EmbeddedFood() {}
 
-    public EmbeddedFood(Integer id, String name, KcalAndNutrients kcalAndNutrients, double foodWeight) {
+    public EmbeddedFood(
+            Integer id,
+            String name,
+            KcalAndNutrients kcalAndNutrients,
+            double foodWeight,
+            MeasurementUnit measurementUnit
+    ) {
         this.id = id;
         this.name = name;
         this.kcalAndNutrients = kcalAndNutrients;
         setFoodWeight(foodWeight);
+        this.measurementUnit = measurementUnit;
     }
 
     public Integer getId() {
@@ -40,6 +56,10 @@ public class EmbeddedFood {
 
     public double getFoodWeight() {
         return foodWeight;
+    }
+
+    public MeasurementUnit getMeasurementUnit() {
+        return measurementUnit;
     }
 
     public void setId(Integer id) {
@@ -61,6 +81,10 @@ public class EmbeddedFood {
             );
         }
         this.foodWeight = foodWeight;
+    }
+
+    public void setMeasurementUnit(MeasurementUnit measurementUnit) {
+        this.measurementUnit = measurementUnit;
     }
 
     @Override

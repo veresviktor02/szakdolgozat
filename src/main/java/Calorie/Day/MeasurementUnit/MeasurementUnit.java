@@ -8,6 +8,7 @@ public class MeasurementUnit {
     @GeneratedValue
     private Integer id;
 
+    @Column(unique = true)
     //kg, g, 100g, lbs, ...
     private String measurementUnitName;
 

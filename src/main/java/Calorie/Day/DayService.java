@@ -3,6 +3,7 @@ package Calorie.Day;
 import Calorie.Food.KcalAndNutrients;
 
 import jakarta.annotation.PostConstruct;
+
 import jakarta.transaction.Transactional;
 
 import org.springframework.stereotype.Service;
@@ -28,14 +29,15 @@ public class DayService {
         return dayRepository.findAll();
     }
 
+    //Csak az init()-hez!
     public void insertDay(Day day) {
         dayRepository.save(day);
     }
 
     @Transactional
     public void updateDayById(Integer id, Day newDay) {
-        Day oldDay = dayRepository.findById(id).orElseThrow(
-                () -> new IllegalStateException(
+        Day oldDay = dayRepository.findById(id)
+                .orElseThrow(() -> new IllegalStateException(
                         "A frissíteni kívánt nap nem található! (ID: " + id + ')'
                 ));
 
@@ -57,8 +59,8 @@ public class DayService {
     @Transactional
     public void removeFoodFromDay(Integer dayId, Integer foodId) {
         //Megnézzük, hogy létezik-e a megadott nap.
-        Day day = dayRepository.findById(dayId).
-                orElseThrow(() -> new IllegalStateException(
+        Day day = dayRepository.findById(dayId)
+                .orElseThrow(() -> new IllegalStateException(
                         "A megadott ID nem található! " + dayId + ')'
                 ));
 
@@ -69,13 +71,12 @@ public class DayService {
 
         //Mentse el, vagy nem változik az adatbázis!
         dayRepository.save(day);
-
     }
 
     public void addFoodToDay(Integer dayId, EmbeddedFood food) {
         //Megnézzük, hogy létezik-e a megadott nap.
-        Day day = dayRepository.findById(dayId).
-                orElseThrow(() -> new IllegalStateException(
+        Day day = dayRepository.findById(dayId)
+                .orElseThrow(() -> new IllegalStateException(
                         "A megadott ID nem található! (ID: " + dayId + ')'
                 ));
 
@@ -91,27 +92,35 @@ public class DayService {
         getDayById(dayId).getFoodList().forEach(
                 food -> {
                     totalKcalAndNutrients.setKcal(
-                            totalKcalAndNutrients.getKcal() //1.) Eddigi összeg.
-                                    + food.getKcalAndNutrients().getKcal() // 3.) Végül hozzáadjuk.
-                                    * food.getFoodWeight() / 100.0 //2.) Megszorozzuk a tömeggel az adatokat.
+                            totalKcalAndNutrients.getKcal() //Eddigi összeg
+                                    + food.getKcalAndNutrients().getKcal() //Aktuális étel kcal
+                                    * food.getFoodWeight() //Tömeg szorozva mértékegységgel
+                                    * food.getMeasurementUnit().getMeasurementUnitInGrams()
+                                    / 100 //Ételek nutríciója 100 grammra vetítve lett megadva!
                     );
 
                     totalKcalAndNutrients.setFat(
                             totalKcalAndNutrients.getFat()
                                     + food.getKcalAndNutrients().getFat()
-                                    * food.getFoodWeight() / 100.0
+                                    * food.getFoodWeight()
+                                    * food.getMeasurementUnit().getMeasurementUnitInGrams()
+                                    / 100
                     );
 
                     totalKcalAndNutrients.setCarb(
                             totalKcalAndNutrients.getCarb()
                                     + food.getKcalAndNutrients().getCarb()
-                                    * food.getFoodWeight() / 100.0
+                                    * food.getFoodWeight()
+                                    * food.getMeasurementUnit().getMeasurementUnitInGrams()
+                                    / 100
                     );
 
                     totalKcalAndNutrients.setProtein(
                             totalKcalAndNutrients.getProtein()
                                     + food.getKcalAndNutrients().getProtein()
-                                    * food.getFoodWeight() / 100.0
+                                    * food.getFoodWeight()
+                                    * food.getMeasurementUnit().getMeasurementUnitInGrams()
+                                    / 100
                     );
                 }
         );
