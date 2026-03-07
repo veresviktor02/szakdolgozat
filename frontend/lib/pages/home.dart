@@ -513,9 +513,12 @@ class _HomePageState extends State<HomePage> {
                     padding: const EdgeInsets.all(10.0,),
 
                     child: ElevatedButton(
-                      onPressed: () {
-                        sendFood();
-                        refreshPage();
+                      onPressed: () async {
+                        await sendFood();
+
+                        zeroAllTextFields();
+
+                        await refreshPage();
                       },
                       style: ButtonStyle(
                         //TODO: style
@@ -524,8 +527,6 @@ class _HomePageState extends State<HomePage> {
                       child: const Text('Add hozzá az ételeidhez!',),
                     ),
                   ),
-
-                  //TODO
 
                   _foodSender(),
                 ],
@@ -646,6 +647,8 @@ class _HomePageState extends State<HomePage> {
 
                   double.parse(foodWeightController.text),
                 );
+
+                zeroAllTextFields();
 
                 await refreshPage();
               },
@@ -866,6 +869,16 @@ class _HomePageState extends State<HomePage> {
     }
     //Több, mint 40%-os túllépés
     return Colors.red;
+  }
+
+  void zeroAllTextFields() {
+    nameController.text = '';
+    kcalController.text = '';
+    fatController.text = '';
+    carbController.text = '';
+    proteinController.text = '';
+    foodWeightController.text = '';
+    apiQueryController.text = '';
   }
 }
 
