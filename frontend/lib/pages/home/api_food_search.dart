@@ -27,6 +27,8 @@ class ApiFoodSearchState extends State<ApiFoodSearch> {
 
   List<APIFood> apiFoodList = [];
 
+  bool startedSearching = false;
+
   @override
   void dispose() {
     apiQueryController.dispose();
@@ -157,7 +159,10 @@ class ApiFoodSearchState extends State<ApiFoodSearch> {
               const SizedBox(width: 10,),
 
               ElevatedButton(
-                onPressed: apiLoading ? null : searchFromApi,
+                onPressed: apiLoading ? null : () {
+                  searchFromApi();
+                  startedSearching = true;
+                },
 
                 child: const Text('Keresés',),
               ),
@@ -176,7 +181,11 @@ class ApiFoodSearchState extends State<ApiFoodSearch> {
               style: const TextStyle(color: Colors.red,),
             ),
 
-          if(!apiLoading && apiError == null && apiFoodList.isEmpty)
+          if(!apiLoading
+              && apiError == null
+              && apiFoodList.isEmpty
+              && startedSearching
+          )
             const Text(
               'Nincs találat!',
 
