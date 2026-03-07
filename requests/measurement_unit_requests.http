@@ -1,0 +1,50 @@
+GET localhost:8080/measurementUnits
+
+###
+
+GET localhost:8080/measurementUnits/100
+
+###
+
+POST localhost:8080/measurementUnits
+Content-Type: application/json
+
+{
+  "measurementUnitName" : "Fél kiló",
+  "measurementUnitInGrams": 500
+}
+
+###
+
+POST localhost:8080/measurementUnits
+Content-Type: application/json
+
+{
+  "measurementUnitName" : "Mínusz kiló",
+  "measurementUnitInGrams": -100
+}
+
+###
+
+PUT localhost:8080/measurementUnits/100
+Content-Type: application/json
+
+{
+  "measurementUnitName" : "Fél kiló",
+  "measurementUnitInGrams": 500
+}
+
+###
+
+PUT localhost:8080/measurementUnits/2
+Content-Type: application/json
+
+{
+  "measurementUnitName" : "Fél kiló fele",
+  "measurementUnitInGrams": 250
+}
+
+###
+
+###DELETE localhost:8080/measurementUnits/2
+
