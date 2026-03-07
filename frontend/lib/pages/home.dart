@@ -13,6 +13,9 @@ import 'package:percent_indicator/percent_indicator.dart';
 import '../day/day_model.dart';
 import '../day/day_service.dart';
 
+import 'package:flutter_application/day/measurement_unit/measurement_unit_model.dart';
+import 'package:flutter_application/day/measurement_unit/measurement_unit_service.dart';
+
 import '../food/food_model.dart';
 import '../food/food_service.dart';
 import '../food/kcal_and_nutrients_model.dart';
@@ -28,6 +31,7 @@ class HomePage extends StatefulWidget {
   //Függőségbefecskendezés: tesztekhez kell!
   final FoodService? foodService;
   final DayService? dayService;
+  final MeasurementUnitService? measurementUnitService;
 
   const HomePage({
     super.key,
@@ -36,6 +40,7 @@ class HomePage extends StatefulWidget {
 
     this.foodService,
     this.dayService,
+    this.measurementUnitService,
   });
 
   @override
@@ -45,12 +50,16 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   late final FoodService foodService;
   late final DayService dayService;
+  late final MeasurementUnitService measurementUnitService;
 
   final MyCalendar myCalendar = MyCalendar();
 
   late Future<List<Food>> foodFuture;
   late Future<List<Day>> dayFuture;
   Future<KcalAndNutrients>? totalFuture;
+  late Future<List<MeasurementUnit>> measurementUnitFuture;
+
+  MeasurementUnit? selectedMeasurementUnit;
 
   late final User user;
 
@@ -80,6 +89,7 @@ class _HomePageState extends State<HomePage> {
     //Itt fecskendezzük be a függőséget.
     foodService = widget.foodService ?? FoodService();
     dayService = widget.dayService ?? DayService();
+    measurementUnitService = widget.measurementUnitService ?? MeasurementUnitService();
 
     refreshPage();
   }
@@ -101,6 +111,7 @@ class _HomePageState extends State<HomePage> {
     setState(() {
       foodFuture = foodService.fetchFoods();
       dayFuture = dayService.fetchDays();
+      measurementUnitFuture = measurementUnitService.fetchMeasurementUnits();
     });
 
     final days = await dayFuture;
@@ -463,7 +474,7 @@ class _HomePageState extends State<HomePage> {
   Container _dataSenderContainer() {
     return Container(
         width: 600,
-        height: 400,
+        height: 500,
 
         padding: const EdgeInsets.all(20.0,),
 
@@ -503,6 +514,61 @@ class _HomePageState extends State<HomePage> {
                 _textFieldColumn('Tömeg', foodWeightController),
               ],
             ),
+
+            //TODO: Refaktorálni! + Küldésnél küldeni!
+            Align(
+              alignment: Alignment.centerLeft,
+
+              child: Padding(
+                padding: const EdgeInsets.all(5.0,),
+
+                child: SizedBox(
+                  width: 440,
+
+                  child: FutureBuilder<List<MeasurementUnit>>(
+                    future: measurementUnitFuture,
+
+                    builder: (context, measurementUnitSnapshot) {
+                      if(measurementUnitSnapshot.connectionState == ConnectionState.waiting) {
+                        return Shared.myCircularProgressIndicator();
+                      }
+                      else if(measurementUnitSnapshot.hasError) {
+                        return Text('Hiba történt: ${measurementUnitSnapshot.error}');
+                      }
+                      else if(!measurementUnitSnapshot.hasData || measurementUnitSnapshot.data!.isEmpty) {
+                        return const Text('Nincs elérhető mértékegység.');
+                      }
+
+                      final measurementUnits = measurementUnitSnapshot.data!;
+
+                      return DropdownButtonFormField<MeasurementUnit>(
+                        hint: const Text('Mértékegység'),
+
+                        decoration: const InputDecoration(
+                          border: OutlineInputBorder(),
+                        ),
+
+                        items: measurementUnits.map((measurementUnit) {
+                          return DropdownMenuItem<MeasurementUnit>(
+                            value: measurementUnit,
+
+                            child: Text(measurementUnit.measurementUnitName),
+                          );
+                        }).toList(),
+
+                        onChanged: (MeasurementUnit? value) {
+                          setState(() {
+                            selectedMeasurementUnit = value;
+                          });
+                        },
+                      );
+                    },
+                  ),
+                ),
+              ),
+            ),
+
+            const SizedBox(height: 10,),
 
             Container(
               alignment: Alignment.centerLeft,
@@ -941,7 +1007,6 @@ Widget _textFieldColumn(String textData, TextEditingController controller) {
 
         SizedBox(
           width: 80,
-          height: 100,
 
           child: TextField(
             controller: controller,
