@@ -71,4 +71,30 @@ class UserService {
       );
     }
   }
+
+  Future<void> updateUserById(int userId, User user) async {
+    final response = await http.put(
+      Uri.parse('${Shared.baseUrl}/users/$userId'),
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: jsonEncode({
+        'name': user.name,
+        'height': user.height,
+        'weight': user.weight,
+        'userType': user.userType.name,
+        'differentDays': user.differentDays,
+        'dailyTarget': user.dailyTarget.map((target) => {
+          'kcal': target.kcal,
+          'fat': target.fat,
+          'carb': target.carb,
+          'protein': target.protein,
+        }).toList(),
+      }),
+    );
+
+    if(response.statusCode != 200) {
+      throw Exception('Nem sikerült frissíteni a felhasználót');
+    }
+  }
 }

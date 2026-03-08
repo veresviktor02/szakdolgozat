@@ -6,6 +6,7 @@ import '/pages/welcome.dart';
 import '/pages/home/home.dart';
 import '/pages/food_data_page.dart';
 import '/pages/third_page.dart';
+import '/pages/settings_page.dart';
 
 import 'shared.dart';
 
@@ -15,7 +16,7 @@ final GoRouter appRouter = GoRouter(
   initialLocation: '/',
 
   errorBuilder: (context, state) => Scaffold(
-    appBar: AppBar(title: const Text('Error')),
+    appBar: Shared.myAppBar('Error',),
 
     body: Center(
       child: Text(
@@ -58,6 +59,19 @@ final GoRouter appRouter = GoRouter(
     GoRoute(
       path: '/third',
       builder: (context, state) => const ThirdPage(),
+    ),
+
+    GoRoute(
+      path: '/settings/:userId',
+      builder: (context, state) {
+        final userId = int.tryParse(state.pathParameters['userId'] ?? '');
+
+        if(userId == null) {
+          return const _ErrorPage(message: 'Hiányzó adat!');
+        }
+
+        return SettingsPage(userId: userId);
+      }
     ),
   ],
 );
