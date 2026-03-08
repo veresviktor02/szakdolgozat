@@ -39,6 +39,20 @@ class FoodService {
       })
     );
 
-    print(response.body);
+    if(response.statusCode != 200) {
+      throw Exception('Étel küldése sikertelen!');
+    }
+  }
+
+  Future<void> deleteFood(int id) async {
+    final response = await http.delete(
+      Uri.parse(
+        '${Shared.baseUrl}/foods/$id',
+      ),
+    );
+
+    if(response.statusCode != 200 && response.statusCode != 204) {
+      throw Exception('Étel törlése sikertelen!');
+    }
   }
 }

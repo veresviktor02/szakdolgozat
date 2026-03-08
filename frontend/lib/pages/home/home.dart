@@ -13,7 +13,6 @@ import 'package:table_calendar/table_calendar.dart';
 
 import '../../day/day_model.dart';
 import '../../day/day_service.dart';
-
 import '../../day/measurement_unit/measurement_unit_model.dart';
 import '../../day/measurement_unit/measurement_unit_service.dart';
 
@@ -454,7 +453,22 @@ class _HomePageState extends State<HomePage> {
                   return DropdownMenuItem<MeasurementUnit>(
                     value: measurementUnit,
 
-                    child: Text(measurementUnit.measurementUnitName),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(measurementUnit.measurementUnitName),
+
+                        ElevatedButton(
+                          onPressed: () async {
+                            await measurementUnitService.deleteMeasurementUnit(measurementUnit.id);
+
+                            await refreshPage();
+                          },
+
+                          child: const Text('Törlés',),
+                        ),
+                      ],
+                    ),
                   );
                 }).toList(),
 
@@ -697,6 +711,105 @@ class _HomePageState extends State<HomePage> {
     foodWeightController.text = '';
     apiQueryController.text = '';
   }
+
+  Column _foodColumn(AsyncSnapshot<List<Food>> foodSnapshot) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+
+      children: foodSnapshot.data!.map(
+              (food) {
+            return SizedBox(
+              width: 200,
+              height: 200,
+
+              child: Card(
+                elevation: 3,
+                margin: const EdgeInsets.symmetric(vertical: 8.0,),
+
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12.0,),
+                ),
+
+                child: Padding(
+                  padding: const EdgeInsets.fromLTRB(0.0, 8.0, 0.0, 8.0,),
+
+                  child: Center(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+
+                      children: [
+                        Text(
+                          'Név: ${food.name}',
+
+                          style: const TextStyle(fontSize: 16),
+                        ),
+
+                        Text('ID: ${food.id}',),
+                        Text('Kcal: ${food.kcalAndNutrients.kcal} kcal',),
+                        Text('Zsír: ${food.kcalAndNutrients.fat} g',),
+                        Text('Szénhidrát: ${food.kcalAndNutrients.carb} g',),
+                        Text('Fehérje: ${food.kcalAndNutrients.protein} g',),
+
+                        const SizedBox(height: 10,),
+
+                        ElevatedButton(
+                          onPressed: () async {
+                            await foodService.deleteFood(food.id);
+
+                            await refreshPage();
+                          },
+
+                          child: const Text('Törlés',),
+                        ),
+                      ],
+
+                    ),
+                  ),
+                ),
+              ),
+            );
+          }).toList(),
+    );
+  }
+
+  Container _futureFoodBuilder(Future<List<Food>> foodFuture) {
+    return Container(
+      padding: const EdgeInsets.all(20.0,),
+
+      decoration: BoxDecoration(
+        border: Border.all(color: Colors.blueAccent),
+      ),
+
+      child: FutureBuilder<List<Food>>(
+        future: foodFuture,
+
+        builder: (context, foodSnapshot) {
+          //Várakozik a kapcsolatra
+          if(foodSnapshot.connectionState == ConnectionState.waiting) {
+            return Center(child: Shared.myCircularProgressIndicator());
+          }
+          //Hiba történt
+          else if(foodSnapshot.hasError) {
+            return Text(
+              'Hiba: ${foodSnapshot.error}',
+              style: const TextStyle(color: Colors.red),
+            );
+          }
+          //Nem üres a lista
+          else if(foodSnapshot.data!.isNotEmpty) {
+            return _foodColumn(foodSnapshot);
+          }
+
+          //Üres a lista
+          return const Text('Nincs adat.',);
+        },
+      ),
+    );
+  }
+
+  //////////////////////////////////////////////////////////////////////
+  ////////////////////Itt ér véget a _HomePageState!////////////////////
+  //////////////////////////////////////////////////////////////////////
 }
 
 Container _nameTextField(TextEditingController nameController) {
@@ -788,182 +901,6 @@ Widget _textFieldColumn(String textData, TextEditingController controller) {
         ),
       ],
     ),
-  );
-}
-
-Container _futureFoodBuilder(Future<List<Food>> foodFuture) {
-  return Container(
-    padding: const EdgeInsets.all(20.0,),
-
-    decoration: BoxDecoration(
-      border: Border.all(color: Colors.blueAccent),
-    ),
-
-    child: FutureBuilder<List<Food>>(
-      future: foodFuture,
-
-      builder: (context, foodSnapshot) {
-        //Várakozik a kapcsolatra
-        if(foodSnapshot.connectionState == ConnectionState.waiting) {
-          return Center(child: Shared.myCircularProgressIndicator());
-        }
-        //Hiba történt
-        else if(foodSnapshot.hasError) {
-          return Text(
-            'Hiba: ${foodSnapshot.error}',
-            style: const TextStyle(color: Colors.red),
-          );
-        }
-        //Nem üres a lista
-        else if(foodSnapshot.data!.isNotEmpty) {
-          return _foodColumn(foodSnapshot);
-        }
-
-        //Üres a lista
-        return const Text('Nincs adat.',);
-      },
-    ),
-  );
-}
-
-Column _foodColumn(AsyncSnapshot<List<Food>> foodSnapshot) {
-  return Column(
-    crossAxisAlignment: CrossAxisAlignment.start,
-
-    children: foodSnapshot.data!.map(
-            (food) {
-        return SizedBox(
-          width: 180,
-          height: 180,
-
-          child: Card(
-            elevation: 3,
-            margin: const EdgeInsets.symmetric(vertical: 8.0,),
-
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(12.0,),
-            ),
-
-            child: Padding(
-              padding: const EdgeInsets.all(16.0,),
-
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-
-                children: [
-                  Text(
-                    'Név: ${food.name}',
-                    style: const TextStyle(fontSize: 16),
-                  ),
-
-                  const SizedBox(height: 5,),
-
-                  Text('ID: ${food.id}',),
-                  Text('Kcal: ${food.kcalAndNutrients.kcal} kcal',),
-                  Text('Zsír: ${food.kcalAndNutrients.fat} g',),
-                  Text('Szénhidrát: ${food.kcalAndNutrients.carb} g',),
-                  Text('Fehérje: ${food.kcalAndNutrients.protein} g',),
-                ],
-
-              ),
-            ),
-          ),
-        );
-      }).toList(),
-  );
-}
-
-Container _futureDayBuilder(Future<List<Day>> dayFuture) {
-  return Container(
-    padding: const EdgeInsets.all(20.0,),
-
-    child: FutureBuilder<List<Day>>(
-      future: dayFuture,
-
-      builder: (context, daySnapshot) {
-        //Várakozik a kapcsolatra
-        if(daySnapshot.connectionState == ConnectionState.waiting) {
-          return Center(child: Shared.myCircularProgressIndicator());
-        }
-        //Hiba történt
-        else if(daySnapshot.hasError) {
-          return Text(
-            'Hiba: ${daySnapshot.error}',
-            style: const TextStyle(color: Colors.red),
-          );
-        }
-        //Nem üres a lista
-        else if(daySnapshot.data!.isNotEmpty) {
-          return _dayColumn(daySnapshot);
-        }
-
-        //Üres a lista
-        return const Text('Nincs adat.',);
-      },
-    ),
-  );
-}
-
-Column _dayColumn(AsyncSnapshot<List<Day>> daySnapshot) {
-  return Column(
-    crossAxisAlignment: CrossAxisAlignment.start,
-
-    children: daySnapshot.data!.map(
-            (day) {
-        return Card(
-          elevation: 3,
-
-          margin: const EdgeInsets.symmetric(vertical: 8.0,),
-
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(12),
-          ),
-
-          child: Padding(
-            padding: const EdgeInsets.all(16.0,),
-
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-
-              children: [
-                Text(
-                  style: const TextStyle(fontSize: 16,),
-
-                  //TODO: Egyszámjegyű hónapot és napot kétszámjegyűvé konvertálni!
-                  'Dátum: ${day.date.year}-${day.date.month}-${day.date.day}',
-                ),
-
-                const SizedBox(height: 5,),
-
-                const Text('Ételek:',),
-
-                ListView.builder(
-                  shrinkWrap: true,
-
-                  itemCount: day.foodList.length,
-
-                  itemBuilder: (context, index) {
-                    final food = day.foodList[index];
-
-                    return Column(
-                      //Itt bent elveszik a külső Column crossAxisAlignment-je!
-                      crossAxisAlignment: CrossAxisAlignment.start,
-
-                      children: [
-                        Text('Név: ${food.name}',),
-                        Text('Kcal: ${food.kcalAndNutrients.kcal}',),
-                        Text('Zsír: ${food.kcalAndNutrients.fat}',),
-                        Text('Szénhidrát: ${food.kcalAndNutrients.carb}',),
-                        Text('Fehérje: ${food.kcalAndNutrients.protein}',),
-                      ],
-                    );
-                  },
-                ),
-              ],
-            ),
-          ),
-        );
-      }).toList(),
   );
 }
 

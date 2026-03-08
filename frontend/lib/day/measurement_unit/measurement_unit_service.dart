@@ -4,7 +4,7 @@ import 'package:http/http.dart' as http;
 
 import '../../utils/shared.dart';
 
-import 'package:flutter_application/day/measurement_unit/measurement_unit_model.dart';
+import 'measurement_unit_model.dart';
 
 class MeasurementUnitService {
   Future<List<MeasurementUnit>> fetchMeasurementUnits() async {
@@ -42,7 +42,16 @@ class MeasurementUnitService {
     }
   }
 
-  Future<void> deleteMeasurementUnit() async {
-    //TODO
+  Future<void> deleteMeasurementUnit(int id) async {
+    final response = await http.delete(
+      Uri.parse(
+        '${Shared.baseUrl}/measurementUnits/$id',
+      ),
+    );
+
+    if(response.statusCode != 200 && response.statusCode != 204) {
+      print(response.body);
+      throw Exception('Mértékegység törlése sikertelen!');
+    }
   }
 }
