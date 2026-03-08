@@ -27,7 +27,9 @@ class User {
       name: json['name'],
       height: json['height'],
       weight: json['weight'],
-      userType: json['userType'],
+      userType: UserType.values.firstWhere(
+            (e) => e.name == json['userType'],
+      ),
       differentDays: json['differentDays'],
       dailyTarget: (json['dailyTarget'] as List<dynamic>)
           .map((item) => KcalAndNutrients.fromJson(item))
@@ -41,7 +43,7 @@ class User {
       'name': name,
       'height': height,
       'weight': weight,
-      'userType': userType,
+      'userType': userType.name,
       'differentDays': differentDays,
       'dailyTarget': dailyTarget,
     };

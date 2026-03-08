@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
+import 'package:go_router/go_router.dart';
+
+import '../../user/user_service.dart';
 import '../../utils/shared.dart';
 import '../../utils/my_calendar.dart';
 
@@ -26,7 +29,7 @@ import '../../API/api_service.dart';
 import '../../API/api_food_model.dart';
 
 class HomePage extends StatefulWidget {
-  final User user;
+  final int userId;
 
   //Függőségbefecskendezés: tesztekhez kell!
   final FoodService? foodService;
@@ -36,7 +39,7 @@ class HomePage extends StatefulWidget {
   const HomePage({
     super.key,
 
-    required this.user,
+    required this.userId,
 
     this.foodService,
     this.dayService,
@@ -48,6 +51,7 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  final UserService userService = UserService();
   late final FoodService foodService;
   late final DayService dayService;
   late final MeasurementUnitService measurementUnitService;
@@ -61,7 +65,11 @@ class _HomePageState extends State<HomePage> {
 
   MeasurementUnit? selectedMeasurementUnit;
 
-  late final User user;
+  //late final User user;
+
+  User? user;
+  bool isLoading = true;
+  String? errorMessage;
 
   //Beviteli mezők
   final nameController = TextEditingController();
@@ -84,7 +92,7 @@ class _HomePageState extends State<HomePage> {
   void initState() {
     super.initState();
 
-    user = widget.user;
+    _loadUser();
 
     //Itt fecskendezzük be a függőséget.
     foodService = widget.foodService ?? FoodService();
@@ -92,6 +100,22 @@ class _HomePageState extends State<HomePage> {
     measurementUnitService = widget.measurementUnitService ?? MeasurementUnitService();
 
     refreshPage();
+  }
+
+  Future<void> _loadUser() async {
+    try {
+      final loadedUser = await userService.getUserById(widget.userId);
+
+      setState(() {
+        user = loadedUser;
+        isLoading = false;
+      });
+    } catch (error) {
+      setState(() {
+        errorMessage = 'Nem sikerült betölteni a felhasználót: $error';
+        isLoading = false;
+      });
+    }
   }
 
   @override
@@ -137,6 +161,13 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
+    //Elkerüli a betöltés alatti hibát!
+    if(user == null) {
+      return Scaffold(
+        body: Text('',),
+      );
+    }
+
     return Scaffold(
       appBar: Shared.myAppBar('Kalóriaszámláló alkalmazás',),
 
@@ -170,10 +201,6 @@ class _HomePageState extends State<HomePage> {
               const SizedBox(height: 5,),
           
               _futureFoodBuilder(foodFuture),
-          
-              const SizedBox(height: 20,),
-          
-              //_futureDayBuilder(dayFuture), //Picit belassul tőle!
           
               const SizedBox(height: 20,),
           
@@ -687,19 +714,19 @@ class _HomePageState extends State<HomePage> {
   KcalAndNutrients dailyTargetForSelectedDay() {
     switch(myCalendar.selectedDay.weekday) {
       case DateTime.monday:
-        return user.dailyTarget[0];
+        return user!.dailyTarget[0];
       case DateTime.tuesday:
-        return user.dailyTarget[1];
+        return user!.dailyTarget[1];
       case DateTime.wednesday:
-        return user.dailyTarget[2];
+        return user!.dailyTarget[2];
       case DateTime.thursday:
-        return user.dailyTarget[3];
+        return user!.dailyTarget[3];
       case DateTime.friday:
-        return user.dailyTarget[4];
+        return user!.dailyTarget[4];
       case DateTime.saturday:
-        return user.dailyTarget[5];
+        return user!.dailyTarget[5];
     }
-    return user.dailyTarget[6];
+    return user!.dailyTarget[6];
   }
 
   void zeroAllTextFields() {
@@ -907,11 +934,8 @@ Widget _textFieldColumn(String textData, TextEditingController controller) {
 ElevatedButton _navigateToSecondPage(BuildContext context) {
   return ElevatedButton(
       onPressed: () {
-        Navigator.of(context).pushNamed(
-          '/second',
-          arguments: 'Hello',
-          //arguments: '12', -> Error oldal!
-        );
+        context.push('/second/Hello');
+        // context.push('/second/12'); -> would work too
       },
 
       child: const Text('2. oldal',),
@@ -921,9 +945,7 @@ ElevatedButton _navigateToSecondPage(BuildContext context) {
 ElevatedButton _navigateToThirdPage(BuildContext context) {
   return ElevatedButton(
       onPressed: () {
-        Navigator.of(context).pushNamed(
-          '/third',
-        );
+        context.push('/third');
       },
 
       child: const Text('3. oldal',),

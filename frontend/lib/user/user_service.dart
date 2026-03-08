@@ -28,6 +28,18 @@ class UserService {
     );
   }
 
+  Future<User> getUserById(int id) async {
+    final response = await http.get(
+      Uri.parse('${Shared.baseUrl}/users/$id'),
+    );
+
+    if (response.statusCode == 200) {
+      return User.fromJson(jsonDecode(response.body));
+    } else {
+      throw Exception('Hiba User lekérésekor (ID: $id).');
+    }
+  }
+
   Future<void> sendUser(
       String name,
       double height,

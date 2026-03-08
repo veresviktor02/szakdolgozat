@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
+import 'package:go_router/go_router.dart';
+
 import 'package:flutter_application/food/kcal_and_nutrients_model.dart';
 
 import '../coupon/coupon_service.dart';
@@ -65,6 +67,26 @@ class _WelcomePageState extends State<WelcomePage> {
         4, (_) => 0,
       ),
     );
+
+    loadDefaultUser();
+  }
+
+  //Vele tudunk bejelentkezni az adatok kitöltése nélkül!
+  Future<void> loadDefaultUser() async {
+    try {
+      final user = await userService.getUserById(1);
+
+      if(!mounted) {
+        return;
+      }
+
+      setState(() {
+        tempUser = user;
+      });
+    } catch (e, stackTrace) {
+      print('User betöltési hiba: $e');
+      print(stackTrace);
+    }
   }
 
   @override
@@ -110,9 +132,9 @@ class _WelcomePageState extends State<WelcomePage> {
 
               _saveUserButton(),
 
-              _navigateToHomePage(context,),
+              _navigateToHomePage(),
 
-              _navigateUserToHomePage(context,),
+              _navigateUserToHomePage(),
             ],
 
 
@@ -306,26 +328,23 @@ class _WelcomePageState extends State<WelcomePage> {
       );
     }
 
+    //Ha üresek a kontrollerek, akkor
+    if(areControllersEmpty()) {
+      Shared.mySnackBar(
+        'Még nem adtál meg adatokat! Töltsd ki a fentebbi mezőket!',
+        Colors.red,
+        context,
+      );
+
+      throw Exception(
+        'Még nem adtál meg adatokat! Töltsd ki a fentebbi mezőket!',
+      );
+    }
+
     Shared.mySnackBar(
       'Felhasználó sikeresen létrehozva! (Név: ${nameController.text})',
       Colors.green,
       context,
-    );
-
-    tempUser = User(
-        id: 1,
-        name: nameController.text,
-        height: double.parse(heightController.text),
-        weight: double.parse(weightController.text),
-        userType: userType,
-        differentDays: differentDays,
-        dailyTarget: List.generate(7, (index) => KcalAndNutrients(
-            kcal: dailyTargetValues[index][0],
-            fat: dailyTargetValues[index][1],
-            carb: dailyTargetValues[index][2],
-            protein: dailyTargetValues[index][3],
-          ),
-        ),
     );
 
     await userService.sendUser(
@@ -342,8 +361,6 @@ class _WelcomePageState extends State<WelcomePage> {
         ),
       ),
     );
-
-    zeroAllTextFields();
   }
 
   Widget _saveUserButton() {
@@ -352,8 +369,8 @@ class _WelcomePageState extends State<WelcomePage> {
 
       child: Center(
         child: ElevatedButton(
-          onPressed: () {
-            sendUserFromWelcome();
+          onPressed: () async {
+            await sendUserFromWelcome();
 
             if(isCouponValid) {
               couponService.useCoupon(couponController.text, tempUser!.id);
@@ -423,8 +440,6 @@ class _WelcomePageState extends State<WelcomePage> {
       },
     );
   }
-
-
 
   Center _fillDailyTarget() {
     if(differentDays) {
@@ -648,36 +663,63 @@ class _WelcomePageState extends State<WelcomePage> {
     couponController.text = '';
   }
 
-  Widget _navigateUserToHomePage(BuildContext context,) {
+  bool areControllersEmpty() {
+    return nameController.text == '' ||
+        heightController.text == '' ||
+        weightController.text == '' ||
+        controllers[0][0].text == '' ||
+        controllers[0][1].text == '' ||
+        controllers[0][2].text == '' ||
+        controllers[0][3].text == '';
+  }
+
+
+  Widget _navigateUserToHomePage() {
+    return Padding(
+      padding: const EdgeInsets.all(12.0,),
+
+      child: Center(
+          child: ElevatedButton(
+            onPressed: () {
+              //.go, hogy ne lehessen visszanavigálni a belépési képernyőre!
+              //TODO: User legyen!
+              context.go('/home/2',);
+            },
+            child: const Text('Belépés'),
+          )
+      ),
+    );
+  }
+
+  Widget _navigateToHomePage() {
     return Padding(
       padding: const EdgeInsets.all(12.0,),
 
       child: Center(
         child: ElevatedButton(
           onPressed: () {
-            //Adatok megadása nélkül ne tudja lenyomni a 'Belépés' gombot.
-            if(tempUser == null) {
+            if (tempUser == null) {
               Shared.mySnackBar(
-                'Még nem adtál meg adatokat! Töltsd ki a fentebbi mezőket!',
+                'A felhasználó még nem töltődött be!',
                 Colors.red,
                 context,
               );
-            } else {
-              print('Gomb lenyomva! (User ${tempUser?.name} oldal gombja)',);
 
-              Navigator.of(context).pushNamed(
-                '/home',
-
-                arguments: tempUser,
-              );
+              return;
             }
+
+            context.go('/home/${tempUser!.id}');
           },
 
-          child: const Text('Belépés',),
+          child: const Text('Home Page',),
         ),
       ),
     );
   }
+
+/////////////////////////////////////////////////////////////////////////
+////////////////////Itt ér véget a _WelcomePageState!////////////////////
+/////////////////////////////////////////////////////////////////////////
 }
 
 Container _userDataInput({
@@ -755,43 +797,6 @@ Padding _greeting() {
           ),
         ),
       ],
-    ),
-  );
-}
-
-Widget _navigateToHomePage(BuildContext context,) {
-  return Padding(
-    padding: const EdgeInsets.all(12.0,),
-
-    child: Center(
-      child: ElevatedButton(
-          onPressed: () {
-            print('Gomb lenyomva! (Home oldal gombja)',);
-
-            Navigator.of(context).pushNamed(
-              '/home',
-
-              arguments: User(
-                id: 0,
-                name: 'Unnamed User',
-                height: 190.0,
-                weight: 81.0,
-                userType: UserType.FREE,
-                differentDays: false,
-                dailyTarget: List.generate(
-                  7, (_) => KcalAndNutrients(
-                    kcal: 2000.0,
-                    fat: 40.0,
-                    carb: 250.0,
-                    protein: 160.0
-                  ),
-                ),
-              ),
-            );
-          },
-
-          child: const Text('Home Page',),
-      ),
     ),
   );
 }
