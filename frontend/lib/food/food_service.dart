@@ -55,4 +55,16 @@ class FoodService {
       throw Exception('Étel törlése sikertelen!');
     }
   }
+
+  Future<Food> getFoodById(int id) async {
+    final response = await http.get(
+      Uri.parse('${Shared.baseUrl}/foods/$id'),
+    );
+
+    if (response.statusCode == 200) {
+      return Food.fromJson(jsonDecode(response.body));
+    } else {
+      throw Exception('Hiba étel lekérésekor (ID: $id).');
+    }
+  }
 }

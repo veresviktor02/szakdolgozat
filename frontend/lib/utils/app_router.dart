@@ -4,7 +4,7 @@ import 'package:go_router/go_router.dart';
 
 import '/pages/welcome.dart';
 import '/pages/home/home.dart';
-import '/pages/second_page.dart';
+import '/pages/food_data_page.dart';
 import '/pages/third_page.dart';
 
 import 'shared.dart';
@@ -39,13 +39,15 @@ final GoRouter appRouter = GoRouter(
     ),
 
     GoRoute(
-      path: '/second/:data',
+      path: '/foodDataPage/:foodId',
       builder: (context, state) {
-        final data = state.pathParameters['data'];
-        if (data == null || data.isEmpty) {
+        final foodId = int.tryParse(state.pathParameters['foodId'] ?? '');
+
+        if (foodId == null) {
           return const _ErrorPage(message: 'Missing data');
         }
-        return SecondPage(data: data);
+
+        return FoodDataPage(foodId: foodId);
       },
     ),
 
