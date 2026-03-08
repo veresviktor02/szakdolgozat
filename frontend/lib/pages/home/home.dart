@@ -192,8 +192,6 @@ class _HomePageState extends State<HomePage> {
 
               const SizedBox(height: 5,),
 
-              _navigateToSecondPage(context),
-
               const SizedBox(height: 5,),
 
               _navigateToThirdPage(context),
@@ -580,6 +578,10 @@ class _HomePageState extends State<HomePage> {
                         Text('Szénhidrát: ${food.kcalAndNutrients.carb}',),
                         Text('Fehérje: ${food.kcalAndNutrients.protein}',),
                         Text('Tömeg: ${food.foodWeight} ${food.measurementUnit.measurementUnitName}',),
+
+                        SizedBox(height: 5.0,),
+
+                        _navigateToFoodDataPage(food.id),
                       ],
                     ),
                   );
@@ -834,6 +836,16 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
+  ElevatedButton _navigateToFoodDataPage(int foodId) {
+    return ElevatedButton(
+      onPressed: () {
+        context.go('/foodDataPage/$foodId');
+      },
+
+      child: const Text('Étel adatlapja',),
+    );
+  }
+
   //////////////////////////////////////////////////////////////////////
   ////////////////////Itt ér véget a _HomePageState!////////////////////
   //////////////////////////////////////////////////////////////////////
@@ -928,17 +940,6 @@ Widget _textFieldColumn(String textData, TextEditingController controller) {
         ),
       ],
     ),
-  );
-}
-
-ElevatedButton _navigateToSecondPage(BuildContext context) {
-  return ElevatedButton(
-      onPressed: () {
-        context.push('/second/Hello');
-        // context.push('/second/12'); -> would work too
-      },
-
-      child: const Text('2. oldal',),
   );
 }
 

@@ -9,13 +9,17 @@ import '/pages/third_page.dart';
 
 import 'shared.dart';
 
+//context.go   -> Cseréli a linket.
+//context.push -> Nem cseréli a linket.
 final GoRouter appRouter = GoRouter(
   initialLocation: '/',
+
   errorBuilder: (context, state) => Scaffold(
     appBar: AppBar(title: const Text('Error')),
+
     body: Center(
       child: Text(
-        state.error?.toString() ?? 'Page not found',
+        state.error?.toString() ?? 'A keresett oldal nem található!',
       ),
     ),
   ),
@@ -31,7 +35,7 @@ final GoRouter appRouter = GoRouter(
         final userId = int.tryParse(state.pathParameters['userId'] ?? '');
 
         if(userId == null) {
-          return const _ErrorPage(message: 'Missing User argument');
+          return const _ErrorPage(message: 'User argumentum hiányzik!');
         }
 
         return HomePage(userId: userId);
@@ -43,8 +47,8 @@ final GoRouter appRouter = GoRouter(
       builder: (context, state) {
         final foodId = int.tryParse(state.pathParameters['foodId'] ?? '');
 
-        if (foodId == null) {
-          return const _ErrorPage(message: 'Missing data');
+        if(foodId == null) {
+          return const _ErrorPage(message: 'Hiányzó adat!');
         }
 
         return FoodDataPage(foodId: foodId);
@@ -88,6 +92,7 @@ class _ErrorPage extends StatelessWidget {
             onPressed: () {
               context.go('/');
             },
+
             child: const Text('Vissza a kezdőlapra'),
           ),
         ],
