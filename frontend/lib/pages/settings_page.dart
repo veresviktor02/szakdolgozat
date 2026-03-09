@@ -30,6 +30,8 @@ class _SettingsPageState extends State<SettingsPage> {
   late final TextEditingController weightController;
   late final TextEditingController heightController;
 
+  final TextEditingController calculationController = TextEditingController();
+
   UserType userType = UserType.FREE;
   bool differentDays = false;
 
@@ -153,7 +155,9 @@ class _SettingsPageState extends State<SettingsPage> {
       backgroundColor: Colors.white,
 
       body: Center(
-        child: Column(
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+
           children: [
             Container(
               width: 300,
@@ -234,10 +238,154 @@ class _SettingsPageState extends State<SettingsPage> {
                 ],
               ),
             ),
+
+            SizedBox(height: 20,),
+
+            Container(
+              width: 400,
+              height: 550,
+
+              padding: const EdgeInsets.all(15.0,),
+              margin: const EdgeInsets.all(40.0,),
+
+              decoration: BoxDecoration(
+                border: Border.all(color: Colors.blueAccent,),
+              ),
+
+              child: Column(
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(5.0, 10.0, 5.0, 20.0,),
+
+                    child: Text(
+                        'Napi kalóriaszükséglet kiszámítása',
+
+                      style: TextStyle(
+                        fontSize: 18,
+
+                        fontWeight: FontWeight.w300,
+                      ),
+                    ),
+                  ),
+
+                  const SizedBox(height: 15,),
+
+                  TextField(
+                    //controller: weightController,
+
+                    decoration: const InputDecoration(
+                      labelText: 'Nem',
+
+                      border: OutlineInputBorder(),
+                    ),
+                  ),
+
+                  const SizedBox(height: 15,),
+
+                  TextField(
+                    //controller: nameController,
+
+                    keyboardType: TextInputType.number,
+
+                    decoration: const InputDecoration(
+                      labelText: 'Életkor',
+
+                      border: OutlineInputBorder(),
+                    ),
+                  ),
+
+                  const SizedBox(height: 15,),
+
+                  TextField(
+                    controller: weightController,
+
+                    keyboardType: TextInputType.number,
+
+                    decoration: const InputDecoration(
+                      labelText: 'Testtömeg (kg)',
+
+                      border: OutlineInputBorder(),
+                    ),
+                  ),
+
+                  const SizedBox(height: 15,),
+
+                  TextField(
+                    controller: heightController,
+
+                    keyboardType: TextInputType.number,
+
+                    decoration: const InputDecoration(
+                      labelText: 'Magasság (cm)',
+
+                      border: OutlineInputBorder(),
+                    ),
+                  ),
+
+                  const SizedBox(height: 15,),
+
+                  TextField(
+                    //controller: weightController,
+
+                    decoration: const InputDecoration(
+                      labelText: 'Aktivitási szint',
+
+                      border: OutlineInputBorder(),
+                    ),
+                  ),
+
+                  const SizedBox(height: 10,),
+
+                  ElevatedButton(
+                    onPressed: () {
+                      calculateDailyCalories();
+                    },
+
+                    child: Text('Kiszámítás'),),
+
+                  const SizedBox(height: 15,),
+
+                  TextField(
+                    controller: calculationController,
+
+                    readOnly: true,
+
+                    decoration: const InputDecoration(
+                      labelText: 'Napi kalória (Kcal)',
+
+                      border: OutlineInputBorder(),
+                    ),
+                  ),
+                ],
+              ),
+            ),
           ],
         ),
       ),
     );
+  }
+
+  //BMR Mifflin-St Jeor
+  //For men:
+  //BMR = 10W + 6.25H - 5A + 5
+  //For women:
+  //BMR = 10W + 6.25H - 5A - 161
+
+  //Activity level multiplier:
+  //Sedentary	- 1.2	- little or no exercise
+  //Lightly active - 1.375 - light exercise 1–3 days/week
+  //Moderately active -	1.55 - exercise 3–5 days/week
+  //Very active	- 1.725 - hard exercise 6–7 days/week
+  //Extremely active - 1.9 - athlete / physical job
+  void calculateDailyCalories() {
+    //TODO User bővítése.
+    var age = 22;
+    var gender = 'Men';
+    var activityLevel = 'BMR';
+
+    double calculatedCalories = double.parse(weightController.text) * 10 + double.parse(heightController.text) * 6.25 - 5 * age + 5;
+
+    calculationController.text = calculatedCalories.toString();
   }
 
 //////////////////////////////////////////////////////////////////////////
