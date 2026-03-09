@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_application/pages/leaderboard_page.dart';
 
 import 'package:go_router/go_router.dart';
 
@@ -59,6 +60,11 @@ final GoRouter appRouter = GoRouter(
     GoRoute(
       path: '/third',
       builder: (context, state) => const ThirdPage(),
+    ),
+
+    GoRoute(
+      path: '/leaderboard',
+      builder: (context, state) => const LeaderboardPage(),
     ),
 
     GoRoute(
