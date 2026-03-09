@@ -128,6 +128,26 @@ public class DayService {
         return totalKcalAndNutrients;
     }
 
+    //Hány napot trackelt a felhasználó egyhuzamban (mával számolva, nem történelmileg!).
+    public int getCurrentActivityStreak() {
+        int streak = 0;
+        LocalDate currentDate = LocalDate.now();
+
+        while(true) {
+            Day day = dayRepository.findByDate(currentDate).orElse(null);
+
+            if(day == null || day.getFoodList() == null || day.getFoodList().isEmpty()) {
+                break;
+            }
+
+            streak++;
+
+            currentDate = currentDate.minusDays(1);
+        }
+
+        return streak;
+    }
+
     public void createEmptyDays() {
         LocalDate start = LocalDate.of(2026, 1, 1);
         LocalDate end = LocalDate.of(2026, 12, 31);

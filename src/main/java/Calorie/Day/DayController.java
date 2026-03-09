@@ -1,7 +1,7 @@
 package Calorie.Day;
 
-import Calorie.Food.Food;
 import Calorie.Food.KcalAndNutrients;
+
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -57,5 +57,10 @@ public class DayController {
     @PostMapping("/create-empty-days")
     public void createEmptyDays() {
         dayService.createEmptyDays();
+    }
+
+    @GetMapping("/streak")
+    public int getCurrentActivityStreak() {
+        return dayService.getCurrentActivityStreak();
     }
 }

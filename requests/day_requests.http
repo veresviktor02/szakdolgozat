@@ -12,7 +12,11 @@ GET localhost:8080/days/360/total
 
 ###
 
-POST localhost:8080/days/360
+GET localhost:8080/days/streak
+
+###
+
+POST localhost:8080/days/65
 Content-Type: application/json
 
 {
