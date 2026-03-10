@@ -64,9 +64,13 @@ public class DayController {
     ///////////////////////////////////////////////////////////////////////////////
 
     //PUT
-    @PutMapping("{id}")
-    public void updateDayById(@PathVariable Integer id, @RequestBody Day day) {
-        dayService.updateDayById(id, day);
+    @PutMapping("{userId}/{dayId}")
+    public void updateDayById(
+            @PathVariable Integer userId,
+            @PathVariable Integer dayId,
+            @RequestBody Day day
+    ) {
+        dayService.updateDayById(userId, dayId, day);
     }
 
     ///////////////////////////////////////////////////////////////////////////////
@@ -77,7 +81,7 @@ public class DayController {
         dayService.deleteDayById(id);
     }
 
-    @DeleteMapping("{dayId}/foods/{foodId}")
+    @DeleteMapping("{dayId}/{foodId}")
     public void removeFoodFromDay(@PathVariable Integer dayId, @PathVariable Integer foodId) {
         dayService.removeFoodFromDay(dayId, foodId);
     }

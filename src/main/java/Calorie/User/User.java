@@ -1,6 +1,7 @@
 package Calorie.User;
 
 import Calorie.Day.Day;
+import Calorie.Day.MeasurementUnit.MeasurementUnit;
 
 import Calorie.Food.Food;
 import Calorie.Food.KcalAndNutrients;
@@ -37,6 +38,9 @@ public class User {
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Day> days = new ArrayList<>();
 
+    @OneToMany(mappedBy = "owner", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<MeasurementUnit> measurementUnits = new ArrayList<>();
+
     @ElementCollection
     @CollectionTable(name = "daily_target", joinColumns = @JoinColumn(name = "user_id"))
     @OrderColumn(name = "day_index")
@@ -53,6 +57,7 @@ public class User {
             boolean differentDays,
             List<Food> foods,
             List<Day> days,
+            List<MeasurementUnit> measurementUnits,
             List<KcalAndNutrients> dailyTarget
     ) {
         this.id = id;
@@ -63,6 +68,7 @@ public class User {
         setDifferentDays(differentDays);
         this.foods = foods;
         this.days = days;
+        this.measurementUnits = measurementUnits;
         setDailyTarget(dailyTarget);
     }
 
@@ -96,6 +102,10 @@ public class User {
 
     public List<Day> getDays() {
         return days;
+    }
+
+    public List<MeasurementUnit> getMeasurementUnits() {
+        return measurementUnits;
     }
 
     public List<KcalAndNutrients> getDailyTarget() {
@@ -156,6 +166,10 @@ public class User {
 
     public void setDays(List<Day> days) {
         this.days = days;
+    }
+
+    public void setMeasurementUnits(List<MeasurementUnit> measurementUnits) {
+        this.measurementUnits = measurementUnits;
     }
 
     public void setDailyTarget(List<KcalAndNutrients> dailyTarget) {

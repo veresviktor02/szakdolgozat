@@ -17,4 +17,6 @@ public interface DayRepository extends JpaRepository<Day, Integer> {
     Optional<Day> findByIdAndUser(Integer dayId, User user);
 
     List<Day> findByUserId(Integer id);
+
+    Optional<Day> findByIdAndUserId(Integer dayId, Integer userId);
 }

@@ -1,6 +1,12 @@
 package Calorie.Day.MeasurementUnit;
 
+import Calorie.User.User;
+
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 import jakarta.persistence.*;
+
+import java.util.Objects;
 
 @Entity
 public class MeasurementUnit {
@@ -14,12 +20,23 @@ public class MeasurementUnit {
 
     private int measurementUnitInGrams;
 
+    @ManyToOne
+    @JoinColumn(name = "owner_id", nullable = false)
+    @JsonBackReference //Ettől nem lesz rekurzív a JSON!
+    private User owner;
+
     public MeasurementUnit() {}
 
-    public MeasurementUnit(Integer id, String measurementUnitName, int measurementUnitInGrams) {
+    public MeasurementUnit(
+            Integer id,
+            String measurementUnitName,
+            int measurementUnitInGrams,
+            User owner
+    ) {
         this.id = id;
         setMeasurementUnitName(measurementUnitName);
         setMeasurementUnitInGrams(measurementUnitInGrams);
+        this.owner = owner;
     }
 
     public int getId() {
@@ -32,6 +49,10 @@ public class MeasurementUnit {
 
     public int getMeasurementUnitInGrams() {
         return measurementUnitInGrams;
+    }
+
+    public User getOwner() {
+        return owner;
     }
 
     public void setId(Integer id) {
@@ -51,10 +72,38 @@ public class MeasurementUnit {
     public void setMeasurementUnitInGrams(int measurementUnitInGrams) {
         if(measurementUnitInGrams <= 0) {
             throw new IllegalArgumentException(
-                    "Tömeg nem lehet nullánál kisebb!"
+                    "Tömeg nem lehet nulla vagy kisebb szám!"
             );
         }
 
         this.measurementUnitInGrams = measurementUnitInGrams;
+    }
+
+    public void setOwner(User owner) {
+        this.owner = owner;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if(o == null || getClass() != o.getClass()) return false;
+        MeasurementUnit that = (MeasurementUnit) o;
+        return measurementUnitInGrams == that.measurementUnitInGrams &&
+                Objects.equals(id, that.id) &&
+                Objects.equals(measurementUnitName, that.measurementUnitName) &&
+                Objects.equals(owner, that.owner);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, measurementUnitName, measurementUnitInGrams, owner);
+    }
+
+    @Override
+    public String toString() {
+        return "MeasurementUnit:" + '\n' +
+                "id = " + id + '\n' +
+                "measurementUnitName = " + measurementUnitName + '\n' +
+                "measurementUnitInGrams = " + measurementUnitInGrams + '\n' +
+                "owner = " + owner;
     }
 }

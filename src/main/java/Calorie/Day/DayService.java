@@ -47,10 +47,10 @@ public class DayService {
     }
 
     @Transactional
-    public void updateDayById(Integer id, Day newDay) {
-        Day oldDay = dayRepository.findById(id)
+    public void updateDayById(Integer userId, Integer dayId, Day newDay) {
+        Day oldDay = dayRepository.findByIdAndUserId(dayId, userId)
                 .orElseThrow(() -> new IllegalStateException(
-                        "A frissíteni kívánt nap nem található! (ID: " + id + ')'
+                        "A frissíteni kívánt nap nem található! (ID: " + dayId + ')'
                 ));
 
         oldDay.setDate(newDay.getDate());
@@ -67,7 +67,7 @@ public class DayService {
                         "A megadott felhasználó nem található! " + userId + ')'
                 ));
 
-        return dayRepository.findById(dayId)
+        return dayRepository.findByIdAndUser(dayId, user)
                 .orElseThrow(() -> new IllegalStateException(
                         "A megadott nap nem található! " + dayId + ')'
                 ));
@@ -81,12 +81,11 @@ public class DayService {
                         "A megadott ID nem található! " + dayId + ')'
                 ));
 
-        //Töröljük az ételt, ha nem található, Error dobása.
+        //Töröljük az ételt, ha nem található, kivétel dobása.
         if(!day.getFoodList().removeIf(food -> food.getId().equals(foodId))) {
             throw new IllegalStateException("A megadott ID nem található! (ID: " + foodId + ')');
         }
 
-        //Mentse el, vagy nem változik az adatbázis!
         dayRepository.save(day);
     }
 

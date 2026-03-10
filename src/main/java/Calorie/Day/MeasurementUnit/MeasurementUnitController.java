@@ -13,29 +13,48 @@ public class MeasurementUnitController {
         this.measurementUnitService = measurementUnitService;
     }
 
-    @GetMapping
-    public List<MeasurementUnit> getAllMeasurementUnits() {
-        return measurementUnitService.getAllMeasurementUnits();
-    }
-
+    //GET
     @GetMapping("{id}")
-    public MeasurementUnit getMeasurementUnitById(@PathVariable Integer id) {
-        return measurementUnitService.getMeasurementUnitById(id);
+    public List<MeasurementUnit> getAllMeasurementUnits(@PathVariable Integer id) {
+        return measurementUnitService.getAllMeasurementUnits(id);
     }
 
-    @PostMapping
-    public void addMeasurementUnit(@RequestBody MeasurementUnit measurementUnit) {
-        measurementUnitService.addMeasurementUnit(measurementUnit);
+    @GetMapping("{userId}/{measurementId}")
+    public MeasurementUnit getMeasurementUnitById(
+            @PathVariable Integer userId,
+            @PathVariable Integer measurementId
+    ) {
+        return measurementUnitService.getMeasurementUnitById(userId, measurementId);
     }
 
-    @PutMapping("{id}")
-    public void updateMeasurementUnitById(
-            @PathVariable Integer id,
+    ///////////////////////////////////////////////////////////////////////////////
+
+    //POST
+    @PostMapping("{userId}")
+    public void addMeasurementUnit(
+            @PathVariable Integer userId,
             @RequestBody MeasurementUnit measurementUnit
     ) {
-        measurementUnitService.updateMeasurementUnitById(id, measurementUnit);
+        measurementUnitService.addMeasurementUnit(userId, measurementUnit);
     }
 
+    //PUT
+    @PutMapping("{userId}/{measurementUnitId}")
+    public void updateMeasurementUnitById(
+            @PathVariable Integer userId,
+            @PathVariable Integer measurementUnitId,
+            @RequestBody MeasurementUnit measurementUnit
+    ) {
+        measurementUnitService.updateMeasurementUnitById(
+                userId,
+                measurementUnitId,
+                measurementUnit
+        );
+    }
+
+    ///////////////////////////////////////////////////////////////////////////////
+
+    //DELETE
     @DeleteMapping("{id}")
     public void removeMeasurementUnitById(@PathVariable Integer id) {
         measurementUnitService.removeMeasurementUnitById(id);
