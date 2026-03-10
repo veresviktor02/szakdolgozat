@@ -1,6 +1,9 @@
-import 'package:flutter_application/food/kcal_and_nutrients_model.dart';
+import '/day/day_model.dart';
 
-import 'package:flutter_application/user/user_type.dart';
+import '/food/food_model.dart';
+import '/food/kcal_and_nutrients_model.dart';
+
+import '/user/user_type.dart';
 
 class User {
   final int id;
@@ -10,6 +13,8 @@ class User {
   final UserType userType;
   final bool differentDays;
   final List<KcalAndNutrients> dailyTarget;
+  final List<Food> foods;
+  final List<Day> days;
 
   User({
     required this.id,
@@ -19,6 +24,8 @@ class User {
     required this.userType,
     required this.differentDays,
     required this.dailyTarget,
+    required this.foods,
+    required this.days,
   });
 
   factory User.fromJson(Map<String, dynamic> json) {
@@ -34,6 +41,12 @@ class User {
       dailyTarget: (json['dailyTarget'] as List<dynamic>)
           .map((item) => KcalAndNutrients.fromJson(item))
           .toList(),
+      foods: (json['foods'] as List<dynamic>)
+          .map((item) => Food.fromJson(item))
+          .toList(),
+      days: (json['days'] as List<dynamic>)
+          .map((item) => Day.fromJson(item))
+          .toList(),
     );
   }
 
@@ -45,7 +58,9 @@ class User {
       'weight': weight,
       'userType': userType.name,
       'differentDays': differentDays,
-      'dailyTarget': dailyTarget,
+      'dailyTarget': dailyTarget.map((item) => item.toJson()).toList(),
+      'foods': foods.map((item) => item.toJson()).toList(),
+      'days': days.map((item) => item.toJson()).toList(),
     };
   }
 }

@@ -1,6 +1,10 @@
 package Calorie.User;
 
+import Calorie.Day.Day;
+
+import Calorie.Food.Food;
 import Calorie.Food.KcalAndNutrients;
+
 import jakarta.persistence.*;
 
 import java.util.ArrayList;
@@ -14,8 +18,11 @@ public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
+
     private String name;
+
     private Double weight;
+
     private Double height;
 
     //Az annotáció nélkül 0,1-ként lenne eltárolva az adatbázisban!!!
@@ -24,8 +31,16 @@ public class User {
 
     private boolean differentDays;
 
+    @OneToMany(mappedBy = "owner", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Food> foods = new ArrayList<>();
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Day> days = new ArrayList<>();
+
     @ElementCollection
-    private List<KcalAndNutrients> dailyTarget = new ArrayList<>(7);
+    @CollectionTable(name = "daily_target", joinColumns = @JoinColumn(name = "user_id"))
+    @OrderColumn(name = "day_index")
+    private List<KcalAndNutrients> dailyTarget = new ArrayList<>();
 
     public User() {}
 
@@ -36,6 +51,8 @@ public class User {
             Double height,
             UserType userType,
             boolean differentDays,
+            List<Food> foods,
+            List<Day> days,
             List<KcalAndNutrients> dailyTarget
     ) {
         this.id = id;
@@ -44,6 +61,8 @@ public class User {
         setHeight(height);
         this.userType = userType;
         setDifferentDays(differentDays);
+        this.foods = foods;
+        this.days = days;
         setDailyTarget(dailyTarget);
     }
 
@@ -69,6 +88,14 @@ public class User {
 
     public boolean isDifferentDays() {
         return differentDays;
+    }
+
+    public List<Food> getFoods() {
+        return foods;
+    }
+
+    public List<Day> getDays() {
+        return days;
     }
 
     public List<KcalAndNutrients> getDailyTarget() {
@@ -123,6 +150,14 @@ public class User {
         this.differentDays = differentDays;
     }
 
+    public void setFoods(List<Food> foods) {
+        this.foods = foods;
+    }
+
+    public void setDays(List<Day> days) {
+        this.days = days;
+    }
+
     public void setDailyTarget(List<KcalAndNutrients> dailyTarget) {
         if(dailyTarget == null || dailyTarget.isEmpty()) {
             this.dailyTarget = List.of(
@@ -166,7 +201,12 @@ public class User {
     public boolean equals(Object o) {
         if(o == null || getClass() != o.getClass()) return false;
         User user = (User) o;
-        return differentDays == user.differentDays && Objects.equals(id, user.id) && Objects.equals(name, user.name) && Objects.equals(weight, user.weight) && Objects.equals(height, user.height) && userType == user.userType;
+        return differentDays == user.differentDays &&
+                Objects.equals(id, user.id) &&
+                Objects.equals(name, user.name) &&
+                Objects.equals(weight, user.weight) &&
+                Objects.equals(height, user.height) &&
+                userType == user.userType;
     }
 
     @Override
@@ -176,7 +216,6 @@ public class User {
 
     @Override
     public String toString() {
-
         return "User: " + '\n' +
                 "id = " + id + '\n' +
                 "name = " + name + '\n' +

@@ -26,7 +26,7 @@ class _ThirdPageState extends State<ThirdPage> {
 
   Future<void> refreshPage() async {
     setState(() {
-      foodFuture = foodService.fetchFoods();
+      foodFuture = foodService.fetchFoods(1); //TODO: widget.userId
     });
   }
 

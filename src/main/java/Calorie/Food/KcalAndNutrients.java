@@ -90,7 +90,10 @@ public class KcalAndNutrients {
     public boolean equals(Object o) {
         if(o == null || getClass() != o.getClass()) return false;
         KcalAndNutrients that = (KcalAndNutrients) o;
-        return Objects.equals(kcal, that.kcal) && Objects.equals(fat, that.fat) && Objects.equals(carb, that.carb) && Objects.equals(protein, that.protein);
+        return Objects.equals(kcal, that.kcal) &&
+                Objects.equals(fat, that.fat) &&
+                Objects.equals(carb, that.carb) &&
+                Objects.equals(protein, that.protein);
     }
 
     @Override

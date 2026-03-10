@@ -10,9 +10,9 @@ import 'package:flutter_application/day/day_model.dart';
 import 'package:flutter_application/food/kcal_and_nutrients_model.dart';
 
 class DayService {
-  Future<List<Day>> fetchDays() async {
+  Future<List<Day>> fetchDays(int id) async {
     final response = await http.get(
-      Uri.parse('${Shared.baseUrl}/days'),
+      Uri.parse('${Shared.baseUrl}/days/$id'),
       headers: {
         'Content-Type': 'application/json',
       },
@@ -41,9 +41,9 @@ class DayService {
     }
   }
 
-  Future<KcalAndNutrients> getTotalKcalAndNutrients(int dayId) async {
+  Future<KcalAndNutrients> getTotalKcalAndNutrients(int userId, int dayId) async {
     final response = await http.get(
-      Uri.parse('${Shared.baseUrl}/days/$dayId/total'),
+      Uri.parse('${Shared.baseUrl}/days/$userId/$dayId/total'),
     );
 
     if(response.statusCode == 200) {
@@ -51,10 +51,22 @@ class DayService {
 
       return KcalAndNutrients.fromJson(jsonMap);
     }
-    throw Exception("Kcal és tápanyagok lekérése sikertelen! (Válasz: ${response.statusCode})");
+    //TODO ezt dobja!!!
+    throw Exception('Kcal és tápanyagok lekérése sikertelen! (Válasz: ${response.statusCode})');
+  }
+
+  Future<void> createEmptyDays(int id) async {
+    final response = await http.get(
+      Uri.parse('${Shared.baseUrl}/days/create-empty-days/$id'),
+    );
+
+    if(response.statusCode == 200) {
+      throw Exception('Üres napok létrehozása nem sikerült! (${response.body})');
+    }
   }
 
   Future<void> addFoodToDay(
+      int userId,
       int dayId,
       String name,
       KcalAndNutrients kcalAndNutrients,
@@ -63,7 +75,7 @@ class DayService {
   ) async {
     final response = await http.post(
       Uri.parse(
-        '${Shared.baseUrl}/days/$dayId',
+        '${Shared.baseUrl}/days/$userId/$dayId',
       ),
       headers: {
         'Content-Type': 'application/json',
@@ -78,7 +90,7 @@ class DayService {
 
     if(response.statusCode != 200) {
       throw Exception(
-        "Étel hozzáadása a naphoz (ID: $dayId) sikertelen! (Válasz: ${response.statusCode})",
+        'Étel hozzáadása a naphoz (ID: $dayId) sikertelen! (Válasz: ${response.statusCode})',
       );
     }
   }

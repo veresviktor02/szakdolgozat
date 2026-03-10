@@ -1,9 +1,9 @@
 
-GET localhost:8080/foods
+GET localhost:8080/foods/1
 
 ###
 
-POST localhost:8080/foods
+POST localhost:8080/foods/1
 Content-Type: application/json
 
 {
@@ -18,7 +18,7 @@ Content-Type: application/json
 
 ###
 
-POST localhost:8080/foods
+POST localhost:8080/foods/2
 Content-Type: application/json
 
 {
@@ -40,24 +40,20 @@ Content-Type: application/json
   "name": "New Apple",
   "kcalAndNutrients": {
     "kcal": 100.0,
-    "fat": 100.0,
-    "carb": 100.0,
-    "protein": 100.0
+    "fat": 1.0,
+    "carb": 2.0,
+    "protein": 3.0
   }
 }
 
 ###
 
-GET localhost:8080/foods
-
-###
-
 ###Mindig legyen kikommentelve, ha nem használjuk, mert a PUT lefutása helyett ez fut le!!!
-###DELETE localhost:8080/foods/1
+###DELETE localhost:8080/1/foods/1
 
 ###
 
-GET localhost:8080/foods/2
+GET localhost:8080/1/foods/2
 
 ###
 

@@ -65,8 +65,6 @@ class _HomePageState extends State<HomePage> {
 
   MeasurementUnit? selectedMeasurementUnit;
 
-  //late final User user;
-
   User? user;
   bool isLoading = true;
   String? errorMessage;
@@ -133,8 +131,8 @@ class _HomePageState extends State<HomePage> {
   Future<void> refreshPage() async {
     //Külön setState kell, mert nem lenne inicializálva másképpen!
     setState(() {
-      foodFuture = foodService.fetchFoods();
-      dayFuture = dayService.fetchDays();
+      foodFuture = foodService.fetchFoods(widget.userId);
+      dayFuture = dayService.fetchDays(widget.userId);
       measurementUnitFuture = measurementUnitService.fetchMeasurementUnits();
     });
 
@@ -152,7 +150,7 @@ class _HomePageState extends State<HomePage> {
 
       //Kijelölt nap összes adata
       if(selected != null) {
-        totalFuture = dayService.getTotalKcalAndNutrients(selected.id);
+        totalFuture = dayService.getTotalKcalAndNutrients(widget.userId, selected.id);
       } else {
         totalFuture = null;
       }
@@ -348,6 +346,8 @@ class _HomePageState extends State<HomePage> {
 
   Future<void> sendFood() async {
     await foodService.sendFood(
+      widget.userId,
+
       nameController.text,
 
       KcalAndNutrients(
@@ -640,6 +640,8 @@ class _HomePageState extends State<HomePage> {
 
   Future<void> addFoodToDay() async {
     await dayService.addFoodToDay(
+        widget.userId,
+
         myCalendar.daysMap[myCalendar.dayOnly(myCalendar.selectedDay)]!.id,
 
         nameController.text,

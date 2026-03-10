@@ -1,26 +1,39 @@
 package Calorie.Food;
 
+import Calorie.User.User;
+
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 import jakarta.persistence.*;
 
 import java.util.Objects;
 
 @Entity
+@Table(name = "food")
 public class Food {
     //Wrapper osztály, mert JSON-ban nem lehet null, Spring boot utólag ad neki értéket!
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
+
     private String name;
+
     //Összetett adattípushoz kell! Nem külön adatbáziselem, nincs idegenkulcs, stb.!
     @Embedded
     private KcalAndNutrients kcalAndNutrients;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id", nullable = false)
+    @JsonBackReference //Ettől nem lesz rekurzív a JSON!
+    private User owner;
+
     public Food() {}
 
-    public Food(Integer id, String name, KcalAndNutrients kcalAndNutrients) {
+    public Food(Integer id, String name, KcalAndNutrients kcalAndNutrients,  User owner) {
         this.id = id;
         setName(name);
         this.kcalAndNutrients = kcalAndNutrients;
+        this.owner = owner;
     }
 
     public Integer getId() {
@@ -33,6 +46,10 @@ public class Food {
 
     public KcalAndNutrients getKcalAndNutrients() {
         return kcalAndNutrients;
+    }
+
+    public User getOwner() {
+        return owner;
     }
 
     public void setId(Integer id) {
@@ -53,11 +70,17 @@ public class Food {
         this.kcalAndNutrients = kcalAndNutrients;
     }
 
+    public void setOwner(User owner) {
+        this.owner = owner;
+    }
+
     @Override
     public boolean equals(Object o) {
         if(o == null || getClass() != o.getClass()) return false;
         Food food = (Food) o;
-        return id == food.id && Objects.equals(name, food.name) && Objects.equals(kcalAndNutrients, food.kcalAndNutrients);
+        return Objects.equals(id, food.id) &&
+                Objects.equals(name, food.name) &&
+                Objects.equals(kcalAndNutrients, food.kcalAndNutrients);
     }
 
     @Override
@@ -70,6 +93,6 @@ public class Food {
         return "Food: " + '\n' +
                 "id = " + id + '\n' +
                 "name = " + name + '\n' +
-                kcalAndNutrients;
+                "KcalAndNutrients = " + kcalAndNutrients;
     }
 }

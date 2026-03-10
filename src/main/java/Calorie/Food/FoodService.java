@@ -1,5 +1,7 @@
 package Calorie.Food;
 
+import Calorie.User.User;
+import Calorie.User.UserRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
@@ -8,26 +10,33 @@ import java.util.List;
 @Service
 public class FoodService {
     private final FoodRepository foodRepository;
+    private final UserRepository userRepository;
 
-    public FoodService(FoodRepository foodRepository) {
+    public FoodService(FoodRepository foodRepository, UserRepository userRepository) {
         this.foodRepository = foodRepository;
+        this.userRepository = userRepository;
     }
 
-    public List<Food> getAllFoods() {
-        return foodRepository.findAll();
+    public List<Food> getFoodsByUserId(Integer userId) {
+        return foodRepository.findByOwnerId(userId);
     }
 
-    public void insertFood(Food food) {
+    public void insertFood(Integer userId, Food food) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new IllegalStateException(
+                        "A megadott felhasználó nem található! (ID: " + userId + ')'
+                ));
+
+        food.setOwner(user);
+
         foodRepository.save(food);
     }
 
-    //Csak frissítéshez használjuk, új rekord beszúrásához nem!
-    //@Transactional - ne vesszenek el a módosítások!!!
     @Transactional
-    public void updateFoodById(Integer id, Food newFood) {
-        Food oldFood = foodRepository.findById(id).orElseThrow(
+    public void updateFoodById(Integer foodId, Food newFood) {
+        Food oldFood = foodRepository.findById(foodId).orElseThrow(
                 () -> new IllegalStateException(
-                        "A frissíteni kívánt étel nem található! (ID: " + id + ')'
+                        "A frissíteni kívánt étel nem található! (ID: " + foodId + ')'
                 ));
 
         oldFood.setName(newFood.getName());

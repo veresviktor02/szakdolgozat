@@ -4,6 +4,7 @@ class Day {
   final int id;
   final DateTime date;
   final List<EmbeddedFood> foodList;
+  //final User user; //@JsonBackReference miatt nem kell!
 
   Day({
     required this.id,
@@ -24,7 +25,7 @@ class Day {
   Map<String, dynamic> toJson() {
     return {
       'id': id,
-      'date': date.toIso8601String().split('T')[0], //TODO: Nap utáni rész levágása!
+      'date': date.toIso8601String().split('T')[0],
       'foodList': foodList.map((embeddedFood) => embeddedFood.toJson()).toList(),
     };
   }

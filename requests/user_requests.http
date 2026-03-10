@@ -11,7 +11,9 @@ Content-Type: application/json
   "weight": 84.0,
   "userType": "PREMIUM",
   "differentDays": true,
-  "dailyTarget": []
+  "dailyTarget": [],
+  "days": [],
+  "foods": []
 }
 
 ###
@@ -25,7 +27,9 @@ Content-Type: application/json
   "weight": 64.0,
   "userType": "FREE",
   "differentDays": false,
-  "dailyTarget": []
+  "dailyTarget": [],
+  "days": [],
+  "foods": []
 }
 
 ###
@@ -39,7 +43,9 @@ Content-Type: application/json
   "weight": 67.0,
   "userType": "PREMIUM",
   "differentDays": true,
-  "dailyTarget": []
+  "dailyTarget": [],
+  "days": [],
+  "foods": []
 }
 
 ###
@@ -53,12 +59,14 @@ Content-Type: application/json
   "weight": 84.0,
   "userType": "FREE",
   "differentDays": true,
-  "dailyTarget": []
+  "dailyTarget": [],
+  "days": [],
+  "foods": []
 }
 
 ###
 
-DELETE localhost:8080/users/100
+###DELETE localhost:8080/users/100
 
 ###
 

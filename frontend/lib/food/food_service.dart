@@ -9,9 +9,9 @@ import 'food_model.dart';
 import 'kcal_and_nutrients_model.dart';
 
 class FoodService {
-  Future<List<Food>> fetchFoods() async {
+  Future<List<Food>> fetchFoods(int id) async {
     final response = await http.get(
-      Uri.parse('${Shared.baseUrl}/foods'),
+      Uri.parse('${Shared.baseUrl}/foods/$id'),
       headers: {
         'Content-Type': 'application/json',
       },
@@ -27,27 +27,28 @@ class FoodService {
     );
   }
 
-  Future<void> sendFood(String name, KcalAndNutrients kcalAndNutrients) async {
+  Future<void> sendFood(int userId, String name, KcalAndNutrients kcalAndNutrients) async {
     final response = await http.post(
-      Uri.parse('${Shared.baseUrl}/foods'),
+      Uri.parse('${Shared.baseUrl}/foods/$userId'),
       headers: {
         'Content-Type': 'application/json',
       },
       body: jsonEncode({
+        'userId': userId,
         'name': name,
         'kcalAndNutrients': kcalAndNutrients.toJson(),
       })
     );
 
     if(response.statusCode != 200) {
-      throw Exception('Étel küldése sikertelen!');
+      throw Exception('Étel küldése sikertelen! (${response.body})');
     }
   }
 
-  Future<void> deleteFood(int id) async {
+  Future<void> deleteFood(int foodId) async {
     final response = await http.delete(
       Uri.parse(
-        '${Shared.baseUrl}/foods/$id',
+        '${Shared.baseUrl}/foods/$foodId',
       ),
     );
 
@@ -56,15 +57,15 @@ class FoodService {
     }
   }
 
-  Future<Food> getFoodById(int id) async {
+  Future<Food> getFoodById(int foodId) async {
     final response = await http.get(
-      Uri.parse('${Shared.baseUrl}/foods/$id'),
+      Uri.parse('${Shared.baseUrl}/foods/$foodId'),
     );
 
     if (response.statusCode == 200) {
       return Food.fromJson(jsonDecode(response.body));
     } else {
-      throw Exception('Hiba étel lekérésekor (ID: $id).');
+      throw Exception('Hiba étel lekérésekor (ID: $foodId).');
     }
   }
 }

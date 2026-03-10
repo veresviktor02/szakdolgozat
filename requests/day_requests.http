@@ -4,19 +4,23 @@
 ### 3 - kilogramm - 1000
 ### 4 - lbs - 453
 
-GET localhost:8080/days
+GET localhost:8080/days/1
 
 ###
 
-GET localhost:8080/days/360/total
+GET localhost:8080/days/1/365
 
 ###
 
-GET localhost:8080/days/streak
+GET localhost:8080/days/1/365/total
 
 ###
 
-POST localhost:8080/days/65
+GET localhost:8080/days/1/streak
+
+###
+
+POST localhost:8080/days/1/365
 Content-Type: application/json
 
 {
@@ -37,7 +41,7 @@ Content-Type: application/json
 
 ###
 
-POST localhost:8080/days/360
+POST localhost:8080/days/1/365
 Content-Type: application/json
 
 {
@@ -58,7 +62,7 @@ Content-Type: application/json
 
 ###
 
-POST localhost:8080/days/360
+POST localhost:8080/days/1/365
 Content-Type: application/json
 
 {
@@ -79,7 +83,7 @@ Content-Type: application/json
 
 ###
 
-POST localhost:8080/days/360
+POST localhost:8080/days/1/365
 Content-Type: application/json
 
 {
@@ -101,7 +105,7 @@ Content-Type: application/json
 ###
 
 ###Itt csak az ID-t nézi a JPA, mindegy, ha rosszat írunk be utána!
-POST localhost:8080/days/360
+POST localhost:8080/days/1/365
 Content-Type: application/json
 
 {
@@ -122,7 +126,7 @@ Content-Type: application/json
 
 ###
 
-PUT localhost:8080/days/360
+POST localhost:8080/days/1/365
 Content-Type: application/json
 
 {
@@ -167,7 +171,7 @@ Content-Type: application/json
 
 ###
 
-POST localhost:8080/days/2
+POST localhost:8080/days/2/365
 Content-Type: application/json
 
 {
@@ -188,6 +192,4 @@ Content-Type: application/json
 
 ###
 
-GET localhost:8080/days/360/total
-
-###
+POST localhost:8080/days/create-empty-days/2

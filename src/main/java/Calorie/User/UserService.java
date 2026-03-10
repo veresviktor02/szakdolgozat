@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 
-@Service
+@Service("UserService")
 public class UserService {
     @PostConstruct
     public void init() {

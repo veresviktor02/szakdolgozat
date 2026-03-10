@@ -13,6 +13,7 @@ public class UserController {
         this.userService = userService;
     }
 
+    //GET
     @GetMapping
     public List<User> getUsers() {
         return userService.getAllUsers();
@@ -23,18 +24,27 @@ public class UserController {
         return userService.getUserById(id);
     }
 
+    ///////////////////////////////////////////////////////////////////////////////
+
+    //POST
     @PostMapping
     public void addNewUser(@RequestBody User user) {
         userService.insertUser(user);
     }
 
-    @DeleteMapping("{id}")
-    public void deleteUserById(@PathVariable Integer id) {
-        userService.deleteUserById(id);
-    }
+    ///////////////////////////////////////////////////////////////////////////////
 
+    //PUT
     @PutMapping("{id}")
     public void updateUserById(@PathVariable Integer id, @RequestBody User user) {
         userService.updateUserById(id, user);
+    }
+
+    ///////////////////////////////////////////////////////////////////////////////
+
+    //DELETE
+    @DeleteMapping("{id}")
+    public void deleteUserById(@PathVariable Integer id) {
+        userService.deleteUserById(id);
     }
 }

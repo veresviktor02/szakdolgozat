@@ -105,6 +105,8 @@ class _SettingsPageState extends State<SettingsPage> {
         userType: userType,
         differentDays: differentDays,
         dailyTarget: user!.dailyTarget,
+        foods: [], //TODO
+        days: [], //TODO
       );
 
       await userService.updateUserById(widget.userId, updatedUser);
@@ -383,7 +385,10 @@ class _SettingsPageState extends State<SettingsPage> {
     var gender = 'Men';
     var activityLevel = 'BMR';
 
-    double calculatedCalories = double.parse(weightController.text) * 10 + double.parse(heightController.text) * 6.25 - 5 * age + 5;
+    double calculatedCalories = double.parse(weightController.text) * 10 +
+        double.parse(heightController.text) * 6.25 -
+        5 * age +
+        5;
 
     calculationController.text = calculatedCalories.toString();
   }

@@ -2,13 +2,17 @@ package Calorie.Day;
 
 import Calorie.Day.MeasurementUnit.MeasurementUnit;
 
+import Calorie.Food.Food;
 import Calorie.Food.KcalAndNutrients;
+
+import com.fasterxml.jackson.annotation.JsonBackReference;
 
 import jakarta.persistence.*;
 
 import java.util.Objects;
 
 @Entity
+@Table
 public class EmbeddedFood {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -22,9 +26,18 @@ public class EmbeddedFood {
 
     private double foodWeight;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "measurement_unit_id")
     private MeasurementUnit measurementUnit;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "day_id", nullable = false)
+    @JsonBackReference //Ettől nem lesz rekurzív a JSON!
+    private Day day;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "food_id")
+    private Food food;
 
     public EmbeddedFood() {}
 
@@ -33,13 +46,17 @@ public class EmbeddedFood {
             String name,
             KcalAndNutrients kcalAndNutrients,
             double foodWeight,
-            MeasurementUnit measurementUnit
+            MeasurementUnit measurementUnit,
+            Day day,
+            Food food
     ) {
         this.id = id;
         this.name = name;
         this.kcalAndNutrients = kcalAndNutrients;
         setFoodWeight(foodWeight);
         this.measurementUnit = measurementUnit;
+        this.day = day;
+        this.food = food;
     }
 
     public Integer getId() {
@@ -60,6 +77,14 @@ public class EmbeddedFood {
 
     public MeasurementUnit getMeasurementUnit() {
         return measurementUnit;
+    }
+
+    public Day getDay() {
+        return day;
+    }
+
+    public Food getFood() {
+        return food;
     }
 
     public void setId(Integer id) {
@@ -87,11 +112,21 @@ public class EmbeddedFood {
         this.measurementUnit = measurementUnit;
     }
 
+    public void setDay(Day day) {
+        this.day = day;
+    }
+
+    public void setFood(Food food) {
+        this.food = food;
+    }
+
     @Override
     public boolean equals(Object o) {
         if(o == null || getClass() != o.getClass()) return false;
         EmbeddedFood food = (EmbeddedFood) o;
-        return id == food.id && Objects.equals(name, food.name) && Objects.equals(kcalAndNutrients, food.kcalAndNutrients);
+        return Objects.equals(id, food.id) &&
+                Objects.equals(name, food.name) &&
+                Objects.equals(kcalAndNutrients, food.kcalAndNutrients);
     }
 
     @Override

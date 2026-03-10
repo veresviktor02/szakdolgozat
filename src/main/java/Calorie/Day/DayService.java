@@ -2,10 +2,13 @@ package Calorie.Day;
 
 import Calorie.Food.KcalAndNutrients;
 
-import jakarta.annotation.PostConstruct;
+import Calorie.User.User;
+import Calorie.User.UserRepository;
 
+import jakarta.annotation.PostConstruct;
 import jakarta.transaction.Transactional;
 
+import org.springframework.context.annotation.DependsOn;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -13,24 +16,33 @@ import java.time.LocalDate;
 import java.util.List;
 
 @Service
+@DependsOn("UserService") //Ez biztosítja, hogy a UserService előbb fog lefutni!
 public class DayService {
     @PostConstruct
     public void init() {
-        createEmptyDays();
+        createEmptyDays(1);
     }
 
     private final DayRepository dayRepository;
+    private final UserRepository userRepository;
 
-    public DayService(DayRepository dayRepository) {
+    public DayService(DayRepository dayRepository, UserRepository userRepository) {
         this.dayRepository = dayRepository;
+        this.userRepository = userRepository;
     }
 
-    public List<Day> getAllDays() {
-        return dayRepository.findAll();
+    public List<Day> getAllDays(Integer id) {
+        return dayRepository.findByUserId(id);
     }
 
-    //Csak az init()-hez!
-    public void insertDay(Day day) {
+    //Csak napok inicializálásához!
+    public void insertDay(Integer userId, Day day) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new IllegalStateException(
+                        "A felhasználó nem található! (ID: " + userId + ')'
+                ));
+
+        day.setUser(user);
         dayRepository.save(day);
     }
 
@@ -49,10 +61,15 @@ public class DayService {
         dayRepository.deleteById(id);
     }
 
-    public Day getDayById(Integer id) {
-        return dayRepository.findById(id)
+    public Day getDayById(Integer userId, Integer dayId) {
+        User user = userRepository.findById(userId)
                 .orElseThrow(() -> new IllegalStateException(
-                        "A megadott ID nem található! " + id + ')'
+                        "A megadott felhasználó nem található! " + userId + ')'
+                ));
+
+        return dayRepository.findById(dayId)
+                .orElseThrow(() -> new IllegalStateException(
+                        "A megadott nap nem található! " + dayId + ')'
                 ));
     }
 
@@ -73,23 +90,29 @@ public class DayService {
         dayRepository.save(day);
     }
 
-    public void addFoodToDay(Integer dayId, EmbeddedFood food) {
-        //Megnézzük, hogy létezik-e a megadott nap.
-        Day day = dayRepository.findById(dayId)
+    public void addFoodToDay(Integer userId, Integer dayId, EmbeddedFood food) {
+        User user = userRepository.findById(userId)
                 .orElseThrow(() -> new IllegalStateException(
-                        "A megadott ID nem található! (ID: " + dayId + ')'
+                        "A megadott felhasználó nem található! (ID: " + userId + ')'
                 ));
 
+        //Megnézzük, hogy létezik-e a megadott nap.
+        Day day = dayRepository.findByIdAndUser(dayId, user)
+                .orElseThrow(() -> new IllegalStateException(
+                        "A megadott nap nem található! (ID: " + dayId + ')'
+                ));
+
+        food.setDay(day);
         day.getFoodList().add(food);
 
         dayRepository.save(day);
     }
 
     @Transactional
-    public KcalAndNutrients getTotalKcalAndNutrients(Integer dayId) {
+    public KcalAndNutrients getTotalKcalAndNutrients(Integer userId, Integer dayId) {
         KcalAndNutrients totalKcalAndNutrients = new KcalAndNutrients(0.0, 0.0, 0.0 ,0.0);
 
-        getDayById(dayId).getFoodList().forEach(
+        getDayById(userId, dayId).getFoodList().forEach(
                 food -> {
                     totalKcalAndNutrients.setKcal(
                             totalKcalAndNutrients.getKcal() //Eddigi összeg
@@ -129,7 +152,8 @@ public class DayService {
     }
 
     //Hány napot trackelt a felhasználó egyhuzamban (mával számolva, nem történelmileg!).
-    public int getCurrentActivityStreak() {
+    public int getCurrentActivityStreak(Integer id) {
+        //TODO User kiválasztása!
         int streak = 0;
         LocalDate currentDate = LocalDate.now();
 
@@ -148,16 +172,23 @@ public class DayService {
         return streak;
     }
 
-    public void createEmptyDays() {
+    public void createEmptyDays(Integer id) {
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new IllegalStateException(
+                        "A felhasználó nem található! (ID: " + id + ')'
+                ));
+
         LocalDate start = LocalDate.of(2026, 1, 1);
         LocalDate end = LocalDate.of(2026, 12, 31);
 
         LocalDate current = start;
 
         while(!current.isAfter(end)) {
-            if(!dayRepository.existsByDate(current)) {
+            if(!dayRepository.existsByUserAndDate(user, current)) {
                 Day day = new Day();
+
                 day.setDate(current);
+                day.setUser(user);
 
                 dayRepository.save(day);
             }

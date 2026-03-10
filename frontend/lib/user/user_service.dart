@@ -1,13 +1,16 @@
-import 'package:flutter_application/food/kcal_and_nutrients_model.dart';
-
-import 'package:flutter_application/user/user_model.dart';
-import 'package:flutter_application/user/user_type.dart';
-
-import '../utils/shared.dart';
+import 'dart:convert';
 
 import 'package:http/http.dart' as http;
 
-import 'dart:convert';
+import '/user/user_model.dart';
+import '/user/user_type.dart';
+
+import '/day/day_model.dart';
+
+import '/food/food_model.dart';
+import '/food/kcal_and_nutrients_model.dart';
+
+import '/utils/shared.dart';
 
 class UserService {
   Future<List<User>> fetchUsers() async {
@@ -47,6 +50,8 @@ class UserService {
       UserType userType,
       bool differentDays,
       List<KcalAndNutrients> dailyTarget,
+      List<Food> foods,
+      List<Day> days,
   ) async {
     final response = await http.post(
       Uri.parse('${Shared.baseUrl}/users'),
@@ -60,10 +65,10 @@ class UserService {
         'userType': userType.name, //sima userType hibás!
         'differentDays': differentDays,
         'dailyTarget': dailyTarget,
+        'foods': foods,
+        'days': days,
       }),
     );
-
-    print(response.body);
 
     if(response.statusCode != 200) {
       throw Exception(
@@ -90,6 +95,7 @@ class UserService {
           'carb': target.carb,
           'protein': target.protein,
         }).toList(),
+        //TODO
       }),
     );
 

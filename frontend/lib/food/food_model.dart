@@ -4,6 +4,7 @@ class Food {
   final int id;
   final String name;
   final KcalAndNutrients kcalAndNutrients;
+  //final User owner; //@JsonBackReference miatt nem kell!
 
   Food({
     required this.id,
@@ -20,8 +21,7 @@ class Food {
     return Food(
       id: json['id'],
       name: json['name'],
-      kcalAndNutrients:
-      KcalAndNutrients.fromJson(json['kcalAndNutrients']),
+      kcalAndNutrients: KcalAndNutrients.fromJson(json['kcalAndNutrients']),
     );
   }
 
