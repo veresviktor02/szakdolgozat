@@ -45,15 +45,16 @@ final GoRouter appRouter = GoRouter(
     ),
 
     GoRoute(
-      path: '/foodDataPage/:foodId',
+      path: '/foodDataPage/:userId/:foodId',
       builder: (context, state) {
+        final userId = int.tryParse(state.pathParameters['userId'] ?? '');
         final foodId = int.tryParse(state.pathParameters['foodId'] ?? '');
 
-        if(foodId == null) {
+        if(userId == null || foodId == null) {
           return const _ErrorPage(message: 'Hiányzó adat!');
         }
 
-        return FoodDataPage(foodId: foodId);
+        return FoodDataPage(userId: userId, foodId: foodId);
       },
     ),
 

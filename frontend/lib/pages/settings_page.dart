@@ -107,6 +107,7 @@ class _SettingsPageState extends State<SettingsPage> {
         dailyTarget: user!.dailyTarget,
         foods: [], //TODO
         days: [], //TODO
+        measurementUnits: []//TODO
       );
 
       await userService.updateUserById(widget.userId, updatedUser);

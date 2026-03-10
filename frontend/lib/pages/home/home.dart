@@ -133,7 +133,7 @@ class _HomePageState extends State<HomePage> {
     setState(() {
       foodFuture = foodService.fetchFoods(widget.userId);
       dayFuture = dayService.fetchDays(widget.userId);
-      measurementUnitFuture = measurementUnitService.fetchMeasurementUnits();
+      measurementUnitFuture = measurementUnitService.fetchMeasurementUnits(widget.userId);
     });
 
     final days = await dayFuture;

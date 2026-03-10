@@ -3,17 +3,17 @@ import 'package:flutter/services.dart';
 
 import 'package:go_router/go_router.dart';
 
-import 'package:flutter_application/food/kcal_and_nutrients_model.dart';
+import '/food/kcal_and_nutrients_model.dart';
 
-import '../coupon/coupon_service.dart';
-import '../coupon/coupon_status.dart';
+import '/coupon/coupon_service.dart';
+import '/coupon/coupon_status.dart';
 
-import '../utils/my_calendar.dart';
-import '../utils/shared.dart';
+import '/user/user_model.dart';
+import '/user/user_service.dart';
+import '/user/user_type.dart';
 
-import '../user/user_model.dart';
-import '../user/user_service.dart';
-import '../user/user_type.dart';
+import '/utils/my_calendar.dart';
+import '/utils/shared.dart';
 
 class WelcomePage extends StatefulWidget {
   const WelcomePage({super.key});
@@ -360,6 +360,7 @@ class _WelcomePageState extends State<WelcomePage> {
           protein: dailyTargetValues[index][3],
         ),
       ),
+      [], //TODO
       [], //TODO
       [], //TODO
     );

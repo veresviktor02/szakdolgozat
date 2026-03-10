@@ -1,9 +1,10 @@
+import '/user/user_type.dart';
+
 import '/day/day_model.dart';
+import '/day/measurement_unit/measurement_unit_model.dart';
 
 import '/food/food_model.dart';
 import '/food/kcal_and_nutrients_model.dart';
-
-import '/user/user_type.dart';
 
 class User {
   final int id;
@@ -15,6 +16,7 @@ class User {
   final List<KcalAndNutrients> dailyTarget;
   final List<Food> foods;
   final List<Day> days;
+  final List<MeasurementUnit> measurementUnits;
 
   User({
     required this.id,
@@ -26,6 +28,7 @@ class User {
     required this.dailyTarget,
     required this.foods,
     required this.days,
+    required this.measurementUnits,
   });
 
   factory User.fromJson(Map<String, dynamic> json) {
@@ -47,6 +50,9 @@ class User {
       days: (json['days'] as List<dynamic>)
           .map((item) => Day.fromJson(item))
           .toList(),
+      measurementUnits: (json['measurementUnits'] as List<dynamic>)
+          .map((item) => MeasurementUnit.fromJson(item))
+          .toList(),
     );
   }
 
@@ -61,6 +67,7 @@ class User {
       'dailyTarget': dailyTarget.map((item) => item.toJson()).toList(),
       'foods': foods.map((item) => item.toJson()).toList(),
       'days': days.map((item) => item.toJson()).toList(),
+      'measurementUnits': measurementUnits.map((item) => item.toJson()).toList(),
     };
   }
 }

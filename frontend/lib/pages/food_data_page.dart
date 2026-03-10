@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 
+import '/user/user_model.dart';
+import '/user/user_service.dart';
+
 import '/food/food_model.dart';
 import '/food/food_service.dart';
 
@@ -9,11 +12,13 @@ import '../utils/shared.dart';
 class FoodDataPage extends StatefulWidget {
   //Ezt adta át az előző oldal!
   final int foodId;
+  final int userId;
 
   const FoodDataPage({
     super.key,
 
     required this.foodId,
+    required this.userId,
   });
 
   @override
@@ -21,7 +26,35 @@ class FoodDataPage extends StatefulWidget {
 }
 
 class _FoodDataPageState extends State<FoodDataPage> {
+  final UserService userService = UserService();
   final FoodService foodService = FoodService();
+
+  User? user;
+  bool isLoading = true;
+  String? errorMessage;
+
+  @override
+  void initState() {
+    super.initState();
+
+    _loadUser();
+  }
+
+  Future<void> _loadUser() async {
+    try {
+      final loadedUser = await userService.getUserById(widget.userId);
+
+      setState(() {
+        user = loadedUser;
+        isLoading = false;
+      });
+    } catch (error) {
+      setState(() {
+        errorMessage = 'Nem sikerült betölteni a felhasználót: $error';
+        isLoading = false;
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -103,7 +136,7 @@ class _FoodDataPageState extends State<FoodDataPage> {
   }
 
   Future<Food> getFood() async {
-    return await foodService.getFoodById(widget.foodId);
+    return await foodService.getFoodById(widget.userId, widget.foodId);
   }
 
   Widget _textField(String label, String foodElement) {

@@ -20,9 +20,9 @@ public class FoodController {
         return foodService.getFoodsByUserId(id);
     }
 
-    @GetMapping("/foodById/{id}")
-    public Food getFoodById(@PathVariable Integer id) {
-        return foodService.getFoodById(id);
+    @GetMapping("/{userId}/{foodId}")
+    public Food getFoodById(@PathVariable Integer userId, @PathVariable Integer foodId) {
+        return foodService.getFoodById(userId, foodId);
     }
 
     ///////////////////////////////////////////////////////////////////////////////

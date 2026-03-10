@@ -1,12 +1,12 @@
-import 'package:http/http.dart' as http;
-
 import 'dart:convert';
 
-import '../utils/shared.dart';
+import 'package:http/http.dart' as http;
 
 import 'food_model.dart';
 
 import 'kcal_and_nutrients_model.dart';
+
+import '/utils/shared.dart';
 
 class FoodService {
   Future<List<Food>> fetchFoods(int id) async {
@@ -57,9 +57,9 @@ class FoodService {
     }
   }
 
-  Future<Food> getFoodById(int foodId) async {
+  Future<Food> getFoodById(int userId, int foodId) async {
     final response = await http.get(
-      Uri.parse('${Shared.baseUrl}/foods/$foodId'),
+      Uri.parse('${Shared.baseUrl}/foods/$userId/$foodId'),
     );
 
     if (response.statusCode == 200) {

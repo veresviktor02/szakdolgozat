@@ -3,6 +3,10 @@ GET localhost:8080/foods/1
 
 ###
 
+GET localhost:8080/foods/1/2
+
+###
+
 POST localhost:8080/foods/1
 Content-Type: application/json
 
@@ -26,7 +30,7 @@ Content-Type: application/json
   "kcalAndNutrients": {
     "kcal": 52.0,
     "fat": 0.2,
-    "carb": 14.0,
+    "carb": 10.0,
     "protein": 0.3
   }
 }
@@ -49,11 +53,6 @@ Content-Type: application/json
 ###
 
 ###Mindig legyen kikommentelve, ha nem használjuk, mert a PUT lefutása helyett ez fut le!!!
-###DELETE localhost:8080/1/foods/1
+###DELETE localhost:8080/foods/1
 
 ###
-
-GET localhost:8080/1/foods/2
-
-###
-

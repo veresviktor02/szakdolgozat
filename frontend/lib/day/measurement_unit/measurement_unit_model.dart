@@ -2,6 +2,7 @@ class MeasurementUnit {
   final int id;
   final String measurementUnitName;
   final int measurementUnitInGrams;
+  //final User owner; //@JsonBackReference miatt nem kell!
 
   MeasurementUnit({
     required this.id,

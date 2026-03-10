@@ -2,14 +2,14 @@ import 'dart:convert';
 
 import 'package:http/http.dart' as http;
 
-import '../../utils/shared.dart';
-
 import 'measurement_unit_model.dart';
 
+import '/utils/shared.dart';
+
 class MeasurementUnitService {
-  Future<List<MeasurementUnit>> fetchMeasurementUnits() async {
+  Future<List<MeasurementUnit>> fetchMeasurementUnits(int id) async {
     final response = await http.get(
-      Uri.parse('${Shared.baseUrl}/measurementUnits'),
+      Uri.parse('${Shared.baseUrl}/measurementUnits/$id'),
       headers: {
         'Content-Type': 'application/json',
       },
@@ -27,7 +27,7 @@ class MeasurementUnitService {
 
   Future<void> sendMeasurementUnit(String measurementUnitName, int measurementUnitInGrams) async {
     final response = await http.post(
-        Uri.parse('${Shared.baseUrl}/measurementUnit'),
+        Uri.parse('${Shared.baseUrl}/measurementUnits'),
         headers: {
           'Content-Type': 'application/json',
         },

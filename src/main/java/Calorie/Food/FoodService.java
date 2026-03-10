@@ -53,10 +53,10 @@ public class FoodService {
         foodRepository.deleteById(id);
     }
 
-    public Food getFoodById(Integer id) {
-        return foodRepository.findById(id)
+    public Food getFoodById(Integer userId, Integer foodId) {
+        return foodRepository.findByIdAndOwnerId(foodId, userId)
                 .orElseThrow(() -> new IllegalStateException(
-                        "A megadott ID nem található! (" + id + ')'
+                        "A megadott ID nem található! (" + foodId + ')'
                 ));
     }
 }

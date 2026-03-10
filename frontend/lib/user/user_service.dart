@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:flutter_application/day/measurement_unit/measurement_unit_model.dart';
 import 'package:http/http.dart' as http;
 
 import '/user/user_model.dart';
@@ -52,6 +53,7 @@ class UserService {
       List<KcalAndNutrients> dailyTarget,
       List<Food> foods,
       List<Day> days,
+      List<MeasurementUnit> measurementUnits,
   ) async {
     final response = await http.post(
       Uri.parse('${Shared.baseUrl}/users'),
@@ -67,6 +69,7 @@ class UserService {
         'dailyTarget': dailyTarget,
         'foods': foods,
         'days': days,
+        'measurementUnits': measurementUnits,
       }),
     );
 
