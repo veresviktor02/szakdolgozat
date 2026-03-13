@@ -20,6 +20,10 @@ GET localhost:8080/days/1/streak
 
 ###
 
+GET localhost:8080/days/leaderboard
+
+###
+
 POST localhost:8080/days/1/365
 Content-Type: application/json
 

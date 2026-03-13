@@ -2,6 +2,7 @@ package Calorie.Day;
 
 import Calorie.Food.KcalAndNutrients;
 
+import Calorie.User.User;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -37,6 +38,11 @@ public class DayController {
     @GetMapping("{id}/streak")
     public int getCurrentActivityStreak(@PathVariable Integer id) {
         return dayService.getCurrentActivityStreak(id);
+    }
+
+    @GetMapping("leaderboard")
+    public List<User> getMostActiveUsers() {
+        return dayService.getMostActiveUsers(5);
     }
 
     ///////////////////////////////////////////////////////////////////////////////

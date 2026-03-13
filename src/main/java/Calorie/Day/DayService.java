@@ -195,4 +195,14 @@ public class DayService {
             current = current.plusDays(1);
         }
     }
+
+    public List<User> getMostActiveUsers(int numberOfTopUsers) {
+        return userRepository.findAll().stream()
+                .sorted((u1, u2) -> Integer.compare(
+                        getCurrentActivityStreak(u2.getId()),
+                        getCurrentActivityStreak(u1.getId())
+                ))
+                .limit(numberOfTopUsers)
+                .toList();
+    }
 }
