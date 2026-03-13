@@ -1,5 +1,6 @@
 package Calorie.Day;
 
+import Calorie.Day.MeasurementUnit.MeasurementUnit;
 import Calorie.Food.KcalAndNutrients;
 
 import Calorie.User.User;
@@ -151,13 +152,12 @@ public class DayService {
     }
 
     //Hány napot trackelt a felhasználó egyhuzamban (mával számolva, nem történelmileg!).
-    public int getCurrentActivityStreak(Integer id) {
-        //TODO User kiválasztása!
+    public int getCurrentActivityStreak(Integer userId) {
         int streak = 0;
         LocalDate currentDate = LocalDate.now();
 
         while(true) {
-            Day day = dayRepository.findByDate(currentDate).orElse(null);
+            Day day = dayRepository.findByDateAndUserId(currentDate, userId).orElse(null);
 
             if(day == null || day.getFoodList() == null || day.getFoodList().isEmpty()) {
                 break;
