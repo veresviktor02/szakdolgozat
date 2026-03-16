@@ -1,13 +1,13 @@
 import 'dart:convert';
 
-import 'package:flutter_application/day/measurement_unit/measurement_unit_model.dart';
 import 'package:http/http.dart' as http;
 
-import '../utils/shared.dart';
+import '/day/day_model.dart';
+import '/day/measurement_unit/measurement_unit_model.dart';
 
-import 'package:flutter_application/day/day_model.dart';
+import '/food/kcal_and_nutrients_model.dart';
 
-import 'package:flutter_application/food/kcal_and_nutrients_model.dart';
+import '/utils/shared.dart';
 
 class DayService {
   Future<List<Day>> fetchDays(int id) async {
@@ -31,13 +31,13 @@ class DayService {
   Future<void> removeFoodFromDay(int dayId, int foodId) async {
     final response = await http.delete(
       Uri.parse(
-        '${Shared.baseUrl}/days/$dayId/foods/$foodId',
+        '${Shared.baseUrl}/days/$dayId/$foodId',
       ),
     );
 
     //HTTP 204: No content! - Delete sikeres, de nincs válasz!
     if(response.statusCode != 204 && response.statusCode != 200) {
-      throw Exception('Étel törlése sikertelen!');
+      throw Exception('Étel törlése a napból sikertelen!');
     }
   }
 
@@ -51,7 +51,7 @@ class DayService {
 
       return KcalAndNutrients.fromJson(jsonMap);
     }
-    //TODO ezt dobja!!!
+
     throw Exception('Kcal és tápanyagok lekérése sikertelen! (Válasz: ${response.statusCode})');
   }
 
