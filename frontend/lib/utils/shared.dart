@@ -54,4 +54,7 @@ class Shared {
       centerTitle: true,
     );
   }
+
+  //1000 = 1 sec
+  static int animationDuration = 800;
 }

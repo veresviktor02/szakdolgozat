@@ -1,7 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:percent_indicator/circular_percent_indicator.dart';
 
-import '../../food/kcal_and_nutrients_model.dart';
+import 'package:percent_indicator/circular_percent_indicator.dart';
+import 'package:percent_indicator/linear_percent_indicator.dart';
+
+import '/food/kcal_and_nutrients_model.dart';
+
+import '/utils/shared.dart';
+
 
 class DailyTarget extends StatelessWidget {
   final KcalAndNutrients dailyTargetForSelectedDay;
@@ -17,53 +22,48 @@ class DailyTarget extends StatelessWidget {
   Widget build(BuildContext context) {
     return Center(
       child: Container(
-        width: 500,
-        height: 500,
+        width: 600,
+        height: 400,
 
         decoration: BoxDecoration(
           border: Border.all(color: Colors.blueAccent,),
         ),
 
-        child: Column(
-          children: [
-            Text(
-              'Napi cél:',
-
-              style: TextStyle(
-                fontSize: 18,
-              ),
-            ),
-
-            const SizedBox(height: 10,),
-
-            Text('${dailyTargetForSelectedDay.kcal} Kcal',),
-            Text('${dailyTargetForSelectedDay.fat} g Zsír',),
-            Text('${dailyTargetForSelectedDay.carb} g Szénhidrát',),
-            Text('${dailyTargetForSelectedDay.protein} g Fehérje',),
-
-            const SizedBox(height: 10,),
-
-            _circularPercentIndicator(),
-
-          ],
-        ),
+        child: _percentIndicators(),
       ),
     );
   }
 
-  Widget _circularPercentIndicator() {
+  Widget _percentIndicators() {
     return FutureBuilder<KcalAndNutrients>(
       future: totalFuture,
 
       builder: (context, totalSnapshot) {
         if(totalFuture == null || totalSnapshot.connectionState == ConnectionState.waiting) {
-          //Ideiglenes CircularPercentIndicator, amíg betölt / értéket kap a totalFuture!
-          return CircularPercentIndicator(
-            radius: 100,
-            lineWidth: 15,
-            percent: 0,
+          //Skeleton a programnak!
+          return Column(
+            mainAxisAlignment: MainAxisAlignment.center,
 
-            backgroundColor: Colors.grey.shade300,
+            children: [
+              CircularPercentIndicator(
+                radius: 100,
+                lineWidth: 15,
+                percent: 0,
+                backgroundColor: Colors.grey.shade300,
+              ),
+
+              Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+
+                  children: [
+                    _nutrients('Zsír', 0, 100, Colors.orange),
+
+                    _nutrients('Szénhidrát', 0, 100, Colors.cyanAccent),
+
+                    _nutrients('Fehérje', 0, 100, Colors.brown),
+                  ]
+              ),
+            ],
           );
         }
         else if(totalSnapshot.hasError) {
@@ -73,57 +73,130 @@ class DailyTarget extends StatelessWidget {
           return const Text('Nincs adat.',);
         }
 
-        return CircularPercentIndicator(
-          //Enélkül nem az animationDuration alatt rajzolná ki a kört, hanem egyből!
-          key: const ValueKey('kcal_indicator'),
+        return Column(
+          mainAxisAlignment: MainAxisAlignment.center,
 
-          radius: 100,
-          lineWidth: 15,
-          percent: (totalSnapshot.data!.kcal / dailyTargetForSelectedDay.kcal).clamp(0.0, 1.0),
+          children: [
+            CircularPercentIndicator(
+              //Enélkül nem az animationDuration alatt rajzolná ki a kört, hanem egyből!
+              key: const ValueKey('kcal_indicator'),
 
-          animation: true,
-          //1000 = 1 sec
-          animationDuration: 800,
+              radius: 100,
+              lineWidth: 15,
+              percent: (totalSnapshot.data!.kcal / dailyTargetForSelectedDay.kcal).clamp(0.0, 1.0),
 
-          backgroundColor: Colors.grey.shade300,
-          progressColor: progressColor(totalSnapshot),
+              animation: true,
+              animationDuration: Shared.animationDuration,
 
-          circularStrokeCap: CircularStrokeCap.round,
+              backgroundColor: Colors.grey.shade300,
+              progressColor: progressColor(totalSnapshot),
 
-          center: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
+              circularStrokeCap: CircularStrokeCap.round,
 
-            children: [
-              Text(
-                totalSnapshot.data!.kcal.toString(),
+              center: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
 
-                style: const TextStyle(
-                  fontSize: 28,
-                  fontWeight: FontWeight.bold,
-                ),
+                children: [
+                  Text(
+                    totalSnapshot.data!.kcal.toString(),
+
+                    style: const TextStyle(
+                      fontSize: 32,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+
+                  const Text(
+                    'Kcal',
+
+                    style: TextStyle(
+                      fontSize: 20,
+                    ),
+                  ),
+
+                  Text(
+                    '${totalSnapshot.data!.kcal - dailyTargetForSelectedDay.kcal}',
+
+                    style: TextStyle(
+                      fontSize: 17,
+
+                      color: progressColor(totalSnapshot),
+                    ),
+                  ),
+                ],
               ),
+            ),
 
-              const Text('Kcal',),
+            SizedBox(height: 30,),
 
-              Text(
-                '${(
-                    (totalSnapshot.data!.kcal / dailyTargetForSelectedDay.kcal) * 100
-                ).toStringAsFixed(1)} %',
-                style: TextStyle(
-                  color: progressColor(totalSnapshot),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+
+              children: [
+                _nutrients(
+                    'Zsír',
+                    totalSnapshot.data!.fat,
+                    dailyTargetForSelectedDay.fat,
+                    Colors.orange
                 ),
-              ),
 
-              Text(
-                '${totalSnapshot.data!.kcal - dailyTargetForSelectedDay.kcal}',
-                style: TextStyle(
-                  color: progressColor(totalSnapshot),
+                _nutrients(
+                    'Szénhidrát',
+                    totalSnapshot.data!.carb,
+                    dailyTargetForSelectedDay.carb,
+                    Colors.cyanAccent
                 ),
-              ),
-            ],
-          ),
+
+                _nutrients(
+                    'Fehérje',
+                    totalSnapshot.data!.protein,
+                    dailyTargetForSelectedDay.protein,
+                    Colors.brown
+                ),
+              ]
+            ),
+          ],
         );
       },
+    );
+  }
+
+  Widget _nutrients(text, totalSnapshotNutrient, dailyTargetNutrient, color) {
+    return Column(
+      children: [
+        Text(
+          '$text',
+
+          style: TextStyle(
+            fontSize: 18,
+
+            fontWeight: FontWeight.w400,
+          ),
+        ),
+
+        Text(
+          '$totalSnapshotNutrient g / $dailyTargetNutrient g',
+
+          style: TextStyle(fontSize: 17,),
+        ),
+
+        SizedBox(height: 5,),
+
+        LinearPercentIndicator(
+          padding: EdgeInsets.zero,
+
+          width: 150.0,
+          lineHeight: 20.0,
+
+          progressColor: color,
+          backgroundColor: Colors.grey.shade300,
+
+          percent: (totalSnapshotNutrient / dailyTargetNutrient).clamp(0.0, 1.0),
+
+          animation: true,
+          animationDuration: Shared.animationDuration,
+        ),
+      ],
     );
   }
 
