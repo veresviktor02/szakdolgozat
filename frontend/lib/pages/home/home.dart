@@ -1,32 +1,32 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
+import 'package:table_calendar/table_calendar.dart';
+
 import 'package:go_router/go_router.dart';
-
-import '../../user/user_service.dart';
-import '../../utils/shared.dart';
-import '../../utils/my_calendar.dart';
-
-import 'api_food_search.dart';
-import 'daily_target.dart';
 
 import 'package:flutter_svg/flutter_svg.dart';
 
-import 'package:table_calendar/table_calendar.dart';
+import '/day/day_model.dart';
+import '/day/day_service.dart';
+import '/day/measurement_unit/measurement_unit_model.dart';
+import '/day/measurement_unit/measurement_unit_service.dart';
 
-import '../../day/day_model.dart';
-import '../../day/day_service.dart';
-import '../../day/measurement_unit/measurement_unit_model.dart';
-import '../../day/measurement_unit/measurement_unit_service.dart';
+import '/food/food_model.dart';
+import '/food/food_service.dart';
+import '/food/kcal_and_nutrients_model.dart';
 
-import '../../food/food_model.dart';
-import '../../food/food_service.dart';
-import '../../food/kcal_and_nutrients_model.dart';
+import '/user/user_model.dart';
+import '/user/user_service.dart';
 
-import '../../user/user_model.dart';
+import '/API/api_service.dart';
+import '/API/api_food_model.dart';
 
-import '../../API/api_service.dart';
-import '../../API/api_food_model.dart';
+import '/utils/shared.dart';
+import '/utils/my_calendar.dart';
+
+import 'api_food_search.dart';
+import 'daily_target.dart';
 
 class HomePage extends StatefulWidget {
   final int userId;
