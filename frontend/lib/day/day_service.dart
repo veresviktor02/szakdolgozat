@@ -2,6 +2,8 @@ import 'dart:convert';
 
 import 'package:http/http.dart' as http;
 
+import '/user/user_model.dart';
+
 import '/day/day_model.dart';
 import '/day/measurement_unit/measurement_unit_model.dart';
 
@@ -57,7 +59,9 @@ class DayService {
 
   Future<void> createEmptyDays(int id) async {
     final response = await http.get(
-      Uri.parse('${Shared.baseUrl}/days/create-empty-days/$id'),
+      Uri.parse(
+          '${Shared.baseUrl}/days/create-empty-days/$id'
+      ),
     );
 
     if(response.statusCode == 200) {
@@ -93,5 +97,35 @@ class DayService {
         'Étel hozzáadása a naphoz (ID: $dayId) sikertelen! (Válasz: ${response.statusCode})',
       );
     }
+  }
+
+  Future<List<User>> getMostActiveUsers() async {
+    final response = await http.get(
+      Uri.parse(
+        '${Shared.baseUrl}/days/leaderboard',
+      ),
+    );
+
+    if(response.statusCode == 200) {
+      final List<dynamic> data = jsonDecode(response.body);
+
+      return data.map((json) => User.fromJson(json)).toList();
+    }
+
+    throw Exception('Ranglista betöltése sikertelen. ${response.statusCode}',);
+  }
+
+  Future<int> getCurrentActivityStreak(int id) async {
+    final response = await http.get(
+      Uri.parse(
+        '${Shared.baseUrl}/days/$id/streak',
+      ),
+    );
+
+    if(response.statusCode == 200) {
+      return int.parse(response.body);
+    }
+
+    throw Exception('Nem sikerült lekérni a felhasználó (ID: $id) aktivitását. ${response.statusCode}');
   }
 }

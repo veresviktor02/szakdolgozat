@@ -186,7 +186,7 @@ class _HomePageState extends State<HomePage> {
 
               const SizedBox(height: 5,),
 
-              _navigateToThirdPage(context),
+              _navigateToLeaderboardPage(context),
           
               const SizedBox(height: 5,),
           
@@ -881,12 +881,12 @@ Widget _textFieldColumn(String textData, TextEditingController controller) {
   );
 }
 
-ElevatedButton _navigateToThirdPage(BuildContext context) {
+ElevatedButton _navigateToLeaderboardPage(BuildContext context) {
   return ElevatedButton(
       onPressed: () {
-        context.push('/third');
+        context.go('/leaderboard');
       },
 
-      child: const Text('3. oldal',),
+      child: const Text('Ranglista',),
   );
 }
