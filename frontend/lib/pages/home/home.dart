@@ -90,7 +90,7 @@ class _HomePageState extends State<HomePage> {
   void initState() {
     super.initState();
 
-    _loadUser();
+    loadUser();
 
     //Itt fecskendezzük be a függőséget.
     foodService = widget.foodService ?? FoodService();
@@ -100,7 +100,7 @@ class _HomePageState extends State<HomePage> {
     refreshPage();
   }
 
-  Future<void> _loadUser() async {
+  Future<void> loadUser() async {
     try {
       final loadedUser = await userService.getUserById(widget.userId);
 
@@ -397,7 +397,7 @@ class _HomePageState extends State<HomePage> {
               ],
             ),
 
-            _myDropdown(),
+            _measurementUnitDropdown(),
 
             const SizedBox(height: 10,),
 
@@ -435,7 +435,7 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  Widget _myDropdown() {
+  Widget _measurementUnitDropdown() {
     return Align(
       alignment: Alignment.centerLeft,
 
@@ -452,14 +452,12 @@ class _HomePageState extends State<HomePage> {
               if(measurementUnitSnapshot.connectionState == ConnectionState.waiting) {
                 return Shared.myCircularProgressIndicator();
               }
-              else if(measurementUnitSnapshot.hasError) {
+              if(measurementUnitSnapshot.hasError) {
                 return Text('Hiba történt: ${measurementUnitSnapshot.error}');
               }
-              else if(!measurementUnitSnapshot.hasData || measurementUnitSnapshot.data!.isEmpty) {
+              if(!measurementUnitSnapshot.hasData || measurementUnitSnapshot.data!.isEmpty) {
                 return const Text('Nincs elérhető mértékegység.');
               }
-
-              //final measurementUnits =
 
               return DropdownButtonFormField<MeasurementUnit>(
                 hint: const Text('Mértékegység'),
@@ -474,6 +472,7 @@ class _HomePageState extends State<HomePage> {
 
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
+
                       children: [
                         Text(measurementUnit.measurementUnitName),
 
@@ -571,10 +570,6 @@ class _HomePageState extends State<HomePage> {
                         Text('Szénhidrát: ${food.kcalAndNutrients.carb}',),
                         Text('Fehérje: ${food.kcalAndNutrients.protein}',),
                         Text('Tömeg: ${food.foodWeight} ${food.measurementUnit.measurementUnitName}',),
-
-                        SizedBox(height: 5.0,),
-
-                        _navigateToFoodDataPage(food.id),
                       ],
                     ),
                   );
@@ -618,7 +613,7 @@ class _HomePageState extends State<HomePage> {
               },
 
               child: const Text(
-                'Hozzáadás',
+                'Hozzáadás a napodhoz',
 
                 style: TextStyle(
                   fontSize: 12,
@@ -688,7 +683,7 @@ class _HomePageState extends State<HomePage> {
               (food) {
             return SizedBox(
               width: 200,
-              height: 200,
+              //height: 250,
 
               child: Card(
                 elevation: 3,
@@ -716,6 +711,10 @@ class _HomePageState extends State<HomePage> {
                         Text('Zsír: ${food.kcalAndNutrients.fat} g',),
                         Text('Szénhidrát: ${food.kcalAndNutrients.carb} g',),
                         Text('Fehérje: ${food.kcalAndNutrients.protein} g',),
+
+                        const SizedBox(height: 10,),
+
+                        _navigateToFoodDataPage(food.id),
 
                         const SizedBox(height: 10,),
 
@@ -756,14 +755,14 @@ class _HomePageState extends State<HomePage> {
             return Center(child: Shared.myCircularProgressIndicator());
           }
           //Hiba történt
-          else if(foodSnapshot.hasError) {
+          if(foodSnapshot.hasError) {
             return Text(
               'Hiba: ${foodSnapshot.error}',
               style: const TextStyle(color: Colors.red),
             );
           }
           //Nem üres a lista
-          else if(foodSnapshot.data!.isNotEmpty) {
+          if(foodSnapshot.data!.isNotEmpty) {
             return _foodColumn(foodSnapshot);
           }
 
@@ -777,7 +776,7 @@ class _HomePageState extends State<HomePage> {
   ElevatedButton _navigateToFoodDataPage(int foodId) {
     return ElevatedButton(
       onPressed: () {
-        context.go('/foodDataPage/$foodId');
+        context.go('/foodDataPage/${user!.id}/$foodId');
       },
 
       child: const Text('Étel adatlapja',),
