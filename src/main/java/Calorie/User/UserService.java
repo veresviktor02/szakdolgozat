@@ -18,9 +18,14 @@ public class UserService {
     }
 
     private final UserRepository userRepository;
+    private final UserNameCheckerService userNameCheckerService;
 
-    public UserService(UserRepository userRepository) {
+    public UserService(
+            UserRepository userRepository,
+            UserNameCheckerService userNameCheckerService
+    ) {
         this.userRepository = userRepository;
+        this.userNameCheckerService = userNameCheckerService;
     }
 
     public List<User> getAllUsers() {
@@ -28,6 +33,8 @@ public class UserService {
     }
 
     public void insertUser(User user) {
+        userNameCheckerService.validate(user.getName());
+
         if(user.getUserType() == UserType.FREE && user.isDifferentDays()) {
             throw new IllegalStateException(
                     "A felhasználó nem lehet FREE és különböző napos egyszerre!"
