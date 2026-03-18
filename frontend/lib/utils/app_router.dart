@@ -16,28 +16,23 @@ import 'shared.dart';
 final GoRouter appRouter = GoRouter(
   initialLocation: '/',
 
-  errorBuilder: (context, state) => Scaffold(
-    appBar: Shared.myAppBar('Error',),
+  errorBuilder: (context, state) => _ErrorPage(message: state.error!.toString()),
 
-    body: Center(
-      child: Text(
-        state.error?.toString() ?? 'A keresett oldal nem található!',
-      ),
-    ),
-  ),
   routes: [
     GoRoute(
       path: '/',
+
       builder: (context, state) => const WelcomePage(),
     ),
 
     GoRoute(
       path: '/home/:userId',
+
       builder: (context, state) {
         final userId = int.tryParse(state.pathParameters['userId'] ?? '');
 
         if(userId == null) {
-          return const _ErrorPage(message: 'User argumentum hiányzik!');
+          return const _ErrorPage(message: 'Hiányzó argumentum (userId)!');
         }
 
         return HomePage(userId: userId);
@@ -46,12 +41,17 @@ final GoRouter appRouter = GoRouter(
 
     GoRoute(
       path: '/foodDataPage/:userId/:foodId',
+
       builder: (context, state) {
         final userId = int.tryParse(state.pathParameters['userId'] ?? '');
         final foodId = int.tryParse(state.pathParameters['foodId'] ?? '');
 
-        if(userId == null || foodId == null) {
-          return const _ErrorPage(message: 'Hiányzó adat!');
+        if(userId == null) {
+          return const _ErrorPage(message: 'Hiányzó argumentum (userId)!');
+        }
+
+        if(foodId == null) {
+          return const _ErrorPage(message: 'Hiányzó argumentum (foodId)!');
         }
 
         return FoodDataPage(userId: userId, foodId: foodId);
@@ -60,16 +60,19 @@ final GoRouter appRouter = GoRouter(
 
     GoRoute(
       path: '/third',
+
       builder: (context, state) => const ThirdPage(),
     ),
 
     GoRoute(
       path: '/leaderboard',
+
       builder: (context, state) => const LeaderboardPage(),
     ),
 
     GoRoute(
       path: '/settings/:userId',
+
       builder: (context, state) {
         final userId = int.tryParse(state.pathParameters['userId'] ?? '');
 
@@ -95,19 +98,19 @@ class _ErrorPage extends StatelessWidget {
 
       body: Column(
         children: [
-          SizedBox(height: 30,),
+          const SizedBox(height: 30,),
 
           Center(
             child: Text(
               message,
 
-              style: TextStyle(
+              style: const TextStyle(
                 fontSize: 40,
               ),
             ),
           ),
 
-          SizedBox(height: 300,),
+          const SizedBox(height: 300,),
 
           ElevatedButton(
             onPressed: () {
