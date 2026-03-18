@@ -8,13 +8,14 @@ import jakarta.persistence.*;
 
 import java.util.Objects;
 
+//Egy mértékegységnévből ne lehessen több, de más-más felhasználónak lehet így ugyanaz a név!
 @Entity
+@Table(uniqueConstraints = {@UniqueConstraint(columnNames = {"owner_id", "measurementUnitName"})})
 public class MeasurementUnit {
     @Id
     @GeneratedValue
     private Integer id;
 
-    @Column(unique = true)
     //kg, g, 100g, lbs, ...
     private String measurementUnitName;
 
@@ -100,10 +101,10 @@ public class MeasurementUnit {
 
     @Override
     public String toString() {
-        return "MeasurementUnit:" + '\n' +
-                "id = " + id + '\n' +
-                "measurementUnitName = " + measurementUnitName + '\n' +
-                "measurementUnitInGrams = " + measurementUnitInGrams + '\n' +
-                "owner = " + owner;
+        return "Mértékegység: " + '\n' +
+                "ID = " + id + '\n' +
+                "Mértékegység neve = " + measurementUnitName + '\n' +
+                "Mértékegység grammban = " + measurementUnitInGrams + '\n' +
+                "Tulajdonos = " + owner;
     }
 }
