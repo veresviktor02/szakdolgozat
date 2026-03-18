@@ -1,7 +1,7 @@
 import '/day/measurement_unit/measurement_unit_model.dart';
 
-import '../food/food_model.dart';
-import '../food/kcal_and_nutrients_model.dart';
+import '/food/food_model.dart';
+import '/food/kcal_and_nutrients_model.dart';
 
 class EmbeddedFood {
   final int id;

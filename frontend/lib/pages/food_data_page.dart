@@ -6,7 +6,7 @@ import '/user/user_service.dart';
 import '/food/food_model.dart';
 import '/food/food_service.dart';
 
-import '../utils/shared.dart';
+import '/utils/shared.dart';
 
 //Ez az oldal arra szolgál, hogy egy adott étel adatait vizsgálhassuk meg.
 class FoodDataPage extends StatefulWidget {

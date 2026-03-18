@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 
-import '../food/food_model.dart';
-import '../food/food_service.dart';
+import '/food/food_model.dart';
+import '/food/food_service.dart';
 
-import '../utils/shared.dart';
+import '/utils/shared.dart';
 
 class ThirdPage extends StatefulWidget {
   const ThirdPage({super.key});

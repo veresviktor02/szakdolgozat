@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 
-import '../../API/api_food_model.dart';
-import '../../API/api_service.dart';
-import '../../utils/shared.dart';
+import '/API/api_food_model.dart';
+import '/API/api_service.dart';
+
+import '/utils/shared.dart';
 
 class ApiFoodSearch extends StatefulWidget {
   final APIService apiService;

@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 
-import '../user/user_model.dart';
+import '/user/user_model.dart';
+import '/user/user_service.dart';
+import '/user/user_type.dart';
 
-import '../user/user_service.dart';
-import '../user/user_type.dart';
-import '../utils/shared.dart';
+import '/utils/shared.dart';
 
 class SettingsPage extends StatefulWidget {
   final int userId;
