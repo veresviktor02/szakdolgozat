@@ -66,10 +66,10 @@ class DailyTarget extends StatelessWidget {
             ],
           );
         }
-        else if(totalSnapshot.hasError) {
+        if(totalSnapshot.hasError) {
           return Text('Hiba: ${totalSnapshot.error}',);
         }
-        else if(!totalSnapshot.hasData) {
+        if(!totalSnapshot.hasData) {
           return const Text('Nincs adat.',);
         }
 
@@ -127,7 +127,7 @@ class DailyTarget extends StatelessWidget {
               ),
             ),
 
-            SizedBox(height: 30,),
+            const SizedBox(height: 30,),
 
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -167,7 +167,7 @@ class DailyTarget extends StatelessWidget {
         Text(
           '$text',
 
-          style: TextStyle(
+          style: const TextStyle(
             fontSize: 18,
 
             fontWeight: FontWeight.w400,
@@ -177,10 +177,10 @@ class DailyTarget extends StatelessWidget {
         Text(
           '$totalSnapshotNutrient g / $dailyTargetNutrient g',
 
-          style: TextStyle(fontSize: 17,),
+          style: const TextStyle(fontSize: 17,),
         ),
 
-        SizedBox(height: 5,),
+        const SizedBox(height: 5,),
 
         LinearPercentIndicator(
           padding: EdgeInsets.zero,

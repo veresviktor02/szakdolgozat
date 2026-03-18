@@ -508,10 +508,10 @@ class _HomePageState extends State<HomePage> {
     if(myCalendar.selectedFoods.isEmpty) {
       return Column(
         children: [
-          SizedBox(
+          const SizedBox(
             height: 500,
 
-            child: const Center(
+            child: Center(
               child: Text(
                 'A napod üres! (myCalendar.selectedFoods.isEmpty == true)',
               ),
@@ -838,6 +838,7 @@ Widget _textFieldColumn(String textData, TextEditingController controller) {
 
           child: Text(
             textData,
+
             textAlign: TextAlign.center,
           ),
 
@@ -853,7 +854,7 @@ Widget _textFieldColumn(String textData, TextEditingController controller) {
 
             inputFormatters: [
               //Csak számok!
-              FilteringTextInputFormatter.allow(RegExp(r'^\d*\.?\d*')),
+              FilteringTextInputFormatter.allow(Shared.onlyNumbers),
             ],
 
             keyboardType: TextInputType.number,

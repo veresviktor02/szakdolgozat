@@ -7,6 +7,10 @@ class Shared {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text(message,),
+        
+        margin: EdgeInsets.all(15.0,),
+
+        behavior: SnackBarBehavior.floating,
 
         backgroundColor: color,
 
@@ -15,7 +19,7 @@ class Shared {
     );
   }
 
-  static String baseUrl = 'http://localhost:8080';
+  static const String baseUrl = 'http://localhost:8080';
 
   //Csak a stílus! Méretezéshez SizedBox-ba kell rakni!
   static CircularProgressIndicator myCircularProgressIndicator() {
@@ -56,5 +60,7 @@ class Shared {
   }
 
   //1000 = 1 sec
-  static int animationDuration = 800;
+  static const int animationDuration = 800;
+
+  static RegExp onlyNumbers = RegExp(r'^\d*\.?\d*');
 }

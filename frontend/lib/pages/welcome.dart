@@ -83,7 +83,7 @@ class _WelcomePageState extends State<WelcomePage> {
       setState(() {
         tempUser = user;
       });
-    } catch (e, stackTrace) {
+    } catch(e, stackTrace) {
       print('User betöltési hiba: $e');
       print(stackTrace);
     }
@@ -91,8 +91,6 @@ class _WelcomePageState extends State<WelcomePage> {
 
   @override
   void dispose() {
-    super.dispose();
-
     nameController.dispose();
     weightController.dispose();
     heightController.dispose();
@@ -103,6 +101,8 @@ class _WelcomePageState extends State<WelcomePage> {
         controllers[days][nutrient].dispose();
       }
     }
+
+    super.dispose();
   }
 
   @override
@@ -174,7 +174,7 @@ class _WelcomePageState extends State<WelcomePage> {
 
       checkCouponStatus(couponStatus);
 
-    } catch (error) {
+    } catch(error) {
       if(!mounted) {
         return;
       }
@@ -267,7 +267,7 @@ class _WelcomePageState extends State<WelcomePage> {
                 controller: weightController,
                 labelText: 'Testtömeg (kg):',
                 hintText: 'Testtömeg',
-                format: FilteringTextInputFormatter.allow(RegExp(r'^\d*\.?\d*')),
+                format: FilteringTextInputFormatter.allow(Shared.onlyNumbers),
               ),
 
               const SizedBox(height: 10,),
@@ -276,7 +276,7 @@ class _WelcomePageState extends State<WelcomePage> {
                 controller: heightController,
                 labelText: 'Magasság (cm):',
                 hintText: 'Magasság',
-                format: FilteringTextInputFormatter.allow(RegExp(r'^\d*\.?\d*')),
+                format: FilteringTextInputFormatter.allow(Shared.onlyNumbers),
               ),
 
               const SizedBox(height: 10,),
@@ -295,7 +295,7 @@ class _WelcomePageState extends State<WelcomePage> {
                 child: ElevatedButton(
                   onPressed: validateCouponCode,
 
-                  child: Text('Kupon ellenőrzése',),
+                  child: const Text('Kupon ellenőrzése',),
                 ),
               ),
 
@@ -542,7 +542,7 @@ class _WelcomePageState extends State<WelcomePage> {
               padding: const EdgeInsets.all(15.0,),
 
               child: const Text(
-                'Minden napra ugyannyi tápanyagot tudsz beálllítani! \n'
+                'Minden napra ugyannyi tápanyagot tudsz beállítani! \n'
                 'Ha nem tetszik, használd a PREMIUM kódot!',
 
                 textAlign: TextAlign.center,
@@ -625,7 +625,7 @@ class _WelcomePageState extends State<WelcomePage> {
               keyboardType: TextInputType.number,
 
               inputFormatters: [
-                FilteringTextInputFormatter.allow(RegExp(r'^\d*\.?\d*')),
+                FilteringTextInputFormatter.allow(Shared.onlyNumbers),
               ],
 
               decoration: const InputDecoration(
@@ -767,11 +767,11 @@ Container _userDataInput({
               filled: true,
               fillColor: Colors.white,
 
-              contentPadding: EdgeInsets.all(15.0,),
+              contentPadding: const EdgeInsets.all(15.0,),
 
               hintText: hintText,
 
-              hintStyle: TextStyle(
+              hintStyle: const TextStyle(
                 color: Colors.grey,
 
                 fontSize: 14,
@@ -785,14 +785,14 @@ Container _userDataInput({
 }
 
 Padding _greeting() {
-  return Padding(
-    padding: const EdgeInsets.all(8.0,),
+  return const Padding(
+    padding: EdgeInsets.all(8.0,),
 
     child: Row(
       mainAxisAlignment: MainAxisAlignment.center,
 
       children: [
-        const Text(
+        Text(
           'Ez a bejelentkezési oldal. Kérlek, töltsd ki az alábbi adatokat a kezdéshez!',
 
           style: TextStyle(

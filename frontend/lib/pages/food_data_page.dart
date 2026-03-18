@@ -78,16 +78,14 @@ class _FoodDataPageState extends State<FoodDataPage> {
                   if(foodSnapshot.connectionState == ConnectionState.waiting) {
                     return Shared.myCircularProgressIndicator();
                   }
-
                   if(foodSnapshot.hasError) {
                     return Text('Hiba történt: ${foodSnapshot.error}');
                   }
-
                   if(!foodSnapshot.hasData) {
                     return const Text('Nincs étel adat.');
                   }
 
-                  return displayFood(foodSnapshot.data!);
+                  return _displayFood(foodSnapshot.data!);
                 },
               ),
             ),
@@ -97,12 +95,12 @@ class _FoodDataPageState extends State<FoodDataPage> {
     );
   }
 
-  Widget displayFood(Food food) {
+  Widget _displayFood(Food food) {
     return Container(
       width: 300,
       height: 300,
 
-      padding: EdgeInsets.all(15.0),
+      padding: const EdgeInsets.all(15.0),
 
       decoration: BoxDecoration(
         border: Border.all(color: Colors.blueAccent,),
@@ -112,7 +110,7 @@ class _FoodDataPageState extends State<FoodDataPage> {
         mainAxisAlignment: MainAxisAlignment.start,
 
         children: [
-          Text(
+          const Text(
               'Ételed:',
 
             style: TextStyle(
@@ -122,7 +120,7 @@ class _FoodDataPageState extends State<FoodDataPage> {
             ),
           ),
 
-          SizedBox(height: 20,),
+          const SizedBox(height: 20,),
 
           _textField('ID', food.id.toString()),
           _textField('Név', food.name.toString()),
@@ -150,7 +148,7 @@ class _FoodDataPageState extends State<FoodDataPage> {
           Text(
             '$label: ',
 
-            style: TextStyle(
+            style: const TextStyle(
               fontSize: 16,
 
               fontWeight: FontWeight.w300
@@ -160,7 +158,7 @@ class _FoodDataPageState extends State<FoodDataPage> {
           Text(
             foodElement,
 
-            style: TextStyle(
+            style: const TextStyle(
                 fontSize: 16,
 
                 fontWeight: FontWeight.w300
