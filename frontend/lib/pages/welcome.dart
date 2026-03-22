@@ -108,7 +108,7 @@ class _WelcomePageState extends State<WelcomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: Shared.myAppBar('Üdvözöllek a Kalóriaszámláló alkalmazásban!',),
+      appBar: Shared.myAppBar('Regisztráció',),
 
       backgroundColor: Colors.white,
 
@@ -331,13 +331,13 @@ class _WelcomePageState extends State<WelcomePage> {
     //Ha üresek a kontrollerek, akkor
     if(areControllersEmpty()) {
       Shared.mySnackBar(
-        'Még nem adtál meg adatokat! Töltsd ki a fentebbi mezőket!',
+        'Még nem adtál meg minden adatot! Töltsd ki a fentebbi mezőket!',
         Colors.red,
         context,
       );
 
       throw Exception(
-        'Még nem adtál meg adatokat! Töltsd ki a fentebbi mezőket!',
+        'Még nem adtál meg minden adatot! Töltsd ki a fentebbi mezőket!',
       );
     }
 
@@ -524,83 +524,83 @@ class _WelcomePageState extends State<WelcomePage> {
     }
 
     return Center(
-      child: Container(
-        width: 500,
-        height: 700,
+      child: Expanded(
+        child: Container(
+          width: 500,
 
-        padding: const EdgeInsets.all(10.0,),
+          padding: const EdgeInsets.all(10.0,),
 
-        decoration: BoxDecoration(
-          border: Border.all(color: Colors.blueAccent),
-        ),
+          decoration: BoxDecoration(
+            border: Border.all(color: Colors.blueAccent),
+          ),
 
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
 
-          children: [
-            Padding(
-              padding: const EdgeInsets.all(15.0,),
+            children: [
+              Padding(
+                padding: const EdgeInsets.all(15.0,),
 
-              child: const Text(
-                'Minden napra ugyannyi tápanyagot tudsz beállítani! \n'
-                'Ha nem tetszik, használd a PREMIUM kódot!',
+                child: const Text(
+                  'Minden napra ugyannyi tápanyagot tudsz beállítani!',
 
-                textAlign: TextAlign.center,
+                  textAlign: TextAlign.center,
 
-                style: TextStyle(
-                  fontSize: 16,
+                  style: TextStyle(
+                    fontSize: 16,
+                  ),
                 ),
               ),
-            ),
 
-            const SizedBox(height: 20,),
+              const SizedBox(height: 20,),
 
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
 
-              children: [
-                _nutrientField(
-                  'Kcal',
-                  controllers[0][0],
-                  (val) {
-                    for(int day = 0; day < 7; day++) {
-                      dailyTargetValues[day][0] = double.tryParse(val)!;
+                children: [
+                  _nutrientField(
+                    'Kcal',
+                    controllers[0][0],
+                    (val) {
+                      for(int day = 0; day < 7; day++) {
+                        dailyTargetValues[day][0] = double.tryParse(val)!;
+                      }
                     }
-                  }
-                ),
+                  ),
 
-                _nutrientField(
-                  'zsír',
-                  controllers[0][1],
-                  (val) {
-                    for(int day = 0; day < 7; day++) {
-                      dailyTargetValues[day][1] = double.tryParse(val)!;
+                  _nutrientField(
+                    'Zsír',
+                    controllers[0][1],
+                    (val) {
+                      for(int day = 0; day < 7; day++) {
+                        dailyTargetValues[day][1] = double.tryParse(val)!;
+                      }
                     }
-                  }
-                ),
+                  ),
 
-                _nutrientField(
-                  'Szénhidrát',
-                  controllers[0][2],
-                  (val) {
-                    for(int day = 0; day < 7; day++) {
-                      dailyTargetValues[day][2] = double.tryParse(val)!;
+                  _nutrientField(
+                    'Szénhidrát',
+                    controllers[0][2],
+                    (val) {
+                      for(int day = 0; day < 7; day++) {
+                        dailyTargetValues[day][2] = double.tryParse(val)!;
+                      }
                     }
-                  }
-                ),
+                  ),
 
-                _nutrientField(
-                  'Fehérje',
-                  controllers[0][3],
-                  (val) {
-                    for(int day = 0; day < 7; day++) {
-                      dailyTargetValues[day][3] = double.tryParse(val)!;
+                  _nutrientField(
+                    'Fehérje',
+                    controllers[0][3],
+                    (val) {
+                      for(int day = 0; day < 7; day++) {
+                        dailyTargetValues[day][3] = double.tryParse(val)!;
+                      }
                     }
-                  }
-                ),
-              ],
-            ),
-          ],
+                  ),
+                ],
+              ),
+            ],
+          ),
         ),
       )
     );
@@ -793,10 +793,12 @@ Padding _greeting() {
 
       children: [
         Text(
-          'Ez a bejelentkezési oldal. Kérlek, töltsd ki az alábbi adatokat a kezdéshez!',
+          'Ez a bejelentkezési oldal.\nTöltsd ki az alábbi adatokat a kezdéshez!',
+
+          textAlign: TextAlign.center,
 
           style: TextStyle(
-            fontSize: 30,
+            fontSize: 26,
           ),
         ),
       ],

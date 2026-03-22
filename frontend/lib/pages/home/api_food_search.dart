@@ -117,96 +117,102 @@ class ApiFoodSearchState extends State<ApiFoodSearch> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      width: 600,
+    return Center(
+      child: Container(
+        width: 600,
 
-      padding: const EdgeInsets.all(20.0,),
+        padding: const EdgeInsets.all(20.0,),
 
-      decoration: BoxDecoration(
-        border: Border.all(color: Colors.blueAccent,),
-      ),
+        decoration: BoxDecoration(
+          border: Border.all(color: Colors.blueAccent,),
+        ),
 
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
 
-        children: [
-          const Text(
-            'CalorieNinjas API ételkeresés',
-
-            style: TextStyle(
-              fontSize: 16,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-
-          const SizedBox(height: 10),
-
-          Row(
-            children: [
-              Expanded(
-                child: TextField(
-                  controller: apiQueryController,
-
-                  decoration: const InputDecoration(
-                    labelText: 'Írj be egy vagy több ételt (pl. "banana 100g")',
-
-                    border: OutlineInputBorder(),
-                  ),
-
-                  onSubmitted: (_) => apiLoading ? null : searchFromApi(),
-                ),
-              ),
-
-              const SizedBox(width: 10,),
-
-              ElevatedButton(
-                onPressed: apiLoading ? null : () {
-                  searchFromApi();
-                  startedSearching = true;
-                },
-
-                child: const Text('Keresés',),
-              ),
-            ],
-          ),
-
-          const SizedBox(height: 10,),
-
-          if(apiLoading)
-            Center(child: Shared.myCircularProgressIndicator(),),
-
-          if(!apiLoading && apiError != null)
-            Text(
-              'Hiba: $apiError',
-
-              style: const TextStyle(color: Colors.red,),
-            ),
-
-          if(!apiLoading
-              && apiError == null
-              && apiFoodList.isEmpty
-              && startedSearching
-          )
+          children: [
             const Text(
-              'Nincs találat!',
+              'CalorieNinjas API ételkeresés',
 
-              style: TextStyle(fontSize: 16,),
+              style: TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.bold,
+              ),
             ),
 
-          if(apiFoodList.isNotEmpty) ...[
+            const SizedBox(height: 10),
+
+            Row(
+              children: [
+                Expanded(
+                  child: TextField(
+                    controller: apiQueryController,
+
+                    decoration: const InputDecoration(
+                      labelText: 'Írj be egy vagy több ételt (pl. "banana 100g")',
+
+                      labelStyle: TextStyle(
+                        fontSize: 15,
+                      ),
+
+                      border: OutlineInputBorder(),
+                    ),
+
+                    onSubmitted: (_) => apiLoading ? null : searchFromApi(),
+                  ),
+                ),
+
+                const SizedBox(width: 10,),
+
+                ElevatedButton(
+                  onPressed: apiLoading ? null : () {
+                    searchFromApi();
+                    startedSearching = true;
+                  },
+
+                  child: const Text('Keresés',),
+                ),
+              ],
+            ),
+
             const SizedBox(height: 10,),
 
-            ListView.builder(
-              shrinkWrap: true,
+            if(apiLoading)
+              Center(child: Shared.myCircularProgressIndicator(),),
 
-              physics: const NeverScrollableScrollPhysics(),
+            if(!apiLoading && apiError != null)
+              Text(
+                'Hiba: $apiError',
 
-              itemCount: apiFoodList.length,
+                style: const TextStyle(color: Colors.red,),
+              ),
 
-              itemBuilder: (context, index) => foodCard(apiFoodList[index]),
-            ),
+            if(!apiLoading
+                && apiError == null
+                && apiFoodList.isEmpty
+                && startedSearching
+            )
+              const Text(
+                'Nincs találat!',
+
+                style: TextStyle(fontSize: 16,),
+              ),
+
+            if(apiFoodList.isNotEmpty) ...[
+              const SizedBox(height: 10,),
+
+              ListView.builder(
+                shrinkWrap: true,
+
+                physics: const NeverScrollableScrollPhysics(),
+
+                itemCount: apiFoodList.length,
+
+                itemBuilder: (context, index) => foodCard(apiFoodList[index]),
+              ),
+            ],
           ],
-        ],
+        ),
       ),
     );
   }

@@ -184,11 +184,7 @@ class _HomePageState extends State<HomePage> {
 
               _calendar(),
 
-              const SizedBox(height: 5,),
-
-              _navigateToLeaderboardPage(context),
-          
-              const SizedBox(height: 5,),
+              const SizedBox(height: 20,),
           
               _futureFoodBuilder(foodFuture),
           
@@ -199,6 +195,10 @@ class _HomePageState extends State<HomePage> {
               const SizedBox(height: 20,),
 
               ApiFoodSearch(apiService: apiService,),
+
+              const SizedBox(height: 20,),
+
+              _navigateToLeaderboardPage(context),
 
               const SizedBox(height: 20,),
           
@@ -353,85 +353,87 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  Container _dataSenderContainer() {
-    return Container(
-        width: 600,
-        height: 500,
+  Widget _dataSenderContainer() {
+    return Center(
+      child: Container(
+          width: 600,
+          height: 500,
 
-        padding: const EdgeInsets.all(20.0,),
+          padding: const EdgeInsets.all(20.0,),
 
-        decoration: BoxDecoration(
-          border: Border.all(color: Colors.blueAccent),
-        ),
+          decoration: BoxDecoration(
+            border: Border.all(color: Colors.blueAccent),
+          ),
 
 
-        child: Column(
-          children: [
-            Row(
-              children: [
-                const Text(
-                  'Add meg a bevinni kívánt adatokat!',
-
-                  style: TextStyle(
-                    fontSize: 17,
-
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ],
-            ),
-
-            const SizedBox(height: 20,),
-
-            _nameTextField(nameController),
-
-            Row(
-              mainAxisAlignment: MainAxisAlignment.start,
-
-              children: [
-                _textFieldColumn('Kcal', kcalController),
-                _textFieldColumn('Zsír', fatController),
-                _textFieldColumn('Szénhidrát', carbController),
-                _textFieldColumn('Fehérje', proteinController),
-                _textFieldColumn('Tömeg', foodWeightController),
-              ],
-            ),
-
-            _measurementUnitDropdown(),
-
-            const SizedBox(height: 10,),
-
-            Container(
-              alignment: Alignment.centerLeft,
-
-              child: Column(
+          child: Column(
+            children: [
+              Row(
                 children: [
-                  Padding(
-                    padding: const EdgeInsets.all(10.0,),
+                  const Text(
+                    'Add meg a bevinni kívánt adatokat!',
 
-                    child: ElevatedButton(
-                      onPressed: () async {
-                        await sendFood();
+                    style: TextStyle(
+                      fontSize: 17,
 
-                        zeroAllTextFields();
-
-                        await refreshPage();
-                      },
-                      style: ButtonStyle(
-                        //TODO: style
-                      ),
-
-                      child: const Text('Add hozzá az ételeidhez!',),
+                      fontWeight: FontWeight.bold,
                     ),
                   ),
-
-                  _foodSender(),
                 ],
               ),
-            ),
 
-          ],
-        )
+              const SizedBox(height: 20,),
+
+              _nameTextField(nameController),
+
+              Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+
+                children: [
+                  _textFieldColumn('Kcal', kcalController),
+                  _textFieldColumn('Zsír', fatController),
+                  _textFieldColumn('Szénhidrát', carbController),
+                  _textFieldColumn('Fehérje', proteinController),
+                  _textFieldColumn('Tömeg', foodWeightController),
+                ],
+              ),
+
+              _measurementUnitDropdown(),
+
+              const SizedBox(height: 10,),
+
+              Container(
+                alignment: Alignment.centerLeft,
+
+                child: Column(
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.all(10.0,),
+
+                      child: ElevatedButton(
+                        onPressed: () async {
+                          await sendFood();
+
+                          zeroAllTextFields();
+
+                          await refreshPage();
+                        },
+                        style: ButtonStyle(
+                          //TODO: style
+                        ),
+
+                        child: const Text('Add hozzá az ételeidhez!',),
+                      ),
+                    ),
+
+                    _foodSender(),
+                  ],
+                ),
+              ),
+
+            ],
+          )
+      ),
     );
   }
 
@@ -738,37 +740,39 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  Container _futureFoodBuilder(Future<List<Food>> foodFuture) {
-    return Container(
-      padding: const EdgeInsets.all(20.0,),
+  Widget _futureFoodBuilder(Future<List<Food>> foodFuture) {
+    return Center(
+      child: Container(
+        padding: const EdgeInsets.all(20.0,),
 
-      decoration: BoxDecoration(
-        border: Border.all(color: Colors.blueAccent),
-      ),
+        decoration: BoxDecoration(
+          border: Border.all(color: Colors.blueAccent),
+        ),
 
-      child: FutureBuilder<List<Food>>(
-        future: foodFuture,
+        child: FutureBuilder<List<Food>>(
+          future: foodFuture,
 
-        builder: (context, foodSnapshot) {
-          //Várakozik a kapcsolatra
-          if(foodSnapshot.connectionState == ConnectionState.waiting) {
-            return Center(child: Shared.myCircularProgressIndicator());
-          }
-          //Hiba történt
-          if(foodSnapshot.hasError) {
-            return Text(
-              'Hiba: ${foodSnapshot.error}',
-              style: const TextStyle(color: Colors.red),
-            );
-          }
-          //Nem üres a lista
-          if(foodSnapshot.data!.isNotEmpty) {
-            return _foodColumn(foodSnapshot);
-          }
+          builder: (context, foodSnapshot) {
+            //Várakozik a kapcsolatra
+            if(foodSnapshot.connectionState == ConnectionState.waiting) {
+              return Center(child: Shared.myCircularProgressIndicator());
+            }
+            //Hiba történt
+            if(foodSnapshot.hasError) {
+              return Text(
+                'Hiba: ${foodSnapshot.error}',
+                style: const TextStyle(color: Colors.red),
+              );
+            }
+            //Nem üres a lista
+            if(foodSnapshot.data!.isNotEmpty) {
+              return _foodColumn(foodSnapshot);
+            }
 
-          //Üres a lista
-          return const Text('Nincs adat.',);
-        },
+            //Üres a lista
+            return const Text('Nincs adat.',);
+          },
+        ),
       ),
     );
   }
@@ -881,12 +885,14 @@ Widget _textFieldColumn(String textData, TextEditingController controller) {
   );
 }
 
-ElevatedButton _navigateToLeaderboardPage(BuildContext context) {
-  return ElevatedButton(
-      onPressed: () {
-        context.go('/leaderboard');
-      },
+Widget _navigateToLeaderboardPage(BuildContext context) {
+  return Center(
+    child: ElevatedButton(
+        onPressed: () {
+          context.go('/leaderboard');
+        },
 
-      child: const Text('Ranglista',),
+        child: const Text('Ranglista',),
+    ),
   );
 }
