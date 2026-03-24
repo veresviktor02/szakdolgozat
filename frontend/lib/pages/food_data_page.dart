@@ -37,10 +37,10 @@ class _FoodDataPageState extends State<FoodDataPage> {
   void initState() {
     super.initState();
 
-    _loadUser();
+    loadUser();
   }
 
-  Future<void> _loadUser() async {
+  Future<void> loadUser() async {
     try {
       final loadedUser = await userService.getUserById(widget.userId);
 
@@ -61,12 +61,12 @@ class _FoodDataPageState extends State<FoodDataPage> {
     return Scaffold(
       appBar: Shared.myAppBar('Étel adatlap',),
 
-      backgroundColor: Colors.white,
+      backgroundColor: Shared.backgroundColor,
 
       body: Column(
         children: [
           Padding(
-            padding: const EdgeInsets.all(100.0),
+            padding: const EdgeInsets.all(100.0,),
 
             child: Align(
               alignment: AlignmentGeometry.center,
@@ -100,7 +100,7 @@ class _FoodDataPageState extends State<FoodDataPage> {
       width: 300,
       height: 300,
 
-      padding: const EdgeInsets.all(15.0),
+      padding: const EdgeInsets.all(15.0,),
 
       decoration: BoxDecoration(
         border: Border.all(color: Colors.blueAccent,),
@@ -122,7 +122,6 @@ class _FoodDataPageState extends State<FoodDataPage> {
 
           const SizedBox(height: 20,),
 
-          _textField('ID', food.id.toString()),
           _textField('Név', food.name.toString()),
           _textField('Kcal', food.kcalAndNutrients.kcal.toString()),
           _textField('Fat', food.kcalAndNutrients.fat.toString()),

@@ -169,7 +169,7 @@ class _HomePageState extends State<HomePage> {
     return Scaffold(
       appBar: Shared.myAppBar('Kalóriaszámláló alkalmazás',),
 
-      backgroundColor: Colors.white,
+      backgroundColor: Shared.backgroundColor,
 
       body: SizedBox(
         child: SingleChildScrollView(
@@ -418,9 +418,8 @@ class _HomePageState extends State<HomePage> {
 
                           await refreshPage();
                         },
-                        style: ButtonStyle(
-                          //TODO: style
-                        ),
+
+                        style: Shared.myButtonStyle,
 
                         child: const Text('Add hozzá az ételeidhez!',),
                       ),
@@ -484,6 +483,8 @@ class _HomePageState extends State<HomePage> {
 
                             await refreshPage();
                           },
+
+                          style: Shared.myButtonStyle,
 
                           child: const Text('Törlés',),
                         ),
@@ -563,6 +564,8 @@ class _HomePageState extends State<HomePage> {
                             await refreshPage();
                           },
 
+                          style: Shared.myButtonStyle,
+
                           child: const Text('Törlés',),
                         ),
 
@@ -613,6 +616,8 @@ class _HomePageState extends State<HomePage> {
 
                 await refreshPage();
               },
+
+              style: Shared.myButtonStyle,
 
               child: const Text(
                 'Hozzáadás a napodhoz',
@@ -727,6 +732,8 @@ class _HomePageState extends State<HomePage> {
                             await refreshPage();
                           },
 
+                          style: Shared.myButtonStyle,
+
                           child: const Text('Törlés',),
                         ),
                       ],
@@ -777,11 +784,13 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  ElevatedButton _navigateToFoodDataPage(int foodId) {
+  Widget _navigateToFoodDataPage(int foodId) {
     return ElevatedButton(
       onPressed: () {
         context.go('/foodDataPage/${user!.id}/$foodId');
       },
+
+      style: Shared.myButtonStyle,
 
       child: const Text('Étel adatlapja',),
     );
@@ -888,11 +897,13 @@ Widget _textFieldColumn(String textData, TextEditingController controller) {
 Widget _navigateToLeaderboardPage(BuildContext context) {
   return Center(
     child: ElevatedButton(
-        onPressed: () {
-          context.go('/leaderboard');
-        },
+      onPressed: () {
+        context.go('/leaderboard');
+      },
 
-        child: const Text('Ranglista',),
+      style: Shared.myButtonStyle,
+
+      child: const Text('Ranglista',),
     ),
   );
 }

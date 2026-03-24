@@ -35,7 +35,7 @@ class _ThirdPageState extends State<ThirdPage> {
     return Scaffold(
       appBar: Shared.myAppBar('Harmadik oldal',),
 
-      backgroundColor: Colors.white,
+      backgroundColor: Shared.backgroundColor,
 
       body: Padding(
         padding: const EdgeInsets.all(20.0,),
@@ -43,7 +43,7 @@ class _ThirdPageState extends State<ThirdPage> {
         child: Center(
           child: Column(
               children: [
-                Text(
+                const Text(
                   'Az ételeid:',
 
                   style: TextStyle(
@@ -53,9 +53,9 @@ class _ThirdPageState extends State<ThirdPage> {
                   ),
                 ),
 
-                SizedBox(height: 20,),
+                const SizedBox(height: 20,),
                 
-                _futureFoodBuilder()
+                _futureFoodBuilder(),
               ]
           ),
         ),
@@ -83,6 +83,7 @@ class _ThirdPageState extends State<ThirdPage> {
           else if(foodSnapshot.hasError) {
             return Text(
               'Hiba: ${foodSnapshot.error}',
+
               style: const TextStyle(color: Colors.red),
             );
           }
@@ -127,7 +128,7 @@ class _ThirdPageState extends State<ThirdPage> {
                     Text(
                       'Név: ${food.name}',
 
-                      style: const TextStyle(fontSize: 16),
+                      style: const TextStyle(fontSize: 16,),
                     ),
 
                     Text('ID: ${food.id}',),
@@ -145,10 +146,11 @@ class _ThirdPageState extends State<ThirdPage> {
                         await refreshPage();
                       },
 
+                      style: Shared.myButtonStyle,
+
                       child: const Text('Törlés',),
                     ),
                   ],
-
                 ),
               ),
             ),

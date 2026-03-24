@@ -30,7 +30,7 @@ class _LeaderboardPageState extends State<LeaderboardPage> {
     return Scaffold(
       appBar: Shared.myAppBar('Ranglista',),
 
-      backgroundColor: Colors.white,
+      backgroundColor: Shared.backgroundColor,
 
       body: Center(
         child: Padding(

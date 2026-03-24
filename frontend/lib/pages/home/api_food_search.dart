@@ -170,6 +170,8 @@ class ApiFoodSearchState extends State<ApiFoodSearch> {
                     startedSearching = true;
                   },
 
+                  style: Shared.myButtonStyle,
+
                   child: const Text('Keresés',),
                 ),
               ],

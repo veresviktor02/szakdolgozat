@@ -110,7 +110,7 @@ class _WelcomePageState extends State<WelcomePage> {
     return Scaffold(
       appBar: Shared.myAppBar('Regisztráció',),
 
-      backgroundColor: Colors.white,
+      backgroundColor: Shared.backgroundColor,
 
       body: SizedBox(
         child: SingleChildScrollView(
@@ -258,7 +258,6 @@ class _WelcomePageState extends State<WelcomePage> {
                 controller: nameController,
                 labelText: 'Név:',
                 hintText: 'Név',
-                format: FilteringTextInputFormatter.allow(RegExp(r'.*'),),
               ),
 
               const SizedBox(height: 10,),
@@ -285,7 +284,6 @@ class _WelcomePageState extends State<WelcomePage> {
                 controller: couponController,
                 labelText: 'Kuponkód:',
                 hintText: 'Kuponkód',
-                format: FilteringTextInputFormatter.allow(RegExp(r'.*'),),
                 isEnabled: !isCouponValid
               ),
 
@@ -294,6 +292,8 @@ class _WelcomePageState extends State<WelcomePage> {
 
                 child: ElevatedButton(
                   onPressed: validateCouponCode,
+
+                  style: Shared.myButtonStyle,
 
                   child: const Text('Kupon ellenőrzése',),
                 ),
@@ -323,9 +323,7 @@ class _WelcomePageState extends State<WelcomePage> {
         context,
       );
 
-      throw Exception(
-        'FREE felhasználó (Név: ${nameController.text}) nem jogosult különböző napokra!',
-      );
+      return;
     }
 
     //Ha üresek a kontrollerek, akkor
@@ -336,9 +334,7 @@ class _WelcomePageState extends State<WelcomePage> {
         context,
       );
 
-      throw Exception(
-        'Még nem adtál meg minden adatot! Töltsd ki a fentebbi mezőket!',
-      );
+      return;
     }
 
     Shared.mySnackBar(
@@ -381,6 +377,8 @@ class _WelcomePageState extends State<WelcomePage> {
 
             zeroAllTextFields();
           },
+
+          style: Shared.myButtonStyle,
 
           child: const Text('User mentése',),
         ),
@@ -688,7 +686,10 @@ class _WelcomePageState extends State<WelcomePage> {
               //TODO: User legyen!
               context.go('/home/2',);
             },
-            child: const Text('Belépés'),
+
+            style: Shared.myButtonStyle,
+
+            child: const Text('Belépés',),
           )
       ),
     );
@@ -714,6 +715,8 @@ class _WelcomePageState extends State<WelcomePage> {
             context.go('/home/${tempUser!.id}');
           },
 
+          style: Shared.myButtonStyle,
+
           child: const Text('Home Page',),
         ),
       ),
@@ -729,7 +732,7 @@ Container _userDataInput({
   required TextEditingController controller,
   required String labelText,
   required String hintText,
-  required FilteringTextInputFormatter format,
+  FilteringTextInputFormatter? format,
   bool isEnabled = true,
 }) {
   return Container(
@@ -760,7 +763,7 @@ Container _userDataInput({
             enabled: isEnabled,
 
             inputFormatters: [
-              format,
+              format ?? FilteringTextInputFormatter.allow(RegExp(r'.*')),
             ],
 
             decoration: InputDecoration(

@@ -117,7 +117,9 @@ class _ErrorPage extends StatelessWidget {
               context.go('/');
             },
 
-            child: const Text('Vissza a kezdőlapra'),
+            style: Shared.myButtonStyle,
+
+            child: const Text('Vissza a kezdőlapra',),
           ),
         ],
       ),

@@ -155,7 +155,7 @@ class _SettingsPageState extends State<SettingsPage> {
     return Scaffold(
       appBar: Shared.myAppBar('Beállítások',),
 
-      backgroundColor: Colors.white,
+      backgroundColor: Shared.backgroundColor,
 
       body: Center(
         child: Row(
@@ -234,6 +234,8 @@ class _SettingsPageState extends State<SettingsPage> {
                   ElevatedButton(
                     onPressed: isSaving ? null : saveUser,
 
+                    style: Shared.myButtonStyle,
+
                     child: isSaving
                         ? Shared.myCircularProgressIndicator()
                         : const Text('Mentés',),
@@ -242,7 +244,7 @@ class _SettingsPageState extends State<SettingsPage> {
               ),
             ),
 
-            SizedBox(height: 20,),
+            const SizedBox(height: 20,),
 
             Container(
               width: 400,
@@ -260,8 +262,8 @@ class _SettingsPageState extends State<SettingsPage> {
                   Padding(
                     padding: const EdgeInsets.fromLTRB(5.0, 10.0, 5.0, 20.0,),
 
-                    child: Text(
-                        'Napi kalóriaszükséglet kiszámítása',
+                    child: const Text(
+                      'Napi kalóriaszükséglet kiszámítása',
 
                       style: TextStyle(
                         fontSize: 18,
@@ -344,7 +346,10 @@ class _SettingsPageState extends State<SettingsPage> {
                       calculateDailyCalories();
                     },
 
-                    child: Text('Kiszámítás'),),
+                    style: Shared.myButtonStyle,
+
+                    child: const Text('Kiszámítás'),
+                  ),
 
                   const SizedBox(height: 15,),
 

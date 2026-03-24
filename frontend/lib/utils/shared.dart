@@ -8,13 +8,13 @@ class Shared {
       SnackBar(
         content: Text(message,),
         
-        margin: EdgeInsets.all(15.0,),
+        margin: const EdgeInsets.all(15.0,),
 
         behavior: SnackBarBehavior.floating,
 
         backgroundColor: color,
 
-        duration: Duration(seconds: 2,),
+        duration: const Duration(seconds: 2,),
       ),
     );
   }
@@ -41,17 +41,20 @@ class Shared {
       title: Text(
         titleText,
 
-        style: TextStyle(
-          color: Colors.red,
+        overflow: TextOverflow.fade,
+
+        style: const TextStyle(
+          color: Colors.black,
 
           fontSize: 34,
 
           fontWeight: FontWeight.bold,
         ),
-
       ),
 
-      backgroundColor: Colors.green,
+      backgroundColor: Colors.green[700],
+
+      shadowColor: Colors.green[300],
 
       elevation: 0.0,
 
@@ -63,4 +66,20 @@ class Shared {
   static const int animationDuration = 800;
 
   static RegExp onlyNumbers = RegExp(r'^\d*\.?\d*');
+
+  static const Color backgroundColor = Colors.white;
+
+  static ButtonStyle myButtonStyle = ButtonStyle(
+    backgroundColor: WidgetStateProperty.all(Colors.greenAccent[100]),
+    foregroundColor: WidgetStateProperty.all(Colors.green[900]),
+    shadowColor: WidgetStateProperty.all(Colors.greenAccent),
+
+    textStyle: WidgetStateProperty.all(
+      const TextStyle(
+        fontWeight: FontWeight.bold,
+
+        fontSize: 15,
+      ),
+    ),
+  );
 }
