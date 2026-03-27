@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 import '/user/user_model.dart';
 import '/user/user_service.dart';
@@ -26,11 +27,29 @@ class _SettingsPageState extends State<SettingsPage> {
   bool isLoading = true;
   bool isSaving = false;
 
+  //Kontrollerek
   late final TextEditingController nameController;
   late final TextEditingController weightController;
   late final TextEditingController heightController;
+  late final TextEditingController genderController;
+  late final TextEditingController ageController;
+  late final TextEditingController activityController;
 
   final TextEditingController calculationController = TextEditingController();
+  //
+
+  final List<String> genders = ['Férfi', 'Nő', 'Egyéb',];
+
+  final List<String> activityLevels = [
+    'Ülőmunka (Kevés vagy semmi mozgás)',
+    'Enyhe aktivitás (heti 1-3 edzés)',
+    'Közepes aktivitás (heti 4-5 edzés)',
+    'Nagy aktivitás (szinte mindennapi edzés)',
+    'Extrém aktivitás (atléta / fizikai munka)',
+  ];
+
+  String? selectedGender;
+  String? selectedActivityLevel;
 
   UserType userType = UserType.FREE;
   bool differentDays = false;
@@ -42,6 +61,9 @@ class _SettingsPageState extends State<SettingsPage> {
     nameController = TextEditingController();
     weightController = TextEditingController();
     heightController = TextEditingController();
+    genderController = TextEditingController();
+    ageController = TextEditingController();
+    activityController = TextEditingController();
 
     refreshPage();
   }
@@ -164,7 +186,7 @@ class _SettingsPageState extends State<SettingsPage> {
           children: [
             Container(
               width: 300,
-              height: 350,
+              height: 700,
 
               padding: const EdgeInsets.all(15.0,),
               margin: const EdgeInsets.all(40.0,),
@@ -248,7 +270,7 @@ class _SettingsPageState extends State<SettingsPage> {
 
             Container(
               width: 400,
-              height: 550,
+              height: 700,
 
               padding: const EdgeInsets.all(15.0,),
               margin: const EdgeInsets.all(40.0,),
@@ -259,10 +281,10 @@ class _SettingsPageState extends State<SettingsPage> {
 
               child: Column(
                 children: [
-                  Padding(
-                    padding: const EdgeInsets.fromLTRB(5.0, 10.0, 5.0, 20.0,),
+                  const Padding(
+                    padding: EdgeInsets.fromLTRB(5.0, 10.0, 5.0, 20.0,),
 
-                    child: const Text(
+                    child: Text(
                       'Napi kalóriaszükséglet kiszámítása',
 
                       style: TextStyle(
@@ -273,27 +295,46 @@ class _SettingsPageState extends State<SettingsPage> {
                     ),
                   ),
 
-                  const SizedBox(height: 15,),
-
-                  TextField(
-                    //controller: weightController,
-
-                    decoration: const InputDecoration(
-                      labelText: 'Nem',
-
-                      border: OutlineInputBorder(),
-                    ),
+                  _dropdown(
+                    selectedGender,
+                    'Nem',
+                    genders,
+                    (value) {
+                      setState(() {
+                        selectedGender = value;
+                      });
+                    },
                   ),
 
-                  const SizedBox(height: 15,),
+                  _dropdown(
+                    selectedActivityLevel,
+                    'Aktivitási szint',
+                    activityLevels,
+                    (value) {
+                      setState(() {
+                        selectedActivityLevel = value;
+                      });
+                    },
+                  ),
+
+                  const SizedBox(height: 7.5,),
 
                   TextField(
-                    //controller: nameController,
+                    controller: ageController,
 
                     keyboardType: TextInputType.number,
 
+                    maxLength: 2,
+
+                    inputFormatters: [
+                      FilteringTextInputFormatter.allow(Shared.onlyNumbers,),
+                    ],
+
                     decoration: const InputDecoration(
                       labelText: 'Életkor',
+
+                      //Nem jelenik meg számláló (0/2, 1/2).
+                      counterText: '',
 
                       border: OutlineInputBorder(),
                     ),
@@ -329,18 +370,6 @@ class _SettingsPageState extends State<SettingsPage> {
 
                   const SizedBox(height: 15,),
 
-                  TextField(
-                    //controller: weightController,
-
-                    decoration: const InputDecoration(
-                      labelText: 'Aktivitási szint',
-
-                      border: OutlineInputBorder(),
-                    ),
-                  ),
-
-                  const SizedBox(height: 10,),
-
                   ElevatedButton(
                     onPressed: () {
                       calculateDailyCalories();
@@ -348,7 +377,7 @@ class _SettingsPageState extends State<SettingsPage> {
 
                     style: Shared.myButtonStyle,
 
-                    child: const Text('Kiszámítás'),
+                    child: const Text('Kiszámítás',),
                   ),
 
                   const SizedBox(height: 15,),
@@ -373,30 +402,81 @@ class _SettingsPageState extends State<SettingsPage> {
     );
   }
 
-  //BMR Mifflin-St Jeor
-  //For men:
-  //BMR = 10W + 6.25H - 5A + 5
-  //For women:
-  //BMR = 10W + 6.25H - 5A - 161
-
-  //Activity level multiplier:
-  //Sedentary	- 1.2	- little or no exercise
-  //Lightly active - 1.375 - light exercise 1–3 days/week
-  //Moderately active -	1.55 - exercise 3–5 days/week
-  //Very active	- 1.725 - hard exercise 6–7 days/week
-  //Extremely active - 1.9 - athlete / physical job
+  //https://www.calculator.net/bmr-calculator.html
   void calculateDailyCalories() {
-    //TODO User bővítése.
-    var age = 22;
-    var gender = 'Men';
-    var activityLevel = 'BMR';
+    double calculatedCalories = 0;
 
-    double calculatedCalories = double.parse(weightController.text) * 10 +
+    //BMR Mifflin-St Jeor
+    //For men:
+    //BMR = 10W + 6.25H - 5A + 5
+    //For women:
+    //BMR = 10W + 6.25H - 5A - 161
+    switch(selectedGender) {
+      case 'Férfi':
+        calculatedCalories = double.parse(weightController.text) * 10 +
+            double.parse(heightController.text) * 6.25 -
+            5 * double.parse(ageController.text) +
+            5;
+      default:
+        calculatedCalories = double.parse(weightController.text) * 10 +
         double.parse(heightController.text) * 6.25 -
-        5 * age +
-        5;
+        161;
+    }
 
-    calculationController.text = calculatedCalories.toString();
+    //Activity level multiplier:
+    //Sedentary	- 1.2	- little or no exercise
+    //Lightly active - 1.375 - light exercise 1–3 days/week
+    //Moderately active -	1.55 - exercise 3–5 days/week
+    //Very active	- 1.725 - hard exercise 6–7 days/week
+    //Extremely active - 1.9 - athlete / physical job
+    switch(selectedActivityLevel) {
+      case 'Ülőmunka (Kevés vagy semmi mozgás)':
+        calculatedCalories = calculatedCalories * 1.2;
+      case 'Enyhe aktivitás (heti 1-3 edzés)':
+        calculatedCalories = calculatedCalories * 1.375;
+      case 'Közepes aktivitás (heti 4-5 edzés)':
+        calculatedCalories = calculatedCalories * 1.55;
+      case 'Nagy aktivitás (szinte mindennapi edzés)':
+        calculatedCalories = calculatedCalories * 1.725;
+      default:
+        calculatedCalories = calculatedCalories * 1.9;
+    }
+
+    calculationController.text = Shared.format(calculatedCalories);
+  }
+
+  Widget _dropdown(selectedItem, labelText, List<String> itemList, Function(String?) onChanged) {
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(0.0, 7.5, 0.0, 7.5,),
+
+      child: DropdownButtonFormField<String>(
+        value: selectedItem,
+
+        decoration: InputDecoration(
+          labelText: labelText,
+
+          border: OutlineInputBorder(),
+        ),
+
+        items: itemList.map((item) {
+          return DropdownMenuItem(
+            value: item,
+
+            child: Text(item,),
+          );
+        }).toList(),
+
+        onChanged: onChanged,
+
+        validator: (value) {
+          if (value == null || value.isEmpty) {
+            return 'Válassz egy elemet!';
+          }
+
+          return null;
+        },
+      ),
+    );
   }
 
 //////////////////////////////////////////////////////////////////////////
