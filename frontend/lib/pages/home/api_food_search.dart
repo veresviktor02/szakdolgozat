@@ -17,6 +17,8 @@ class ApiFoodSearch extends StatefulWidget {
   final int userId;
   final MyCalendar myCalendar;
 
+  final Future<void> Function()? onRefresh;
+
   const ApiFoodSearch({
     super.key,
 
@@ -24,6 +26,7 @@ class ApiFoodSearch extends StatefulWidget {
     required this.dayService,
     required this.userId,
     required this.myCalendar,
+    required this.onRefresh,
   });
 
   @override
@@ -45,6 +48,10 @@ class ApiFoodSearchState extends State<ApiFoodSearch> {
   List<APIFood> apiFoodList = [];
 
   bool startedSearching = false;
+
+  Future<void> refreshPage() async {
+    //TODO: Frissítse a kalendáriumot!
+  }
 
   @override
   void dispose() {
@@ -128,6 +135,8 @@ class ApiFoodSearchState extends State<ApiFoodSearch> {
             ElevatedButton(
                 onPressed: () async {
                   addFoodToDay(food);
+
+                  await widget.onRefresh?.call();
                 },
 
                 style: Shared.myButtonStyle,
