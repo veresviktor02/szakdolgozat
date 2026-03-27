@@ -14,6 +14,7 @@ class DailyTarget extends StatelessWidget {
 
   const DailyTarget({
     super.key,
+
     required this.dailyTargetForSelectedDay,
     required this.totalFuture,
   });
@@ -98,10 +99,11 @@ class DailyTarget extends StatelessWidget {
 
                 children: [
                   Text(
-                    totalSnapshot.data!.kcal.toString(),
+                    Shared.format(totalSnapshot.data!.kcal),
 
                     style: const TextStyle(
                       fontSize: 32,
+
                       fontWeight: FontWeight.bold,
                     ),
                   ),
@@ -115,7 +117,7 @@ class DailyTarget extends StatelessWidget {
                   ),
 
                   Text(
-                    '${totalSnapshot.data!.kcal - dailyTargetForSelectedDay.kcal}',
+                    Shared.format(totalSnapshot.data!.kcal - dailyTargetForSelectedDay.kcal),
 
                     style: TextStyle(
                       fontSize: 17,
@@ -137,21 +139,21 @@ class DailyTarget extends StatelessWidget {
                     'Zsír',
                     totalSnapshot.data!.fat,
                     dailyTargetForSelectedDay.fat,
-                    Colors.orange
+                    Colors.orange,
                 ),
 
                 _nutrients(
                     'Szénhidrát',
                     totalSnapshot.data!.carb,
                     dailyTargetForSelectedDay.carb,
-                    Colors.cyanAccent
+                    Colors.cyanAccent,
                 ),
 
                 _nutrients(
                     'Fehérje',
                     totalSnapshot.data!.protein,
                     dailyTargetForSelectedDay.protein,
-                    Colors.brown
+                    Colors.brown,
                 ),
               ]
             ),
@@ -175,7 +177,7 @@ class DailyTarget extends StatelessWidget {
         ),
 
         Text(
-          '$totalSnapshotNutrient g / $dailyTargetNutrient g',
+          '${Shared.format(totalSnapshotNutrient)} g / $dailyTargetNutrient g',
 
           style: const TextStyle(fontSize: 17,),
         ),

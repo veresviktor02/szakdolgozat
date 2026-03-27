@@ -82,4 +82,6 @@ class Shared {
       ),
     ),
   );
+
+  static String format(double value) => value.toStringAsFixed(1);
 }

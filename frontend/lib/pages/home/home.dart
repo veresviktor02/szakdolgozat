@@ -194,7 +194,12 @@ class _HomePageState extends State<HomePage> {
           
               const SizedBox(height: 20,),
 
-              ApiFoodSearch(apiService: apiService,),
+              ApiFoodSearch(
+                apiService: apiService,
+                dayService: dayService,
+                userId: widget.userId,
+                myCalendar: myCalendar,
+              ),
 
               const SizedBox(height: 20,),
 

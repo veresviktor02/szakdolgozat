@@ -1,16 +1,29 @@
 import 'package:flutter/material.dart';
 
+import '/day/day_service.dart';
+import '/day/measurement_unit/measurement_unit_model.dart';
+
+import '/food/kcal_and_nutrients_model.dart';
+
 import '/API/api_food_model.dart';
 import '/API/api_service.dart';
 
+import '/utils/my_calendar.dart';
 import '/utils/shared.dart';
 
 class ApiFoodSearch extends StatefulWidget {
   final APIService apiService;
+  final DayService dayService;
+  final int userId;
+  final MyCalendar myCalendar;
 
   const ApiFoodSearch({
     super.key,
+
     required this.apiService,
+    required this.dayService,
+    required this.userId,
+    required this.myCalendar,
   });
 
   @override
@@ -19,6 +32,9 @@ class ApiFoodSearch extends StatefulWidget {
 
 class ApiFoodSearchState extends State<ApiFoodSearch> {
   late final APIService apiService = APIService();
+  late final DayService dayService = DayService();
+  late final int userId = widget.userId;
+  late final MyCalendar myCalendar = widget.myCalendar;
 
   final apiQueryController = TextEditingController();
 
@@ -33,6 +49,7 @@ class ApiFoodSearchState extends State<ApiFoodSearch> {
   @override
   void dispose() {
     apiQueryController.dispose();
+
     super.dispose();
   }
 
@@ -75,8 +92,6 @@ class ApiFoodSearchState extends State<ApiFoodSearch> {
     }
   }
 
-  String format(double value) => value.toStringAsFixed(1);
-
   Widget foodCard(APIFood food) {
     return Card(
       elevation: 3,
@@ -104,13 +119,56 @@ class ApiFoodSearchState extends State<ApiFoodSearch> {
 
             const SizedBox(height: 10,),
 
-            Text('Calories: ${format(food.calories)} kcal'),
-            Text('Serving size: ${format(food.servingSizeG)} g'),
-            Text('Protein: ${format(food.proteinG)} g'),
-            Text('Fat: ${format(food.fatTotalG)} g'),
-            Text('Carbs: ${format(food.carbohydratesTotalG)} g'),
+            Text('Kalória: ${Shared.format(food.calories)} kcal',),
+            Text('Zsír: ${Shared.format(food.fatTotalG)} g',),
+            Text('Szénhidrát: ${Shared.format(food.carbohydratesTotalG)} g',),
+            Text('Fehérje: ${Shared.format(food.proteinG)} g',),
+            Text('Tömeg: ${Shared.format(food.servingSizeG)} g',),
+
+            ElevatedButton(
+                onPressed: () async {
+                  addFoodToDay(food);
+                },
+
+                style: Shared.myButtonStyle,
+
+                child: Text('Hozzáadás a naphoz',),
+            ),
           ],
         ),
+      ),
+    );
+  }
+
+  Future<void> addFoodToDay(APIFood food) async {
+    var checkedCalories = food.calories;
+    var calculatedCaloriesFromNutrients = food.fatTotalG * 9 + food.carbohydratesTotalG * 4 + food.proteinG * 4;
+
+    if(food.calories < calculatedCaloriesFromNutrients) {
+      Shared.mySnackBar(
+          'Az API által megadott kalóriaszám hibás! A naptáradba a helyes kalóriaszám kerül be. ',
+          Colors.blue,
+          context,
+      );
+
+      checkedCalories = calculatedCaloriesFromNutrients;
+    }
+
+    dayService.addFoodToDay(
+      userId,
+      myCalendar.daysMap[myCalendar.dayOnly(myCalendar.selectedDay)]!.id,
+      food.name,
+      KcalAndNutrients(
+        kcal: checkedCalories,
+        fat: food.fatTotalG,
+        carb: food.carbohydratesTotalG,
+        protein: food.proteinG,
+      ),
+      food.servingSizeG,
+      MeasurementUnit(
+        id: 1,
+        measurementUnitName: 'Gramm',
+        measurementUnitInGrams: 1,
       ),
     );
   }
@@ -136,11 +194,12 @@ class ApiFoodSearchState extends State<ApiFoodSearch> {
 
               style: TextStyle(
                 fontSize: 16,
+
                 fontWeight: FontWeight.bold,
               ),
             ),
 
-            const SizedBox(height: 10),
+            const SizedBox(height: 10,),
 
             Row(
               children: [
@@ -149,7 +208,7 @@ class ApiFoodSearchState extends State<ApiFoodSearch> {
                     controller: apiQueryController,
 
                     decoration: const InputDecoration(
-                      labelText: 'Írj be egy vagy több ételt (pl. "banana 100g")',
+                      labelText: 'Írj be egy vagy több ételt (pl. "100g banana")',
 
                       labelStyle: TextStyle(
                         fontSize: 15,
