@@ -90,12 +90,6 @@ class MyCalendar {
       decoration: BoxDecoration(
         color: boxDecorationColor,
 
-        border: Border.all(
-          color: Colors.blueAccent,
-
-          width: 2.5,
-        ),
-
         borderRadius: BorderRadius.circular(8),
       ),
 

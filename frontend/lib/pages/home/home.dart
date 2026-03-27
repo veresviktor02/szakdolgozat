@@ -199,6 +199,7 @@ class _HomePageState extends State<HomePage> {
                 dayService: dayService,
                 userId: widget.userId,
                 myCalendar: myCalendar,
+                onRefresh: refreshPage,
               ),
 
               const SizedBox(height: 20,),
@@ -269,9 +270,6 @@ class _HomePageState extends State<HomePage> {
 
               rowHeight: 75,
 
-              //TODO: headerVisible = false és saját headert csinálni?
-              //headerVisible: false,
-
               headerStyle: HeaderStyle(
                 titleCentered: true,
 
@@ -280,7 +278,13 @@ class _HomePageState extends State<HomePage> {
                 headerPadding: EdgeInsets.all(4.0,),
 
                 decoration: BoxDecoration(
-                  border: Border.all(color: Colors.blueAccent,),
+                  color: Colors.lightGreen[400],
+
+                  border: Border.all(
+                    color: Colors.white,
+
+                    width: 2.5,
+                  ),
                 ),
 
                 titleTextStyle: TextStyle(
@@ -296,13 +300,13 @@ class _HomePageState extends State<HomePage> {
               daysOfWeekVisible: false,
 
               calendarBuilders: CalendarBuilders(
-                defaultBuilder: (context, day, focusedDay) => MyCalendar.calendarDay(day, Colors.grey),
+                defaultBuilder: (context, day, focusedDay) => MyCalendar.calendarDay(day, Colors.lightGreen[400]!),
 
-                todayBuilder: (context, day, focusedDay) => MyCalendar.calendarDay(day, Colors.orange),
+                todayBuilder: (context, day, focusedDay) => MyCalendar.calendarDay(day, Colors.greenAccent),
 
-                selectedBuilder: (context, day, focusedDay)  => MyCalendar.calendarDay(day, Colors.green),
+                selectedBuilder: (context, day, focusedDay) => MyCalendar.calendarDay(day, Colors.green[600]!),
 
-                outsideBuilder: (context, day, focusedDay)  => MyCalendar.calendarDay(day, Colors.grey),
+                outsideBuilder: (context, day, focusedDay) => MyCalendar.calendarDay(day, Colors.lightGreen[400]!),
               ),
 
               calendarStyle: CalendarStyle(
@@ -373,9 +377,11 @@ class _HomePageState extends State<HomePage> {
 
           child: Column(
             children: [
-              Row(
+              const Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+
                 children: [
-                  const Text(
+                  Text(
                     'Add meg a bevinni kívánt adatokat!',
 
                     style: TextStyle(
@@ -392,7 +398,7 @@ class _HomePageState extends State<HomePage> {
               _nameTextField(nameController),
 
               Row(
-                mainAxisAlignment: MainAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.center,
 
                 children: [
                   _textFieldColumn('Kcal', kcalController),
@@ -408,7 +414,7 @@ class _HomePageState extends State<HomePage> {
               const SizedBox(height: 10,),
 
               Container(
-                alignment: Alignment.centerLeft,
+                alignment: Alignment.center,
 
                 child: Column(
                   children: [
@@ -443,7 +449,7 @@ class _HomePageState extends State<HomePage> {
 
   Widget _measurementUnitDropdown() {
     return Align(
-      alignment: Alignment.centerLeft,
+      alignment: Alignment.center,
 
       child: Padding(
         padding: const EdgeInsets.all(5.0,),
@@ -551,7 +557,7 @@ class _HomePageState extends State<HomePage> {
                   final food = myCalendar.selectedFoods[index];
 
                   return Card(
-                    color: Colors.blue,
+                    color: Colors.lightGreenAccent,
                     shadowColor: Colors.greenAccent,
 
                     elevation: 8,
@@ -560,18 +566,22 @@ class _HomePageState extends State<HomePage> {
                       crossAxisAlignment: CrossAxisAlignment.center,
 
                       children: [
-                        ElevatedButton(
-                          onPressed: () async {
-                            final day = myCalendar.daysMap[myCalendar.dayOnly(myCalendar.selectedDay)];
+                        Padding(
+                          padding: const EdgeInsets.all(10.0,),
 
-                            await dayService.removeFoodFromDay(day!.id, food.id);
+                          child: ElevatedButton(
+                            onPressed: () async {
+                              final day = myCalendar.daysMap[myCalendar.dayOnly(myCalendar.selectedDay)];
 
-                            await refreshPage();
-                          },
+                              await dayService.removeFoodFromDay(day!.id, food.id);
 
-                          style: Shared.myButtonStyle,
+                              await refreshPage();
+                            },
 
-                          child: const Text('Törlés',),
+                            style: Shared.myButtonStyle,
+
+                            child: const Text('Törlés',),
+                          ),
                         ),
 
                         Text('Név: ${food.name}',),
@@ -588,53 +598,39 @@ class _HomePageState extends State<HomePage> {
             ),
           ),
         ),
-
-        _foodSender(),
       ],
     );
   }
 
-  Container _foodSender() {
-    return Container(
-      decoration: BoxDecoration(
-        border: Border.all(color: Colors.blueAccent),
-      ),
+  Widget _foodSender() {
+    return Column(
+      children: [
+        Center(
+          child: ElevatedButton(
+            onPressed: () async {
+              if(selectedMeasurementUnit == null) {
+                Shared.mySnackBar(
+                  'Nem választottál mértékegységet!',
+                  Colors.red,
+                  context,
+                );
 
-      child: Column(
-        children: [
-          Center(
-            child: ElevatedButton(
-              onPressed: () async {
-                if(selectedMeasurementUnit == null) {
-                  Shared.mySnackBar(
-                    'Nem választottál mértékegységet!',
-                    Colors.red,
-                    context,
-                  );
+                return;
+              }
 
-                  return;
-                }
+              addFoodToDay();
 
-                addFoodToDay();
+              zeroAllTextFields();
 
-                zeroAllTextFields();
+              await refreshPage();
+            },
 
-                await refreshPage();
-              },
+            style: Shared.myButtonStyle,
 
-              style: Shared.myButtonStyle,
-
-              child: const Text(
-                'Hozzáadás a napodhoz',
-
-                style: TextStyle(
-                  fontSize: 12,
-                ),
-              ),
-            ),
+            child: const Text('Hozzáadás a napodhoz',),
           ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 
@@ -691,64 +687,63 @@ class _HomePageState extends State<HomePage> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
 
-      children: foodSnapshot.data!.map(
-              (food) {
-            return SizedBox(
-              width: 200,
-              //height: 250,
+      children: foodSnapshot.data!.map((food) {
+        return SizedBox(
+          width: 200,
 
-              child: Card(
-                elevation: 3,
-                margin: const EdgeInsets.symmetric(vertical: 8.0,),
+          child: Card(
+            elevation: 3,
 
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12.0,),
-                ),
+            margin: const EdgeInsets.symmetric(vertical: 8.0,),
 
-                child: Padding(
-                  padding: const EdgeInsets.fromLTRB(0.0, 8.0, 0.0, 8.0,),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(12.0,),
+            ),
 
-                  child: Center(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
+            child: Padding(
+              padding: const EdgeInsets.fromLTRB(0.0, 8.0, 0.0, 8.0,),
 
-                      children: [
-                        Text(
-                          'Név: ${food.name}',
+              child: Center(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
 
-                          style: const TextStyle(fontSize: 16),
-                        ),
+                  children: [
+                    Text(
+                      'Név: ${food.name}',
 
-                        Text('Kcal: ${food.kcalAndNutrients.kcal} kcal',),
-                        Text('Zsír: ${food.kcalAndNutrients.fat} g',),
-                        Text('Szénhidrát: ${food.kcalAndNutrients.carb} g',),
-                        Text('Fehérje: ${food.kcalAndNutrients.protein} g',),
-
-                        const SizedBox(height: 10,),
-
-                        _navigateToFoodDataPage(food.id),
-
-                        const SizedBox(height: 10,),
-
-                        ElevatedButton(
-                          onPressed: () async {
-                            await foodService.deleteFood(food.id);
-
-                            await refreshPage();
-                          },
-
-                          style: Shared.myButtonStyle,
-
-                          child: const Text('Törlés',),
-                        ),
-                      ],
-
+                      style: const TextStyle(fontSize: 16,),
                     ),
-                  ),
+
+                    Text('Kcal: ${food.kcalAndNutrients.kcal} kcal',),
+                    Text('Zsír: ${food.kcalAndNutrients.fat} g',),
+                    Text('Szénhidrát: ${food.kcalAndNutrients.carb} g',),
+                    Text('Fehérje: ${food.kcalAndNutrients.protein} g',),
+
+                    const SizedBox(height: 10,),
+
+                    _navigateToFoodDataPage(food.id),
+
+                    const SizedBox(height: 10,),
+
+                    ElevatedButton(
+                      onPressed: () async {
+                        await foodService.deleteFood(food.id);
+
+                        await refreshPage();
+                      },
+
+                      style: Shared.myButtonStyle,
+
+                      child: const Text('Törlés',),
+                    ),
+                  ],
+
                 ),
               ),
-            );
-          }).toList(),
+            ),
+          ),
+        );
+      }).toList(),
     );
   }
 
@@ -773,6 +768,7 @@ class _HomePageState extends State<HomePage> {
             if(foodSnapshot.hasError) {
               return Text(
                 'Hiba: ${foodSnapshot.error}',
+
                 style: const TextStyle(color: Colors.red),
               );
             }
@@ -808,7 +804,7 @@ class _HomePageState extends State<HomePage> {
 
 Container _nameTextField(TextEditingController nameController) {
   return Container(
-    alignment: Alignment.topLeft,
+    alignment: Alignment.center,
 
     padding: const EdgeInsets.all(5.0,),
 
@@ -824,16 +820,16 @@ Container _nameTextField(TextEditingController nameController) {
         child: TextField(
           controller: nameController,
 
-          decoration: InputDecoration(
+          decoration: const InputDecoration(
             filled: true,
 
             fillColor: Colors.white,
 
-            contentPadding: const EdgeInsets.all(15.0,),
+            contentPadding: EdgeInsets.all(15.0,),
 
             labelText: 'Étel neve:',
 
-            hintStyle: const TextStyle(
+            hintStyle: TextStyle(
               color: Color(0xffDDDADA,),
 
               fontSize: 13,
@@ -877,16 +873,17 @@ Widget _textFieldColumn(String textData, TextEditingController controller) {
 
             keyboardType: TextInputType.number,
 
-            decoration: InputDecoration(
+            decoration: const InputDecoration(
               filled: true,
               fillColor: Colors.white,
 
-              contentPadding: const EdgeInsets.all(15.0,),
+              contentPadding: EdgeInsets.all(15.0,),
 
               hintText: '0',
 
-              hintStyle: const TextStyle(
+              hintStyle: TextStyle(
                 color: Color(0xffDDDADA),
+
                 fontSize: 14,
               ),
             ),
