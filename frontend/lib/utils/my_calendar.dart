@@ -2,9 +2,8 @@ import 'package:flutter/material.dart';
 
 import 'package:table_calendar/table_calendar.dart';
 
-import '../day/day_model.dart';
-
-import '../day/embedded_food_model.dart';
+import '/day/day_model.dart';
+import '/day/embedded_food_model.dart';
 
 class MyCalendar {
   Map<DateTime, Day> daysMap = {};
@@ -84,9 +83,9 @@ class MyCalendar {
     return Container(
       width: 70,
 
-      margin: const EdgeInsets.all(0.0),
+      margin: const EdgeInsets.all(0.0,),
 
-      padding: const EdgeInsets.all(0.0),
+      padding: const EdgeInsets.all(0.0,),
 
       decoration: BoxDecoration(
         color: boxDecorationColor,

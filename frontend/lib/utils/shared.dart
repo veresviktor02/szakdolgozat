@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 
 class Shared {
+  //WIDGETEK ÉS STÍLUSOK
+  /////////////////////////////////////////////////////////////////////////////
   static void mySnackBar(String message, Color color, BuildContext context) {
     ScaffoldMessenger.of(context).removeCurrentSnackBar();
 
@@ -18,8 +20,6 @@ class Shared {
       ),
     );
   }
-
-  static const String baseUrl = 'http://localhost:8080';
 
   //Csak a stílus! Méretezéshez SizedBox-ba kell rakni!
   static CircularProgressIndicator myCircularProgressIndicator() {
@@ -62,13 +62,6 @@ class Shared {
     );
   }
 
-  //1000 = 1 sec
-  static const int animationDuration = 800;
-
-  static RegExp onlyNumbers = RegExp(r'^\d*\.?\d*');
-
-  static const Color backgroundColor = Colors.white;
-
   static ButtonStyle myButtonStyle = ButtonStyle(
     backgroundColor: WidgetStateProperty.all(Colors.greenAccent[100]),
     foregroundColor: WidgetStateProperty.all(Colors.green[900]),
@@ -83,5 +76,22 @@ class Shared {
     ),
   );
 
+  static const Color backgroundColor = Colors.white;
+
+  //1000 = 1 sec
+  static const int animationDuration = 800;
+  /////////////////////////////////////////////////////////////////////////////
+
+  //ÁLLANDÓ VÁLTOZÓK
+  /////////////////////////////////////////////////////////////////////////////
+  static const String baseUrl = 'http://localhost:8080';
+
+  /////////////////////////////////////////////////////////////////////////////
+
+  //MEGJELENÉS
+  /////////////////////////////////////////////////////////////////////////////
+  static RegExp onlyNumbers = RegExp(r'^\d*\.?\d*');
+
   static String format(double value) => value.toStringAsFixed(1);
+/////////////////////////////////////////////////////////////////////////////
 }
