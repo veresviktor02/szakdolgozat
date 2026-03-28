@@ -450,7 +450,7 @@ class _SettingsPageState extends State<SettingsPage> {
     calculationController.text = Shared.format(calculatedCalories);
   }
 
-  Widget _dropdown(selectedItem, labelText, itemList, onChanged) {
+  Widget _dropdown(selectedItem, labelText, List<String> itemList, onChanged) {
     return Padding(
       padding: const EdgeInsets.fromLTRB(0.0, 7.5, 0.0, 7.5,),
 
