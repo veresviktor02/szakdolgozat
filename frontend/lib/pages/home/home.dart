@@ -116,6 +116,16 @@ class _HomePageState extends State<HomePage> {
     }
   }
 
+  void zeroAllTextFields() {
+    nameController.text = '';
+    kcalController.text = '';
+    fatController.text = '';
+    carbController.text = '';
+    proteinController.text = '';
+    foodWeightController.text = '';
+    apiQueryController.text = '';
+  }
+
   @override
   void dispose() {
     nameController.dispose();
@@ -222,7 +232,7 @@ class _HomePageState extends State<HomePage> {
         alignment: Alignment.center,
 
         child: SizedBox(
-          width: 600,
+          width: Shared.pageWidth,
           height: 200,
 
           child: Center(child: Shared.myCircularProgressIndicator(),),
@@ -245,7 +255,7 @@ class _HomePageState extends State<HomePage> {
       alignment: Alignment.center,
 
       child: SizedBox(
-        width: 600,
+        width: Shared.pageWidth,
         //Itt NE legyen magasság, mert az alatta lévő SingleChildScrollView
         //nem tudja magát üzemeltetni!
         //height: 500,
@@ -263,6 +273,7 @@ class _HomePageState extends State<HomePage> {
               onHeaderTapped: (focusedDay) {
                 setState(() {
                   final today = DateTime.now();
+
                   myCalendar.focusedDay = today;
                   myCalendar.selectedDay = today;
                 });
@@ -275,19 +286,13 @@ class _HomePageState extends State<HomePage> {
 
                 formatButtonVisible: false,
 
-                headerPadding: EdgeInsets.all(4.0,),
+                headerPadding: const EdgeInsets.all(4.0,),
 
                 decoration: BoxDecoration(
-                  color: Colors.lightGreen[400],
-
-                  border: Border.all(
-                    color: Colors.white,
-
-                    width: 2.5,
-                  ),
+                  color: Shared.boxDecorationColor,
                 ),
 
-                titleTextStyle: TextStyle(
+                titleTextStyle: const TextStyle(
                   fontSize: 20,
 
                   fontWeight: FontWeight.bold,
@@ -365,84 +370,84 @@ class _HomePageState extends State<HomePage> {
   Widget _dataSenderContainer() {
     return Center(
       child: Container(
-          width: 600,
-          height: 500,
+        width: Shared.pageWidth,
 
-          padding: const EdgeInsets.all(20.0,),
+        padding: const EdgeInsets.all(20.0,),
 
-          decoration: BoxDecoration(
-            border: Border.all(color: Colors.blueAccent),
-          ),
+        decoration: BoxDecoration(
+          color: Shared.boxDecorationColor,
+
+          border: Border.all(color: Colors.blueAccent,),
+        ),
 
 
-          child: Column(
-            children: [
-              const Row(
-                mainAxisAlignment: MainAxisAlignment.center,
+        child: Column(
+          children: [
+            const Row(
+              mainAxisAlignment: MainAxisAlignment.center,
 
+              children: [
+                Text(
+                  'Add meg a bevinni kívánt adatokat!',
+
+                  style: TextStyle(
+                    fontSize: 17,
+
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ],
+            ),
+
+            const SizedBox(height: 20,),
+
+            _nameTextField(nameController),
+
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+
+              children: [
+                _textFieldColumn('Kcal', kcalController),
+                _textFieldColumn('Zsír', fatController),
+                _textFieldColumn('Szénhidrát', carbController),
+                _textFieldColumn('Fehérje', proteinController),
+                _textFieldColumn('Tömeg', foodWeightController),
+              ],
+            ),
+
+            _measurementUnitDropdown(),
+
+            const SizedBox(height: 10,),
+
+            Container(
+              alignment: Alignment.center,
+
+              child: Column(
                 children: [
-                  Text(
-                    'Add meg a bevinni kívánt adatokat!',
+                  Padding(
+                    padding: const EdgeInsets.all(10.0,),
 
-                    style: TextStyle(
-                      fontSize: 17,
+                    child: ElevatedButton(
+                      onPressed: () async {
+                        await sendFood();
 
-                      fontWeight: FontWeight.bold,
+                        zeroAllTextFields();
+
+                        await refreshPage();
+                      },
+
+                      style: Shared.myButtonStyle,
+
+                      child: const Text('Add hozzá az ételeidhez!',),
                     ),
                   ),
+
+                  _foodSender(),
                 ],
               ),
-
-              const SizedBox(height: 20,),
-
-              _nameTextField(nameController),
-
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-
-                children: [
-                  _textFieldColumn('Kcal', kcalController),
-                  _textFieldColumn('Zsír', fatController),
-                  _textFieldColumn('Szénhidrát', carbController),
-                  _textFieldColumn('Fehérje', proteinController),
-                  _textFieldColumn('Tömeg', foodWeightController),
-                ],
-              ),
-
-              _measurementUnitDropdown(),
-
-              const SizedBox(height: 10,),
-
-              Container(
-                alignment: Alignment.center,
-
-                child: Column(
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.all(10.0,),
-
-                      child: ElevatedButton(
-                        onPressed: () async {
-                          await sendFood();
-
-                          zeroAllTextFields();
-
-                          await refreshPage();
-                        },
-
-                        style: Shared.myButtonStyle,
-
-                        child: const Text('Add hozzá az ételeidhez!',),
-                      ),
-                    ),
-
-                    _foodSender(),
-                  ],
-                ),
-              ),
-
-            ],
-          )
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -476,8 +481,11 @@ class _HomePageState extends State<HomePage> {
 
                 dropdownColor: Shared.dropdownColor,
 
-                decoration: const InputDecoration(
-                  border: OutlineInputBorder(),
+                decoration: InputDecoration(
+                  filled: true,
+                  fillColor: Shared.dropdownColor,
+
+                  border: const OutlineInputBorder(),
                 ),
 
                 items: measurementUnitSnapshot.data!.map((measurementUnit) {
@@ -529,7 +537,7 @@ class _HomePageState extends State<HomePage> {
 
             child: Center(
               child: Text(
-                'A napod üres! (myCalendar.selectedFoods.isEmpty == true)',
+                'A napod üres! Adj hozzá ételeket a napodhoz!',
               ),
             ),
           ),
@@ -587,10 +595,10 @@ class _HomePageState extends State<HomePage> {
                         ),
 
                         Text('Név: ${food.name}',),
-                        Text('Kcal: ${food.kcalAndNutrients.kcal}',),
-                        Text('Zsír: ${food.kcalAndNutrients.fat}',),
-                        Text('Szénhidrát: ${food.kcalAndNutrients.carb}',),
-                        Text('Fehérje: ${food.kcalAndNutrients.protein}',),
+                        Text('Kcal: ${Shared.format(food.kcalAndNutrients.kcal)}',),
+                        Text('Zsír: ${Shared.format(food.kcalAndNutrients.fat)}',),
+                        Text('Szénhidrát: ${Shared.format(food.kcalAndNutrients.carb)}',),
+                        Text('Fehérje: ${Shared.format(food.kcalAndNutrients.protein)}',),
                         Text('Tömeg: ${food.foodWeight} ${food.measurementUnit.measurementUnitName}',),
                       ],
                     ),
@@ -675,26 +683,15 @@ class _HomePageState extends State<HomePage> {
     return user!.dailyTarget[6];
   }
 
-  void zeroAllTextFields() {
-    nameController.text = '';
-    kcalController.text = '';
-    fatController.text = '';
-    carbController.text = '';
-    proteinController.text = '';
-    foodWeightController.text = '';
-    apiQueryController.text = '';
-  }
-
   Widget _foodColumn(AsyncSnapshot<List<Food>> foodSnapshot) {
     return ConstrainedBox(
       constraints: const BoxConstraints(
-        maxWidth: 600,
+        maxWidth: Shared.pageWidth,
         maxHeight: 600,
       ),
 
       child: SingleChildScrollView(
         child: Wrap(
-          //crossAxisAlignment: CrossAxisAlignment.start,
           spacing: 8,
           runSpacing: 8,
         
@@ -728,10 +725,10 @@ class _HomePageState extends State<HomePage> {
                           style: const TextStyle(fontSize: 16,),
                         ),
         
-                        Text('Kcal: ${food.kcalAndNutrients.kcal} kcal',),
-                        Text('Zsír: ${food.kcalAndNutrients.fat} g',),
-                        Text('Szénhidrát: ${food.kcalAndNutrients.carb} g',),
-                        Text('Fehérje: ${food.kcalAndNutrients.protein} g',),
+                        Text('Kcal: ${Shared.format(food.kcalAndNutrients.kcal)} kcal',),
+                        Text('Zsír: ${Shared.format(food.kcalAndNutrients.fat)} g',),
+                        Text('Szénhidrát: ${Shared.format(food.kcalAndNutrients.carb)} g',),
+                        Text('Fehérje: ${Shared.format(food.kcalAndNutrients.protein)} g',),
         
                         const SizedBox(height: 10,),
         
@@ -769,6 +766,8 @@ class _HomePageState extends State<HomePage> {
         padding: const EdgeInsets.all(20.0,),
 
         decoration: BoxDecoration(
+          color: Shared.boxDecorationColor,
+
           border: Border.all(color: Colors.blueAccent),
         ),
 
@@ -822,37 +821,14 @@ Container _nameTextField(TextEditingController nameController) {
   return Container(
     alignment: Alignment.center,
 
+    width: 450,
+
     padding: const EdgeInsets.all(5.0,),
 
-    child: SizedBox(
-      //5 TextField alatta: 5x80-as szélesség + 5x8 (2x5 - 2 széle!) padding!
-      width: 440,
+    child: TextField(
+      controller: nameController,
 
-      child: Container(
-        decoration: BoxDecoration(
-          border: Border.all(color: Colors.blueAccent,),
-        ),
-
-        child: TextField(
-          controller: nameController,
-
-          decoration: const InputDecoration(
-            filled: true,
-
-            fillColor: Colors.white,
-
-            contentPadding: EdgeInsets.all(15.0,),
-
-            labelText: 'Étel neve:',
-
-            hintStyle: TextStyle(
-              color: Color(0xffDDDADA,),
-
-              fontSize: 13,
-            ),
-          ),
-        ),
-      ),
+      decoration: Shared.inputDecoration('Étel neve:', null,),
     ),
   );
 }
@@ -863,15 +839,10 @@ Widget _textFieldColumn(String textData, TextEditingController controller) {
 
     child: Column(
       children: [
-        SizedBox(
-          width: 80, //Ugyanannyi, mint alatta a TextField körüli SizedBox-é!!!
+        Text(
+          textData,
 
-          child: Text(
-            textData,
-
-            textAlign: TextAlign.center,
-          ),
-
+          textAlign: TextAlign.center,
         ),
 
         const SizedBox(height: 5,),
@@ -883,29 +854,13 @@ Widget _textFieldColumn(String textData, TextEditingController controller) {
             controller: controller,
 
             inputFormatters: [
-              //Csak számok!
-              FilteringTextInputFormatter.allow(Shared.onlyNumbers),
+              FilteringTextInputFormatter.allow(Shared.onlyNumbers,),
             ],
 
             keyboardType: TextInputType.number,
 
-            decoration: const InputDecoration(
-              filled: true,
-              fillColor: Colors.white,
-
-              contentPadding: EdgeInsets.all(15.0,),
-
-              hintText: '0',
-
-              hintStyle: TextStyle(
-                color: Color(0xffDDDADA),
-
-                fontSize: 14,
-              ),
-            ),
-
+            decoration: Shared.inputDecoration(null, '0',),
           ),
-
         ),
       ],
     ),

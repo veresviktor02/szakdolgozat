@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class Shared {
-  //WIDGETEK ÉS STÍLUSOK
+  //WIDGETEK
   /////////////////////////////////////////////////////////////////////////////
   static void mySnackBar(String message, Color color, BuildContext context) {
     ScaffoldMessenger.of(context).removeCurrentSnackBar();
@@ -62,6 +62,9 @@ class Shared {
     );
   }
 
+  //STÍLUSOK
+  /////////////////////////////////////////////////////////////////////////////
+
   static ButtonStyle myButtonStyle = ButtonStyle(
     backgroundColor: WidgetStateProperty.all(Colors.greenAccent[100]),
     foregroundColor: WidgetStateProperty.all(Colors.green[900]),
@@ -76,17 +79,53 @@ class Shared {
     ),
   );
 
+  static InputDecoration inputDecoration(labelText, hintText) {
+    return InputDecoration(
+      filled: true,
+      fillColor: Shared.textFieldFillColor,
+
+      border: OutlineInputBorder(),
+
+      contentPadding: const EdgeInsets.all(15.0,),
+
+      labelText: labelText,
+      hintText: hintText,
+
+      hintStyle: const TextStyle(
+        color: Colors.black,
+
+        fontSize: 14,
+      ),
+
+      labelStyle: const TextStyle(
+        color: Colors.black,
+
+        fontSize: 15,
+      ),
+    );
+  }
+
+  //SZÍNEK
+  /////////////////////////////////////////////////////////////////////////////
+
   static const Color backgroundColor = Colors.white;
 
   static Color dropdownColor = Colors.greenAccent[400]!;
 
-  //1000 = 1 sec
-  static const int animationDuration = 800;
+  static Color textFieldFillColor = Colors.greenAccent[400]!;
+
+  static Color boxDecorationColor = Colors.greenAccent[200]!;
+
   /////////////////////////////////////////////////////////////////////////////
 
   //ÁLLANDÓ VÁLTOZÓK
   /////////////////////////////////////////////////////////////////////////////
   static const String baseUrl = 'http://localhost:8080';
+
+  static const double pageWidth = 600;
+
+  //1000 = 1 sec
+  static const int animationDuration = 800;
 
   /////////////////////////////////////////////////////////////////////////////
 

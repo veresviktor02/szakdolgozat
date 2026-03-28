@@ -49,10 +49,6 @@ class ApiFoodSearchState extends State<ApiFoodSearch> {
 
   bool startedSearching = false;
 
-  Future<void> refreshPage() async {
-    //TODO: Frissítse a kalendáriumot!
-  }
-
   @override
   void dispose() {
     apiQueryController.dispose();
@@ -191,6 +187,8 @@ class ApiFoodSearchState extends State<ApiFoodSearch> {
         padding: const EdgeInsets.all(20.0,),
 
         decoration: BoxDecoration(
+          color: Shared.boxDecorationColor,
+
           border: Border.all(color: Colors.blueAccent,),
         ),
 
@@ -216,14 +214,9 @@ class ApiFoodSearchState extends State<ApiFoodSearch> {
                   child: TextField(
                     controller: apiQueryController,
 
-                    decoration: const InputDecoration(
-                      labelText: 'Írj be egy vagy több ételt (pl. "100g banana")',
-
-                      labelStyle: TextStyle(
-                        fontSize: 15,
-                      ),
-
-                      border: OutlineInputBorder(),
+                    decoration: Shared.inputDecoration(
+                      'Írj be egy vagy több ételt (pl. "100g banana")',
+                      null,
                     ),
 
                     onSubmitted: (_) => apiLoading ? null : searchFromApi(),
@@ -235,6 +228,7 @@ class ApiFoodSearchState extends State<ApiFoodSearch> {
                 ElevatedButton(
                   onPressed: apiLoading ? null : () {
                     searchFromApi();
+
                     startedSearching = true;
                   },
 
