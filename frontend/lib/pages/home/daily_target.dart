@@ -7,7 +7,6 @@ import '/food/kcal_and_nutrients_model.dart';
 
 import '/utils/shared.dart';
 
-
 class DailyTarget extends StatelessWidget {
   final KcalAndNutrients dailyTargetForSelectedDay;
   final Future<KcalAndNutrients>? totalFuture;
@@ -56,15 +55,15 @@ class DailyTarget extends StatelessWidget {
               ),
 
               Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
 
-                  children: [
-                    _nutrients('Zsír', 0, 100, Colors.orange),
+                children: [
+                  _nutrients('Zsír', 0, 100, Colors.orange),
 
-                    _nutrients('Szénhidrát', 0, 100, Colors.cyanAccent),
+                  _nutrients('Szénhidrát', 0, 100, Colors.cyanAccent),
 
-                    _nutrients('Fehérje', 0, 100, Colors.brown),
-                  ]
+                  _nutrients('Fehérje', 0, 100, Colors.brown),
+                ],
               ),
             ],
           );
@@ -113,9 +112,7 @@ class DailyTarget extends StatelessWidget {
                   const Text(
                     'Kcal',
 
-                    style: TextStyle(
-                      fontSize: 20,
-                    ),
+                    style: TextStyle(fontSize: 20,),
                   ),
 
                   Text(
@@ -157,7 +154,7 @@ class DailyTarget extends StatelessWidget {
                     dailyTargetForSelectedDay.protein,
                     Colors.brown,
                 ),
-              ]
+              ],
             ),
           ],
         );
@@ -169,7 +166,7 @@ class DailyTarget extends StatelessWidget {
     return Column(
       children: [
         Text(
-          '$text',
+          text,
 
           style: const TextStyle(
             fontSize: 18,

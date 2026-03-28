@@ -15,7 +15,6 @@ class ApiFoodSearch extends StatefulWidget {
   final DayService dayService;
   final int userId;
   final MyCalendar myCalendar;
-
   final Future<void> Function()? onRefresh;
 
   const ApiFoodSearch({
@@ -148,7 +147,7 @@ class ApiFoodSearchState extends State<ApiFoodSearch> {
 
   Future<void> addFoodToDay(APIFood food) async {
     var checkedCalories = food.calories;
-    var calculatedCaloriesFromNutrients = food.fatTotalG * 9 + food.carbohydratesTotalG * 4 + food.proteinG * 4;
+    final calculatedCaloriesFromNutrients = food.fatTotalG * 9 + food.carbohydratesTotalG * 4 + food.proteinG * 4;
 
     if(food.calories < calculatedCaloriesFromNutrients) {
       Shared.mySnackBar(
@@ -164,13 +163,16 @@ class ApiFoodSearchState extends State<ApiFoodSearch> {
       userId,
       myCalendar.daysMap[myCalendar.dayOnly(myCalendar.selectedDay)]!.id,
       food.name,
+
       KcalAndNutrients(
         kcal: checkedCalories,
         fat: food.fatTotalG,
         carb: food.carbohydratesTotalG,
         protein: food.proteinG,
       ),
+
       food.servingSizeG,
+
       MeasurementUnit(
         id: 1,
         measurementUnitName: 'Gramm',

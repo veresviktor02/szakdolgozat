@@ -19,9 +19,6 @@ import '/food/kcal_and_nutrients_model.dart';
 import '/user/user_model.dart';
 import '/user/user_service.dart';
 
-import '/API/api_service.dart';
-import '/API/api_food_model.dart';
-
 import '/utils/shared.dart';
 import '/utils/my_calendar.dart';
 
@@ -58,10 +55,10 @@ class _HomePageState extends State<HomePage> {
 
   final MyCalendar myCalendar = MyCalendar();
 
-  late Future<List<Food>> foodFuture;
-  late Future<List<Day>> dayFuture;
+  late final Future<List<Food>> foodFuture;
+  late final Future<List<Day>> dayFuture;
   Future<KcalAndNutrients>? totalFuture;
-  late Future<List<MeasurementUnit>> measurementUnitFuture;
+  late final Future<List<MeasurementUnit>> measurementUnitFuture;
 
   MeasurementUnit? selectedMeasurementUnit;
 
