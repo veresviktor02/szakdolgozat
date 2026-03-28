@@ -108,13 +108,13 @@ class Shared {
   //SZÍNEK
   /////////////////////////////////////////////////////////////////////////////
 
-  static const Color backgroundColor = Colors.white;
+  static final Color backgroundColor = Colors.greenAccent[700]!;
 
-  static Color dropdownColor = Colors.greenAccent[400]!;
+  static final Color dropdownColor = Colors.greenAccent[400]!;
 
-  static Color textFieldFillColor = Colors.greenAccent[400]!;
+  static final Color textFieldFillColor = Colors.greenAccent[400]!;
 
-  static Color boxDecorationColor = Colors.greenAccent[200]!;
+  static final Color boxDecorationColor = Colors.greenAccent[200]!;
 
   /////////////////////////////////////////////////////////////////////////////
 
@@ -131,7 +131,7 @@ class Shared {
 
   //MEGJELENÉS
   /////////////////////////////////////////////////////////////////////////////
-  static RegExp onlyNumbers = RegExp(r'^\d*\.?\d*');
+  static final RegExp onlyNumbers = RegExp(r'^\d*\.?\d*');
 
   static String format(double value) => value.toStringAsFixed(1);
   /////////////////////////////////////////////////////////////////////////////

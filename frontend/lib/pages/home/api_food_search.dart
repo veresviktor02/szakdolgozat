@@ -12,7 +12,6 @@ import '/utils/my_calendar.dart';
 import '/utils/shared.dart';
 
 class ApiFoodSearch extends StatefulWidget {
-  final APIService apiService;
   final DayService dayService;
   final int userId;
   final MyCalendar myCalendar;
@@ -22,7 +21,6 @@ class ApiFoodSearch extends StatefulWidget {
   const ApiFoodSearch({
     super.key,
 
-    required this.apiService,
     required this.dayService,
     required this.userId,
     required this.myCalendar,
@@ -97,7 +95,10 @@ class ApiFoodSearchState extends State<ApiFoodSearch> {
 
   Widget foodCard(APIFood food) {
     return Card(
-      elevation: 3,
+      color: Colors.lightGreenAccent,
+      shadowColor: Colors.greenAccent,
+
+      elevation: 8,
 
       margin: const EdgeInsets.symmetric(vertical: 8.0,),
 
@@ -182,7 +183,7 @@ class ApiFoodSearchState extends State<ApiFoodSearch> {
   Widget build(BuildContext context) {
     return Center(
       child: Container(
-        width: 600,
+        width: Shared.pageWidth,
 
         padding: const EdgeInsets.all(20.0,),
 

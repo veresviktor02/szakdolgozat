@@ -23,10 +23,12 @@ class DailyTarget extends StatelessWidget {
   Widget build(BuildContext context) {
     return Center(
       child: Container(
-        width: 600,
+        width: Shared.pageWidth,
         height: 400,
 
         decoration: BoxDecoration(
+          color: Shared.boxDecorationColor,
+
           border: Border.all(color: Colors.blueAccent,),
         ),
 

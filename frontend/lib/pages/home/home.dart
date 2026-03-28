@@ -187,7 +187,7 @@ class _HomePageState extends State<HomePage> {
 
               const SizedBox(height: 20,),
           
-              _futureFoodBuilder(foodFuture),
+              _futureFoodBuilder(),
           
               const SizedBox(height: 20,),
           
@@ -204,10 +204,9 @@ class _HomePageState extends State<HomePage> {
 
               const SizedBox(height: 20,),
 
-              _navigateToLeaderboardPage(context),
+              _navigateToLeaderboardPage(),
 
               const SizedBox(height: 20,),
-          
             ],
           ),
         ),
@@ -750,7 +749,7 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  Widget _futureFoodBuilder(Future<List<Food>> foodFuture) {
+  Widget _futureFoodBuilder() {
     return Center(
       child: Container(
         padding: const EdgeInsets.all(20.0,),
@@ -799,6 +798,20 @@ class _HomePageState extends State<HomePage> {
       style: Shared.myButtonStyle,
 
       child: const Text('Étel adatlapja',),
+    );
+  }
+
+  Widget _navigateToLeaderboardPage() {
+    return Center(
+      child: ElevatedButton(
+        onPressed: () {
+          context.go('/leaderboard');
+        },
+
+        style: Shared.myButtonStyle,
+
+        child: const Text('Ranglista',),
+      ),
     );
   }
 
@@ -853,20 +866,6 @@ Widget _textFieldColumn(String textData, TextEditingController controller) {
           ),
         ),
       ],
-    ),
-  );
-}
-
-Widget _navigateToLeaderboardPage(BuildContext context) {
-  return Center(
-    child: ElevatedButton(
-      onPressed: () {
-        context.go('/leaderboard');
-      },
-
-      style: Shared.myButtonStyle,
-
-      child: const Text('Ranglista',),
     ),
   );
 }
