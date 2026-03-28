@@ -168,6 +168,10 @@ class _SettingsPageState extends State<SettingsPage> {
     nameController.dispose();
     weightController.dispose();
     heightController.dispose();
+    genderController.dispose();
+    ageController.dispose();
+    activityController.dispose();
+    calculationController.dispose();
 
     super.dispose();
   }
@@ -179,13 +183,14 @@ class _SettingsPageState extends State<SettingsPage> {
 
       backgroundColor: Shared.backgroundColor,
 
+      //TODO reszponzívvá alakítani!
       body: Center(
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
 
           children: [
             Container(
-              width: 300,
+              width: 400,
               height: 700,
 
               padding: const EdgeInsets.all(15.0,),
@@ -445,7 +450,7 @@ class _SettingsPageState extends State<SettingsPage> {
     calculationController.text = Shared.format(calculatedCalories);
   }
 
-  Widget _dropdown(selectedItem, labelText, List<String> itemList, Function(String?) onChanged) {
+  Widget _dropdown(selectedItem, labelText, itemList, onChanged) {
     return Padding(
       padding: const EdgeInsets.fromLTRB(0.0, 7.5, 0.0, 7.5,),
 

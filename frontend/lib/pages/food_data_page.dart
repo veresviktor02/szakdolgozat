@@ -97,12 +97,14 @@ class _FoodDataPageState extends State<FoodDataPage> {
 
   Widget _displayFood(Food food) {
     return Container(
-      width: 300,
-      height: 300,
+      width: Shared.pageWidth,
+      height: Shared.pageWidth,
 
       padding: const EdgeInsets.all(15.0,),
 
       decoration: BoxDecoration(
+        color: Colors.greenAccent,
+
         border: Border.all(color: Colors.blueAccent,),
       ),
 
@@ -122,11 +124,11 @@ class _FoodDataPageState extends State<FoodDataPage> {
 
           const SizedBox(height: 20,),
 
-          _textField('Név', food.name.toString(),),
-          _textField('Kcal', food.kcalAndNutrients.kcal.toString(),),
-          _textField('Zsír', food.kcalAndNutrients.fat.toString(),),
-          _textField('Szénhidrát', food.kcalAndNutrients.carb.toString(),),
-          _textField('Fehérje', food.kcalAndNutrients.protein.toString(),),
+          _textField('Név', food.name,),
+          _textField('Kcal', Shared.format(food.kcalAndNutrients.kcal),),
+          _textField('Zsír', Shared.format(food.kcalAndNutrients.fat),),
+          _textField('Szénhidrát', Shared.format(food.kcalAndNutrients.carb),),
+          _textField('Fehérje', Shared.format(food.kcalAndNutrients.protein),),
         ],
       ),
     );
@@ -136,7 +138,7 @@ class _FoodDataPageState extends State<FoodDataPage> {
     return await foodService.getFoodById(widget.userId, widget.foodId);
   }
 
-  Widget _textField(String label, String foodElement) {
+  Widget _textField(label, foodElement) {
     return Padding(
       padding: const EdgeInsets.fromLTRB(5.0, 0.0, 5.0, 4.0,),
 
@@ -147,21 +149,13 @@ class _FoodDataPageState extends State<FoodDataPage> {
           Text(
             '$label: ',
 
-            style: const TextStyle(
-              fontSize: 16,
-
-              fontWeight: FontWeight.w300,
-            ),
+            style: textStyle(),
           ),
 
           Text(
             foodElement,
 
-            style: const TextStyle(
-                fontSize: 16,
-
-                fontWeight: FontWeight.w300,
-            ),
+            style: textStyle(),
           ),
         ],
       ),
@@ -170,4 +164,12 @@ class _FoodDataPageState extends State<FoodDataPage> {
 /////////////////////////////////////////////////////////////////////
 ////////////////////Itt ér véget a _FoodDataPage!////////////////////
 /////////////////////////////////////////////////////////////////////
+}
+
+TextStyle textStyle() {
+  return const TextStyle(
+    fontSize: 18,
+
+    fontWeight: FontWeight.w300,
+  );
 }

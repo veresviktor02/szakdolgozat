@@ -16,7 +16,7 @@ class LeaderboardPage extends StatefulWidget {
 class _LeaderboardPageState extends State<LeaderboardPage> {
   final dayService = DayService();
 
-  late Future<List<User>> mostActiveUsersFuture;
+  late final Future<List<User>> mostActiveUsersFuture;
 
   @override
   void initState() {
