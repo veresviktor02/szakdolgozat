@@ -71,6 +71,19 @@ class _WelcomePageState extends State<WelcomePage> {
     loadDefaultUser();
   }
 
+  void zeroAllTextFields() {
+    for(int day = 0; day < 7; day++) {
+      for(int nutrient = 0; nutrient < 4; nutrient++) {
+        controllers[day][nutrient].text = '';
+      }
+    }
+
+    nameController.text = '';
+    weightController.text = '';
+    heightController.text = '';
+    couponController.text = '';
+  }
+
   //Vele tudunk bejelentkezni az adatok kitöltése nélkül!
   Future<void> loadDefaultUser() async {
     try {
@@ -242,68 +255,53 @@ class _WelcomePageState extends State<WelcomePage> {
   Center _fillData() {
     return Center(
       child: SizedBox(
-        width: 400,
-        height: 600,
+        width: Shared.pageWidth,
 
-        child: Container(
-          decoration: BoxDecoration(
-              border: Border.all(color: Colors.blueAccent,),
-          ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
 
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            _userDataInput(
+              controller: nameController,
+              labelText: 'Név:',
+              hintText: 'Név',
+            ),
 
-            children: [
-              _userDataInput(
-                controller: nameController,
-                labelText: 'Név:',
-                hintText: 'Név',
+            _userDataInput(
+              controller: weightController,
+              labelText: 'Testtömeg (kg):',
+              hintText: 'Testtömeg',
+              format: FilteringTextInputFormatter.allow(Shared.onlyNumbers),
+            ),
+
+            _userDataInput(
+              controller: heightController,
+              labelText: 'Magasság (cm):',
+              hintText: 'Magasság',
+              format: FilteringTextInputFormatter.allow(Shared.onlyNumbers),
+            ),
+
+            _userDataInput(
+              controller: couponController,
+              labelText: 'Kuponkód:',
+              hintText: 'Kuponkód',
+              isEnabled: !isCouponValid
+            ),
+
+            Padding(
+              padding: const EdgeInsets.all(10.0,),
+
+              child: ElevatedButton(
+                onPressed: validateCouponCode,
+
+                style: Shared.myButtonStyle,
+
+                child: const Text('Kupon ellenőrzése',),
               ),
+            ),
 
-              const SizedBox(height: 10,),
-
-              _userDataInput(
-                controller: weightController,
-                labelText: 'Testtömeg (kg):',
-                hintText: 'Testtömeg',
-                format: FilteringTextInputFormatter.allow(Shared.onlyNumbers),
-              ),
-
-              const SizedBox(height: 10,),
-
-              _userDataInput(
-                controller: heightController,
-                labelText: 'Magasság (cm):',
-                hintText: 'Magasság',
-                format: FilteringTextInputFormatter.allow(Shared.onlyNumbers),
-              ),
-
-              const SizedBox(height: 10,),
-
-              _userDataInput(
-                controller: couponController,
-                labelText: 'Kuponkód:',
-                hintText: 'Kuponkód',
-                isEnabled: !isCouponValid
-              ),
-
-              Padding(
-                padding: const EdgeInsets.all(10.0,),
-
-                child: ElevatedButton(
-                  onPressed: validateCouponCode,
-
-                  style: Shared.myButtonStyle,
-
-                  child: const Text('Kupon ellenőrzése',),
-                ),
-              ),
-
-              const SizedBox(height: 10,),
-
-              _differentDaysSwitch(),
-            ],
-          ),
+            _differentDaysSwitch(),
+          ],
         ),
       ),
     );
@@ -392,9 +390,16 @@ class _WelcomePageState extends State<WelcomePage> {
         'Különböző napok (csak PREMIUM-oknak!)',
 
         style: TextStyle(
-          fontSize: 14,
+          fontSize: 16,
         ),
       ),
+
+      activeThumbColor: Colors.green.shade50,
+      activeTrackColor: Colors.green,
+      inactiveThumbColor: Colors.green.shade50,
+      inactiveTrackColor: Colors.green,
+
+      tileColor: Shared.boxDecorationColor,
 
       value: differentDays,
 
@@ -446,13 +451,13 @@ class _WelcomePageState extends State<WelcomePage> {
     if(differentDays) {
       return Center(
         child: Container(
-          width: 500,
-          height: 700,
+          width: Shared.pageWidth,
+          height: 650,
 
           padding: const EdgeInsets.all(10.0,),
 
           decoration: BoxDecoration(
-            border: Border.all(color: Colors.blueAccent),
+            color: Shared.boxDecorationColor,
           ),
 
           child: Column(
@@ -467,13 +472,13 @@ class _WelcomePageState extends State<WelcomePage> {
                       padding: const EdgeInsets.all(5.0,),
 
                       decoration: BoxDecoration(
-                        border: Border.all(color: Colors.blueAccent,),
+                        color: Shared.boxDecorationColor,
                       ),
 
                       child: Row(
                         children: [
                           SizedBox(
-                            width: 100,
+                            width: 140,
 
                             child: Text(
                               MyCalendar.nameOfDays[dayIndex],
@@ -524,22 +529,22 @@ class _WelcomePageState extends State<WelcomePage> {
     return Center(
       child: Expanded(
         child: Container(
-          width: 500,
+          width: Shared.pageWidth,
 
           padding: const EdgeInsets.all(10.0,),
 
           decoration: BoxDecoration(
-            border: Border.all(color: Colors.blueAccent),
+            color: Shared.boxDecorationColor,
           ),
 
           child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
 
             children: [
-              Padding(
-                padding: const EdgeInsets.all(15.0,),
+              const Padding(
+                padding: EdgeInsets.all(15.0,),
 
-                child: const Text(
+                child: Text(
                   'Minden napra ugyannyi tápanyagot tudsz beállítani!',
 
                   textAlign: TextAlign.center,
@@ -550,7 +555,7 @@ class _WelcomePageState extends State<WelcomePage> {
                 ),
               ),
 
-              const SizedBox(height: 20,),
+              const SizedBox(height: 10,),
 
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -600,7 +605,7 @@ class _WelcomePageState extends State<WelcomePage> {
             ],
           ),
         ),
-      )
+      ),
     );
   }
 
@@ -614,7 +619,7 @@ class _WelcomePageState extends State<WelcomePage> {
 
       child: Column(
         children: [
-          Text(label),
+          Text(label,),
 
           SizedBox(
             width: 80,
@@ -626,20 +631,7 @@ class _WelcomePageState extends State<WelcomePage> {
                 FilteringTextInputFormatter.allow(Shared.onlyNumbers),
               ],
 
-              decoration: const InputDecoration(
-                filled: true,
-                fillColor: Colors.white,
-
-                contentPadding: EdgeInsets.all(10.0,),
-
-                hintText: '0',
-
-                hintStyle: TextStyle(
-                  color: Colors.grey,
-
-                  fontSize: 14,
-                ),
-              ),
+              decoration: Shared.inputDecoration(null, '0'),
 
               onChanged: onChanged,
 
@@ -651,19 +643,6 @@ class _WelcomePageState extends State<WelcomePage> {
     );
   }
 
-  void zeroAllTextFields() {
-    for(int day = 0; day < 7; day++) {
-      for(int nutrient = 0; nutrient < 4; nutrient++) {
-        controllers[day][nutrient].text = '';
-      }
-    }
-
-    nameController.text = '';
-    weightController.text = '';
-    heightController.text = '';
-    couponController.text = '';
-  }
-
   bool areControllersEmpty() {
     return nameController.text == '' ||
         heightController.text == '' ||
@@ -673,7 +652,6 @@ class _WelcomePageState extends State<WelcomePage> {
         controllers[0][2].text == '' ||
         controllers[0][3].text == '';
   }
-
 
   Widget _navigateUserToHomePage() {
     return Padding(
@@ -737,7 +715,7 @@ Container _userDataInput({
 }) {
   return Container(
     decoration: BoxDecoration(
-      border: Border.all(color: Colors.blueAccent),
+      color: Shared.boxDecorationColor,
     ),
 
     child: Row(
@@ -750,11 +728,9 @@ Container _userDataInput({
           child: Text(labelText,),
         ),
 
-        const SizedBox(width: 10,),
-
         Container(
           width: 140,
-          height: 100,
+          height: 60,
 
           alignment: Alignment.center,
 
@@ -763,23 +739,10 @@ Container _userDataInput({
             enabled: isEnabled,
 
             inputFormatters: [
-              format ?? FilteringTextInputFormatter.allow(RegExp(r'.*')),
+              format ?? FilteringTextInputFormatter.allow(RegExp(r'.*'),),
             ],
 
-            decoration: InputDecoration(
-              filled: true,
-              fillColor: Colors.white,
-
-              contentPadding: const EdgeInsets.all(15.0,),
-
-              hintText: hintText,
-
-              hintStyle: const TextStyle(
-                color: Colors.grey,
-
-                fontSize: 14,
-              ),
-            ),
+            decoration: Shared.inputDecoration(null, hintText),
           ),
         ),
       ],
