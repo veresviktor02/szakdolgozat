@@ -23,7 +23,7 @@ class Shared {
 
   //Csak a stílus! Méretezéshez SizedBox-ba kell rakni!
   static CircularProgressIndicator myCircularProgressIndicator() {
-    return CircularProgressIndicator(
+    return const CircularProgressIndicator(
       color: Colors.amber,
       backgroundColor: Colors.greenAccent,
 
@@ -32,7 +32,7 @@ class Shared {
       strokeWidth: 5.0,
       strokeCap: StrokeCap.round,
 
-      semanticsLabel: "Töltődés",
+      semanticsLabel: 'Töltődés',
     );
   }
 
@@ -69,14 +69,16 @@ class Shared {
 
     textStyle: WidgetStateProperty.all(
       const TextStyle(
-        fontWeight: FontWeight.bold,
-
         fontSize: 15,
+
+        fontWeight: FontWeight.bold,
       ),
     ),
   );
 
   static const Color backgroundColor = Colors.white;
+
+  static Color dropdownColor = Colors.greenAccent[400]!;
 
   //1000 = 1 sec
   static const int animationDuration = 800;
@@ -93,5 +95,5 @@ class Shared {
   static RegExp onlyNumbers = RegExp(r'^\d*\.?\d*');
 
   static String format(double value) => value.toStringAsFixed(1);
-/////////////////////////////////////////////////////////////////////////////
+  /////////////////////////////////////////////////////////////////////////////
 }
