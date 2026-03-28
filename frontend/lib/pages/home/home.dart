@@ -78,14 +78,6 @@ class _HomePageState extends State<HomePage> {
   final foodWeightController = TextEditingController();
   //
 
-  //API
-  final apiQueryController = TextEditingController();
-  late final APIService apiService = APIService();
-  bool apiLoading = false;
-  String? apiError;
-  List<APIFood> apiFoodList = [];
-  //
-
   @override
   void initState() {
     super.initState();
@@ -123,7 +115,6 @@ class _HomePageState extends State<HomePage> {
     carbController.text = '';
     proteinController.text = '';
     foodWeightController.text = '';
-    apiQueryController.text = '';
   }
 
   @override
@@ -205,7 +196,6 @@ class _HomePageState extends State<HomePage> {
               const SizedBox(height: 20,),
 
               ApiFoodSearch(
-                apiService: apiService,
                 dayService: dayService,
                 userId: widget.userId,
                 myCalendar: myCalendar,
