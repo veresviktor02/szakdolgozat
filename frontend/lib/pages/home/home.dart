@@ -465,14 +465,16 @@ class _HomePageState extends State<HomePage> {
                 return Shared.myCircularProgressIndicator();
               }
               if(measurementUnitSnapshot.hasError) {
-                return Text('Hiba történt: ${measurementUnitSnapshot.error}');
+                return Text('Hiba történt: ${measurementUnitSnapshot.error}',);
               }
               if(!measurementUnitSnapshot.hasData || measurementUnitSnapshot.data!.isEmpty) {
-                return const Text('Nincs elérhető mértékegység.');
+                return const Text('Nincs elérhető mértékegység.',);
               }
 
               return DropdownButtonFormField<MeasurementUnit>(
-                hint: const Text('Mértékegység'),
+                hint: const Text('Mértékegység',),
+
+                dropdownColor: Shared.dropdownColor,
 
                 decoration: const InputDecoration(
                   border: OutlineInputBorder(),
@@ -486,7 +488,7 @@ class _HomePageState extends State<HomePage> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
 
                       children: [
-                        Text(measurementUnit.measurementUnitName),
+                        Text(measurementUnit.measurementUnitName,),
 
                         ElevatedButton(
                           onPressed: () async {
@@ -683,67 +685,81 @@ class _HomePageState extends State<HomePage> {
     apiQueryController.text = '';
   }
 
-  Column _foodColumn(AsyncSnapshot<List<Food>> foodSnapshot) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
+  Widget _foodColumn(AsyncSnapshot<List<Food>> foodSnapshot) {
+    return ConstrainedBox(
+      constraints: const BoxConstraints(
+        maxWidth: 600,
+        maxHeight: 600,
+      ),
 
-      children: foodSnapshot.data!.map((food) {
-        return SizedBox(
-          width: 200,
-
-          child: Card(
-            elevation: 3,
-
-            margin: const EdgeInsets.symmetric(vertical: 8.0,),
-
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(12.0,),
-            ),
-
-            child: Padding(
-              padding: const EdgeInsets.fromLTRB(0.0, 8.0, 0.0, 8.0,),
-
-              child: Center(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-
-                  children: [
-                    Text(
-                      'Név: ${food.name}',
-
-                      style: const TextStyle(fontSize: 16,),
+      child: SingleChildScrollView(
+        child: Wrap(
+          //crossAxisAlignment: CrossAxisAlignment.start,
+          spacing: 8,
+          runSpacing: 8,
+        
+          children: foodSnapshot.data!.map((food) {
+            return SizedBox(
+              width: 180,
+        
+              child: Card(
+                color: Colors.lightGreenAccent,
+                shadowColor: Colors.greenAccent,
+        
+                elevation: 3,
+        
+                margin: const EdgeInsets.symmetric(vertical: 8.0,),
+        
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12.0,),
+                ),
+        
+                child: Padding(
+                  padding: const EdgeInsets.fromLTRB(0.0, 8.0, 0.0, 8.0,),
+        
+                  child: Center(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+        
+                      children: [
+                        Text(
+                          'Név: ${food.name}',
+        
+                          style: const TextStyle(fontSize: 16,),
+                        ),
+        
+                        Text('Kcal: ${food.kcalAndNutrients.kcal} kcal',),
+                        Text('Zsír: ${food.kcalAndNutrients.fat} g',),
+                        Text('Szénhidrát: ${food.kcalAndNutrients.carb} g',),
+                        Text('Fehérje: ${food.kcalAndNutrients.protein} g',),
+        
+                        const SizedBox(height: 10,),
+        
+                        _navigateToFoodDataPage(food.id),
+        
+                        const SizedBox(height: 10,),
+        
+                        ElevatedButton(
+                          onPressed: () async {
+                            await foodService.deleteFood(food.id);
+        
+                            await refreshPage();
+                          },
+        
+                          style: Shared.myButtonStyle,
+        
+                          child: const Text('Törlés',),
+                        ),
+                      ],
+        
                     ),
-
-                    Text('Kcal: ${food.kcalAndNutrients.kcal} kcal',),
-                    Text('Zsír: ${food.kcalAndNutrients.fat} g',),
-                    Text('Szénhidrát: ${food.kcalAndNutrients.carb} g',),
-                    Text('Fehérje: ${food.kcalAndNutrients.protein} g',),
-
-                    const SizedBox(height: 10,),
-
-                    _navigateToFoodDataPage(food.id),
-
-                    const SizedBox(height: 10,),
-
-                    ElevatedButton(
-                      onPressed: () async {
-                        await foodService.deleteFood(food.id);
-
-                        await refreshPage();
-                      },
-
-                      style: Shared.myButtonStyle,
-
-                      child: const Text('Törlés',),
-                    ),
-                  ],
-
+                  ),
                 ),
               ),
-            ),
-          ),
-        );
-      }).toList(),
+            );
+          }).toList(),
+        ),
+      ),
     );
   }
 
