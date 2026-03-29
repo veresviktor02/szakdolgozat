@@ -55,10 +55,10 @@ class _HomePageState extends State<HomePage> {
 
   final MyCalendar myCalendar = MyCalendar();
 
-  late final Future<List<Food>> foodFuture;
-  late final Future<List<Day>> dayFuture;
+  late Future<List<Food>> foodFuture;
+  late Future<List<Day>> dayFuture;
   Future<KcalAndNutrients>? totalFuture;
-  late final Future<List<MeasurementUnit>> measurementUnitFuture;
+  late Future<List<MeasurementUnit>> measurementUnitFuture;
 
   MeasurementUnit? selectedMeasurementUnit;
 
@@ -649,6 +649,18 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
+  Future<void> addFoodDetailsToTextFields(
+      String name,
+      KcalAndNutrients kcalAndNutrients,
+  ) async {
+    nameController.text = name;
+
+    kcalController.text = kcalAndNutrients.kcal.toString();
+    fatController.text = kcalAndNutrients.fat.toString();
+    carbController.text = kcalAndNutrients.carb.toString();
+    proteinController.text = kcalAndNutrients.protein.toString();
+  }
+
   KcalAndNutrients dailyTargetForSelectedDay() {
     switch(myCalendar.selectedDay.weekday) {
       case DateTime.monday:
@@ -730,6 +742,21 @@ class _HomePageState extends State<HomePage> {
                           style: Shared.myButtonStyle,
         
                           child: const Text('Törlés',),
+                        ),
+
+                        const SizedBox(height: 10,),
+
+                        ElevatedButton(
+                          onPressed: () async {
+                            await addFoodDetailsToTextFields(
+                                food.name,
+                                food.kcalAndNutrients,
+                            );
+                          },
+
+                          style: Shared.myButtonStyle,
+
+                          child: const Text('Kitöltés',),
                         ),
                       ],
         
