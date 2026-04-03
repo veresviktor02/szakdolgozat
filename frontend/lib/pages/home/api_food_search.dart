@@ -92,95 +92,6 @@ class ApiFoodSearchState extends State<ApiFoodSearch> {
     }
   }
 
-  Widget foodCard(APIFood food) {
-    return Card(
-      color: Colors.lightGreenAccent,
-      shadowColor: Colors.greenAccent,
-
-      elevation: 8,
-
-      margin: const EdgeInsets.symmetric(vertical: 8.0,),
-
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12.0,),),
-
-      child: Padding(
-        padding: const EdgeInsets.all(12.0,),
-
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-
-          children: [
-            Text(
-              food.name,
-
-              style: const TextStyle(
-                fontSize: 16,
-
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-
-            const SizedBox(height: 10,),
-
-            Text('Kalória: ${Shared.format(food.calories)} kcal',),
-            Text('Zsír: ${Shared.format(food.fatTotalG)} g',),
-            Text('Szénhidrát: ${Shared.format(food.carbohydratesTotalG)} g',),
-            Text('Fehérje: ${Shared.format(food.proteinG)} g',),
-            Text('Tömeg: ${Shared.format(food.servingSizeG)} g',),
-
-            ElevatedButton(
-                onPressed: () async {
-                  addFoodToDay(food);
-
-                  await widget.onRefresh?.call();
-                },
-
-                style: Shared.myButtonStyle,
-
-                child: Text('Hozzáadás a naphoz',),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Future<void> addFoodToDay(APIFood food) async {
-    var checkedCalories = food.calories;
-    final calculatedCaloriesFromNutrients = food.fatTotalG * 9 + food.carbohydratesTotalG * 4 + food.proteinG * 4;
-
-    if(food.calories < calculatedCaloriesFromNutrients) {
-      Shared.mySnackBar(
-          'Az API által megadott kalóriaszám hibás! A naptáradba a helyes kalóriaszám kerül be. ',
-          Colors.blue,
-          context,
-      );
-
-      checkedCalories = calculatedCaloriesFromNutrients;
-    }
-
-    dayService.addFoodToDay(
-      userId,
-      myCalendar.daysMap[myCalendar.dayOnly(myCalendar.selectedDay)]!.id,
-      food.name,
-
-      KcalAndNutrients(
-        kcal: checkedCalories,
-        fat: food.fatTotalG,
-        carb: food.carbohydratesTotalG,
-        protein: food.proteinG,
-      ),
-
-      food.servingSizeG,
-
-      MeasurementUnit(
-        id: 1,
-        measurementUnitName: 'Gramm',
-        measurementUnitInGrams: 1,
-      ),
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     return Center(
@@ -275,12 +186,106 @@ class ApiFoodSearchState extends State<ApiFoodSearch> {
 
                 itemCount: apiFoodList.length,
 
-                itemBuilder: (context, index) => foodCard(apiFoodList[index]),
+                itemBuilder: (context, index) => _foodCard(apiFoodList[index]),
               ),
             ],
           ],
         ),
       ),
     );
+  }
+
+  Widget _foodCard(APIFood food) {
+    return Card(
+      color: Colors.lightGreenAccent,
+      shadowColor: Colors.greenAccent,
+
+      elevation: 8,
+
+      margin: const EdgeInsets.symmetric(vertical: 8.0,),
+
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12.0,),),
+
+      child: Padding(
+        padding: const EdgeInsets.all(12.0,),
+
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+
+          children: [
+            Text(
+              food.name,
+
+              style: const TextStyle(
+                fontSize: 16,
+
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+
+            const SizedBox(height: 10,),
+
+            Text('Kalória: ${Shared.format(food.calories)} kcal',),
+            Text('Zsír: ${Shared.format(food.fatTotalG)} g',),
+            Text('Szénhidrát: ${Shared.format(food.carbohydratesTotalG)} g',),
+            Text('Fehérje: ${Shared.format(food.proteinG)} g',),
+            Text('Tömeg: ${Shared.format(food.servingSizeG)} g',),
+
+            ElevatedButton(
+              onPressed: () async {
+                addFoodToDay(food);
+
+                await widget.onRefresh?.call();
+              },
+
+              style: Shared.myButtonStyle,
+
+              child: Text('Hozzáadás a naphoz',),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Future<void> addFoodToDay(APIFood food) async {
+    dayService.addFoodToDay(
+      userId,
+      myCalendar.daysMap[myCalendar.dayOnly(myCalendar.selectedDay)]!.id,
+      food.name,
+
+      KcalAndNutrients(
+        kcal: checkCalories(food),
+        fat: food.fatTotalG,
+        carb: food.carbohydratesTotalG,
+        protein: food.proteinG,
+      ),
+
+      food.servingSizeG,
+
+      MeasurementUnit(
+        id: 1,
+        measurementUnitName: 'Gramm',
+        measurementUnitInGrams: 1,
+      ),
+    );
+  }
+
+  double checkCalories(APIFood food) {
+    var checkedCalories = food.calories;
+
+    final calculatedCaloriesFromNutrients = food.fatTotalG * 9 + food.carbohydratesTotalG * 4 + food.proteinG * 4;
+
+    if(food.calories < calculatedCaloriesFromNutrients) {
+      Shared.mySnackBar(
+        'Az API által megadott kalóriaszám hibás! A naptáradba a helyes kalóriaszám kerül be. ',
+        Colors.blue,
+        context,
+      );
+
+      checkedCalories = calculatedCaloriesFromNutrients;
+    }
+
+    return checkedCalories;
   }
 }
