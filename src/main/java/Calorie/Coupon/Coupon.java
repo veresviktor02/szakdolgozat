@@ -60,7 +60,25 @@ public class Coupon {
             );
         }
 
-        this.couponCode = couponCode.trim().toUpperCase();
+        try {
+            this.couponCode = EncryptionUtil.encrypt(couponCode.trim().toUpperCase());
+        } catch(Exception e) {
+            throw new CouponException(
+                    "EncryptionUtil.encrypt(couponCode.trim().toUpperCase()) hibát dobott!", e
+            );
+        }
+    }
+
+    //Ne jelenjen meg a tiszta kuponkód!
+    @JsonIgnore
+    public String getPlainCouponCode() {
+        try {
+            return EncryptionUtil.decrypt(this.couponCode);
+        } catch (Exception e) {
+            throw new CouponException(
+                    "EncryptionUtil.decrypt(this.couponCode) hibát dobott!", e
+            );
+        }
     }
 
     public void setUsedByUserId(Integer usedByUserId) {

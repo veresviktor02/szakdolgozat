@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+
 import java.util.List;
 
 @Service
@@ -28,33 +29,41 @@ public class CouponService {
         couponCode = couponCode.trim().toUpperCase();
 
         try {
-            //Kupon nem létezik
-            if(!couponRepository.existsByCouponCode(couponCode)) {
-                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(CouponStatus.NOT_FOUND);
+            List<Coupon> coupons = couponRepository.findAll();
+
+            Coupon matchedCoupon = null;
+
+            for(Coupon coupon : coupons) {
+                try {
+                    String decryptedCode = coupon.getPlainCouponCode();
+
+                    if(decryptedCode.equalsIgnoreCase(couponCode)) {
+                        matchedCoupon = coupon;
+
+                        break;
+                    }
+                } catch (Exception e) {}
             }
-        } catch(Exception e) {
-            throw new CouponException(
-                    "!couponRepository.existsByCouponCode(couponCode) hibát dobott!", e
-            );
-        }
 
-        try {
-            Coupon coupon = couponRepository.findCouponByCouponCode(couponCode);
+            if(matchedCoupon == null) {
+                return ResponseEntity
+                        .status(HttpStatus.NOT_FOUND)
+                        .body(CouponStatus.NOT_FOUND);
+            }
 
-            //Kupon létezik, de lejárt.
-            if(coupon.isExpired()) {
+            if(matchedCoupon.isExpired()) {
                 return ResponseEntity.ok(CouponStatus.EXPIRED);
             }
-            //Kupon létezik, de használt.
-            if(coupon.isUsed()) {
+
+            if(matchedCoupon.isUsed()) {
                 return ResponseEntity.ok(CouponStatus.USED);
             }
 
-            //Kupon aktív.
             return ResponseEntity.ok(CouponStatus.VALID);
-        } catch(Exception e) {
+
+        } catch (Exception e) {
             throw new CouponException(
-                    "couponRepository.findCouponByCouponCode(couponCode) hibát dobott!", e
+                    "checkIfCouponIsValid(String couponCode) hibát dobott!", e
             );
         }
     }
