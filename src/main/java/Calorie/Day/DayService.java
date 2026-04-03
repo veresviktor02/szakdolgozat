@@ -1,6 +1,7 @@
 package Calorie.Day;
 
 import Calorie.Exceptions.DayException;
+import Calorie.Exceptions.UserException;
 
 import Calorie.Food.KcalAndNutrients;
 
@@ -44,7 +45,7 @@ public class DayService {
     //Csak napok inicializálásához!
     public void insertDay(Integer userId, Day day) {
         User user = userRepository.findById(userId)
-                .orElseThrow(() -> new DayException(
+                .orElseThrow(() -> new UserException(
                         "A felhasználó nem található! (ID: " + userId + ')'
                 ));
 
@@ -78,7 +79,7 @@ public class DayService {
 
     public Day getDayById(Integer userId, Integer dayId) {
         User user = userRepository.findById(userId)
-                .orElseThrow(() -> new DayException(
+                .orElseThrow(() -> new UserException(
                         "A megadott felhasználó nem található! " + userId + ')'
                 ));
 
@@ -110,7 +111,7 @@ public class DayService {
 
     public void addFoodToDay(Integer userId, Integer dayId, EmbeddedFood food) {
         User user = userRepository.findById(userId)
-                .orElseThrow(() -> new DayException(
+                .orElseThrow(() -> new UserException(
                         "A megadott felhasználó nem található! (ID: " + userId + ')'
                 ));
 
@@ -201,7 +202,7 @@ public class DayService {
 
     public void createEmptyDays(Integer id) {
         User user = userRepository.findById(id)
-                .orElseThrow(() -> new DayException(
+                .orElseThrow(() -> new UserException(
                         "A felhasználó nem található! (ID: " + id + ')'
                 ));
 
@@ -240,7 +241,7 @@ public class DayService {
                     .limit(numberOfTopUsers)
                     .toList();
         } catch(Exception e) {
-            throw new DayException(
+            throw new UserException(
                     "userRepository.findAll().stream()... hibát dobott!", e
             );
         }

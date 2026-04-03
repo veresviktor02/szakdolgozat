@@ -1,6 +1,7 @@
 package Calorie.Day.MeasurementUnit;
 
 import Calorie.Exceptions.MeasurementUnitException;
+import Calorie.Exceptions.UserException;
 
 import Calorie.User.User;
 import Calorie.User.UserRepository;
@@ -44,7 +45,7 @@ public class MeasurementUnitService {
 
     public MeasurementUnit getMeasurementUnitById(Integer userId, Integer measurementId) {
         User user = userRepository.findById(userId)
-                .orElseThrow(() -> new MeasurementUnitException(
+                .orElseThrow(() -> new UserException(
                         "A megadott felhasználó nem található! " + userId + ')'
                 ));
 
@@ -56,7 +57,7 @@ public class MeasurementUnitService {
 
     public void addMeasurementUnit(Integer userId, MeasurementUnit measurementUnit) {
         User user = userRepository.findById(userId)
-                .orElseThrow(() -> new MeasurementUnitException(
+                .orElseThrow(() -> new UserException(
                         "A felhasználó nem található! (ID: " + userId + ')'
                 ));
 

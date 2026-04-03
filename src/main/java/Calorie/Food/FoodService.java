@@ -1,6 +1,7 @@
 package Calorie.Food;
 
 import Calorie.Exceptions.FoodException;
+import Calorie.Exceptions.UserException;
 
 import Calorie.User.User;
 import Calorie.User.UserRepository;
@@ -31,7 +32,7 @@ public class FoodService {
 
     public void insertFood(Integer userId, Food food) {
         User user = userRepository.findById(userId)
-                .orElseThrow(() -> new FoodException(
+                .orElseThrow(() -> new UserException(
                         "A megadott felhasználó nem található! (ID: " + userId + ')'
                 ));
 
