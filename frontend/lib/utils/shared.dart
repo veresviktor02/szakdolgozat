@@ -116,6 +116,8 @@ class Shared {
 
   static final Color boxDecorationColor = Colors.greenAccent[200]!;
 
+  static final Color circularPercentIndicatorBackgroundColor = Colors.grey[300]!;
+
   /////////////////////////////////////////////////////////////////////////////
 
   //ÁLLANDÓ VÁLTOZÓK

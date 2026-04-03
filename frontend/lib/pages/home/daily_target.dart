@@ -51,7 +51,7 @@ class DailyTarget extends StatelessWidget {
                 radius: 100,
                 lineWidth: 15,
                 percent: 0,
-                backgroundColor: Colors.grey.shade300,
+                backgroundColor: Shared.circularPercentIndicatorBackgroundColor,
               ),
 
               const SizedBox(height: 30,),
@@ -92,7 +92,7 @@ class DailyTarget extends StatelessWidget {
               animation: true,
               animationDuration: Shared.animationDuration,
 
-              backgroundColor: Colors.grey.shade300,
+              backgroundColor: Shared.circularPercentIndicatorBackgroundColor,
               progressColor: progressColor(totalSnapshot),
 
               circularStrokeCap: CircularStrokeCap.round,
