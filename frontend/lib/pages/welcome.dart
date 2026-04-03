@@ -133,15 +133,9 @@ class _WelcomePageState extends State<WelcomePage> {
             children: [
               _greeting(),
 
-              const SizedBox(height: 10,),
-
               _fillData(),
 
-              const SizedBox(height: 10,),
-
               _fillDailyTarget(),
-
-              const SizedBox(height: 10,),
 
               _saveUserButton(),
 
@@ -254,8 +248,9 @@ class _WelcomePageState extends State<WelcomePage> {
 
   Center _fillData() {
     return Center(
-      child: SizedBox(
+      child: Container(
         width: Shared.pageWidth,
+        color: Shared.boxDecorationColor,
 
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
@@ -370,7 +365,7 @@ class _WelcomePageState extends State<WelcomePage> {
             await sendUserFromWelcome();
 
             if(isCouponValid) {
-              couponService.useCoupon(couponController.text, tempUser!.id);
+              useCoupon(couponController.text, tempUser!.id);
             }
 
             zeroAllTextFields();
@@ -415,8 +410,6 @@ class _WelcomePageState extends State<WelcomePage> {
           setState(() => differentDays = value);
         }
         //Be van kapcsolva (és kikapcsolom).
-        //Azért kell, mert ha a PREMIUM kóddal bekapcsolja,
-        //akkor a kód törlése után nem tudja kikapcsolni!
         else if(!value) {
           differentDays = false;
 
@@ -548,9 +541,7 @@ class _WelcomePageState extends State<WelcomePage> {
 
                 textAlign: TextAlign.center,
 
-                style: TextStyle(
-                  fontSize: 16,
-                ),
+                style: TextStyle(fontSize: 16,),
               ),
             ),
 
@@ -563,7 +554,7 @@ class _WelcomePageState extends State<WelcomePage> {
                 _nutrientField(
                     'Kcal',
                     controllers[0][0],
-                        (val) {
+                    (val) {
                       for(int day = 0; day < 7; day++) {
                         dailyTargetValues[day][0] = double.tryParse(val)!;
                       }
@@ -573,7 +564,7 @@ class _WelcomePageState extends State<WelcomePage> {
                 _nutrientField(
                     'Zsír',
                     controllers[0][1],
-                        (val) {
+                    (val) {
                       for(int day = 0; day < 7; day++) {
                         dailyTargetValues[day][1] = double.tryParse(val)!;
                       }
@@ -583,7 +574,7 @@ class _WelcomePageState extends State<WelcomePage> {
                 _nutrientField(
                     'Szénhidrát',
                     controllers[0][2],
-                        (val) {
+                    (val) {
                       for(int day = 0; day < 7; day++) {
                         dailyTargetValues[day][2] = double.tryParse(val)!;
                       }
@@ -593,7 +584,7 @@ class _WelcomePageState extends State<WelcomePage> {
                 _nutrientField(
                     'Fehérje',
                     controllers[0][3],
-                        (val) {
+                    (val) {
                       for(int day = 0; day < 7; day++) {
                         dailyTargetValues[day][3] = double.tryParse(val)!;
                       }
@@ -649,6 +640,10 @@ class _WelcomePageState extends State<WelcomePage> {
         controllers[0][1].text == '' ||
         controllers[0][2].text == '' ||
         controllers[0][3].text == '';
+  }
+
+  void useCoupon(couponCode, userId) {
+    couponService.useCoupon(couponCode, userId);
   }
 
   Widget _navigateUserToHomePage() {
