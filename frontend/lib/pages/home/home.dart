@@ -688,6 +688,7 @@ class _HomePageState extends State<HomePage> {
 
       child: SingleChildScrollView(
         child: Wrap(
+          alignment: WrapAlignment.center,
           spacing: 8,
           runSpacing: 8,
         
