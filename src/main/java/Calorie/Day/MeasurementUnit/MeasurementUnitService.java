@@ -1,5 +1,7 @@
 package Calorie.Day.MeasurementUnit;
 
+import Calorie.Exceptions.MeasurementUnitException;
+
 import Calorie.User.User;
 import Calorie.User.UserRepository;
 
@@ -31,29 +33,42 @@ public class MeasurementUnitService {
     }
 
     public List<MeasurementUnit> getAllMeasurementUnits(Integer id) {
-        return measurementUnitRepository.findByOwnerId(id);
+        try {
+            return measurementUnitRepository.findByOwnerId(id);
+        } catch(Exception e) {
+            throw new MeasurementUnitException(
+                    "measurementUnitRepository.findByOwnerId(id) hibát dobott!", e
+            );
+        }
     }
 
     public MeasurementUnit getMeasurementUnitById(Integer userId, Integer measurementId) {
         User user = userRepository.findById(userId)
-                .orElseThrow(() -> new IllegalStateException(
+                .orElseThrow(() -> new MeasurementUnitException(
                         "A megadott felhasználó nem található! " + userId + ')'
                 ));
 
         return measurementUnitRepository.findByIdAndOwner(measurementId, user)
-                .orElseThrow(() -> new IllegalStateException(
+                .orElseThrow(() -> new MeasurementUnitException(
                         "A megadott mértékegység nem található! (ID: " + measurementId + ')'
                 ));
     }
 
     public void addMeasurementUnit(Integer userId, MeasurementUnit measurementUnit) {
         User user = userRepository.findById(userId)
-                .orElseThrow(() -> new IllegalStateException(
+                .orElseThrow(() -> new MeasurementUnitException(
                         "A felhasználó nem található! (ID: " + userId + ')'
                 ));
 
         measurementUnit.setOwner(user);
-        measurementUnitRepository.save(measurementUnit);
+
+        try {
+            measurementUnitRepository.save(measurementUnit);
+        } catch(Exception e) {
+            throw new MeasurementUnitException(
+                    "measurementUnitRepository.save(measurementUnit) hibát dobott!", e
+            );
+        }
     }
 
     @Transactional
@@ -64,7 +79,7 @@ public class MeasurementUnitService {
     ) {
         MeasurementUnit oldMeasurementUnit = measurementUnitRepository
                 .findByIdAndOwnerId(measurementUnitId, userId)
-                .orElseThrow(() -> new IllegalStateException(
+                .orElseThrow(() -> new MeasurementUnitException(
                         "A frissíteni kívánt mértékegység nem található! (ID: " + measurementUnitId + ')'
                 ));
 
@@ -74,12 +89,18 @@ public class MeasurementUnitService {
 
     public void removeMeasurementUnitById(Integer id) {
         if(!measurementUnitRepository.existsById(id)) {
-            throw new IllegalStateException(
+            throw new MeasurementUnitException(
                     "A törölni kívánt mértékegység nem található! (ID: " + id + ')'
             );
         }
 
-        measurementUnitRepository.deleteById(id);
+        try {
+            measurementUnitRepository.deleteById(id);
+        } catch(Exception e) {
+            throw new MeasurementUnitException(
+                    "measurementUnitRepository.deleteById(id) hibát dobott!", e
+            );
+        }
     }
 
     private void createDefaultMeasurementUnits(Integer userId) {

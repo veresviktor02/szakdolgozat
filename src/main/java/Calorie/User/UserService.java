@@ -1,5 +1,7 @@
 package Calorie.User;
 
+import Calorie.Exceptions.UserException;
+
 import Calorie.Food.KcalAndNutrients;
 
 import jakarta.annotation.PostConstruct;
@@ -29,25 +31,33 @@ public class UserService {
     }
 
     public List<User> getAllUsers() {
-        return userRepository.findAll();
+        try {
+            return userRepository.findAll();
+        } catch(Exception e) {
+            throw new UserException("return userRepository.findAll() hibát dobott!", e);
+        }
     }
 
     public void insertUser(User user) {
         userNameCheckerService.validate(user.getName());
 
         if(user.getUserType() == UserType.FREE && user.isDifferentDays()) {
-            throw new IllegalStateException(
+            throw new UserException(
                     "A felhasználó nem lehet FREE és különböző napos egyszerre!"
             );
         }
 
-        userRepository.save(user);
+        try {
+            userRepository.save(user);
+        } catch(Exception e) {
+            throw new UserException("userRepository.save(user) hibát dobott!", e);
+        }
     }
 
     @Transactional
     public void updateUserById(Integer id, User newUser) {
         User oldUser = userRepository.findById(id).orElseThrow(
-                () -> new IllegalStateException(
+                () -> new UserException(
                         "A frissíteni kívánt felhasználó nem található! (ID: " + id + ')'
                 ));
 
@@ -61,17 +71,21 @@ public class UserService {
 
     public void deleteUserById(Integer id) {
         if(!userRepository.existsById(id)) {
-            throw new IllegalStateException(
+            throw new UserException(
                     "A törölni kívánt felhasználó nem található! (ID: " + id + ')'
             );
         }
 
-        userRepository.deleteById(id);
+        try {
+            userRepository.deleteById(id);
+        } catch(Exception e) {
+            throw new UserException("userRepository.deleteById(id)", e);
+        }
     }
 
     public User getUserById(Integer id) {
         return userRepository.findById(id)
-                .orElseThrow(() -> new IllegalStateException(
+                .orElseThrow(() -> new UserException(
                         "A kért felhasználó nem található! (ID: " + id + ')'
                 ));
     }
@@ -98,6 +112,10 @@ public class UserService {
 
         user.setDailyTarget(kcalAndNutrientsList);
 
-        userRepository.save(user);
+        try {
+            userRepository.save(user);
+        } catch(Exception e) {
+            throw new UserException("userRepository.save(user), hibát dobott!", e);
+        }
     }
 }

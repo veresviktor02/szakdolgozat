@@ -1,6 +1,9 @@
 package Calorie.User;
 
+import Calorie.Exceptions.UserException;
+
 import jakarta.annotation.PostConstruct;
+
 import org.springframework.stereotype.Service;
 
 import java.io.BufferedReader;
@@ -22,7 +25,7 @@ public class UserNameCheckerService {
                     .getResourceAsStream("banned_words.txt");
 
             if(inputStream == null) {
-                throw new RuntimeException("banned_words.txt nem található!");
+                throw new UserException("banned_words.txt nem található!");
             }
 
             BufferedReader reader = new BufferedReader(
@@ -38,7 +41,7 @@ public class UserNameCheckerService {
             reader.close();
 
         } catch (Exception e) {
-            throw new RuntimeException(
+            throw new UserException(
                     "Tiltott szavak listájának betöltése sikertelen.", e
             );
         }
@@ -49,7 +52,7 @@ public class UserNameCheckerService {
 
         for(String bannedWord : bannedWords) {
             if(normalizedText.contains(bannedWord)) {
-                throw new IllegalArgumentException(
+                throw new UserException(
                         "A megadott felhasználónév tiltott szót tartalmaz!"
                 );
             }

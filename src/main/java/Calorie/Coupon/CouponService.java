@@ -1,5 +1,7 @@
 package Calorie.Coupon;
 
+import Calorie.Exceptions.CouponException;
+
 import jakarta.annotation.PostConstruct;
 
 import org.springframework.http.HttpStatus;
@@ -25,49 +27,68 @@ public class CouponService {
     public ResponseEntity<CouponStatus> checkIfCouponIsValid(String couponCode) {
         couponCode = couponCode.trim().toUpperCase();
 
-        //Kupon nem létezik
-        if(!couponRepository.existsByCouponCode(couponCode)) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(CouponStatus.NOT_FOUND);
+        try {
+            //Kupon nem létezik
+            if(!couponRepository.existsByCouponCode(couponCode)) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(CouponStatus.NOT_FOUND);
+            }
+        } catch(Exception e) {
+            throw new CouponException(
+                    "!couponRepository.existsByCouponCode(couponCode) hibát dobott!", e
+            );
         }
 
-        Coupon coupon = couponRepository.findCouponByCouponCode(couponCode);
+        try {
+            Coupon coupon = couponRepository.findCouponByCouponCode(couponCode);
 
-        //Kupon létezik, de lejárt.
-        if(coupon.isExpired()) {
-            return ResponseEntity.ok(CouponStatus.EXPIRED);
+            //Kupon létezik, de lejárt.
+            if(coupon.isExpired()) {
+                return ResponseEntity.ok(CouponStatus.EXPIRED);
+            }
+            //Kupon létezik, de használt.
+            if(coupon.isUsed()) {
+                return ResponseEntity.ok(CouponStatus.USED);
+            }
+
+            //Kupon aktív.
+            return ResponseEntity.ok(CouponStatus.VALID);
+        } catch(Exception e) {
+            throw new CouponException(
+                    "couponRepository.findCouponByCouponCode(couponCode) hibát dobott!", e
+            );
         }
-
-        //Kupon létezik, de használt.
-        if(coupon.isUsed()) {
-            return ResponseEntity.ok(CouponStatus.USED);
-        }
-
-        //Kupon aktív.
-        return ResponseEntity.ok(CouponStatus.VALID);
     }
 
     public void useCoupon(String couponCode, Integer userId) {
         Coupon coupon = couponRepository
                 .findByCouponCode(couponCode.trim().toUpperCase())
                 .orElseThrow(
-                        () -> new RuntimeException("Kupon nem található!")
+                        () -> new CouponException("Kupon nem található!")
                 );
 
         if(coupon.isExpired()) {
-            throw new IllegalStateException("A kupon lejárt!");
+            throw new CouponException("A kupon lejárt!");
         }
 
         if(coupon.isUsed()) {
-            throw new IllegalStateException("A kupon már fel lett használva!");
+            throw new CouponException("A kupon már fel lett használva!");
         }
 
         coupon.setUsedByUserId(userId);
 
-        couponRepository.save(coupon);
+        try {
+            couponRepository.save(coupon);
+        } catch(Exception e) {
+            throw new CouponException("couponRepository.save(coupon) hibát dobott!", e);
+        }
     }
 
     public List<Coupon> getAllCoupons() {
-        return couponRepository.findAll();
+        try {
+            return couponRepository.findAll();
+        } catch(Exception e) {
+            throw new CouponException("couponRepository.findAll() hibát dobott!", e);
+        }
     }
 
     public void createCoupons() {
@@ -91,7 +112,11 @@ public class CouponService {
                 coupon.setExpirationDate(LocalDate.of(2030, 12, 31));
             }
 
-            couponRepository.save(coupon);
+            try {
+                couponRepository.save(coupon);
+            } catch(Exception e) {
+                throw new CouponException("couponRepository.save(coupon) hibát dobott!", e);
+            }
         }
     }
 }
