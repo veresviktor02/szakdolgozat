@@ -75,7 +75,7 @@ class ApiFoodSearchState extends State<ApiFoodSearch> {
     });
 
     try {
-      final response = await apiService.fetchNutritions(query);
+      final response = await apiService.fetchNutritions(query, widget.userId);
 
       setState(() {
         apiFoodList = response.items;

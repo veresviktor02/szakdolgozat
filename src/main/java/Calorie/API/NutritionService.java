@@ -16,13 +16,23 @@ public class NutritionService {
 
     private final RestTemplate restTemplate;
 
-    public NutritionService(RestTemplate restTemplate, @Value("${api.key}") String apiKey) {
+    private final RateLimiter rateLimiter;
+
+    public NutritionService(
+            RestTemplate restTemplate,
+            @Value("${api.key}") String apiKey,
+            RateLimiter rateLimiter
+    ) {
         this.restTemplate = restTemplate;
         this.apiKey = apiKey;
-        ;
+        this.rateLimiter = rateLimiter;
     }
 
-    public NutritionResponse getNutrition(String query) {
+    public NutritionResponse getNutrition(String query, Integer userId) {
+        if(!rateLimiter.isAllowed(userId)) {
+            throw new RuntimeException("Limit elérve! Próbáld meg újra!");
+        }
+
         String url = UriComponentsBuilder
                 .fromUri(URI.create(API_URL))
                 .queryParam("query", query)

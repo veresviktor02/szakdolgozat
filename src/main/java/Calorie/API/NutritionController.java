@@ -13,7 +13,7 @@ public class NutritionController {
     }
 
     @GetMapping
-    public NutritionResponse getNutrition(@RequestParam String query) {
-        return nutritionService.getNutrition(query);
+    public NutritionResponse getNutrition(@RequestParam String query, @RequestParam Integer userId) {
+        return nutritionService.getNutrition(query, userId);
     }
 }
