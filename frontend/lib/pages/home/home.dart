@@ -773,39 +773,44 @@ class _HomePageState extends State<HomePage> {
 
   Widget _futureFoodBuilder() {
     return Center(
-      child: Container(
-        padding: const EdgeInsets.all(20.0,),
+      //Hirtelen szélességugrás miatt kell!
+      child: SizedBox(
+        width: Shared.pageWidth,
 
-        decoration: BoxDecoration(
-          color: Shared.boxDecorationColor,
+        child: Container(
+          padding: const EdgeInsets.all(20.0,),
 
-          border: Border.all(color: Colors.blueAccent),
-        ),
+          decoration: BoxDecoration(
+            color: Shared.boxDecorationColor,
 
-        child: FutureBuilder<List<Food>>(
-          future: foodFuture,
+            border: Border.all(color: Colors.blueAccent),
+          ),
 
-          builder: (context, foodSnapshot) {
-            //Várakozik a kapcsolatra
-            if(foodSnapshot.connectionState == ConnectionState.waiting) {
-              return Center(child: Shared.myCircularProgressIndicator());
-            }
-            //Hiba történt
-            if(foodSnapshot.hasError) {
-              return Text(
-                'Hiba: ${foodSnapshot.error}',
+          child: FutureBuilder<List<Food>>(
+            future: foodFuture,
 
-                style: const TextStyle(color: Colors.red),
-              );
-            }
-            //Nem üres a lista
-            if(foodSnapshot.data!.isNotEmpty) {
-              return _foodColumn(foodSnapshot);
-            }
+            builder: (context, foodSnapshot) {
+              //Várakozik a kapcsolatra
+              if(foodSnapshot.connectionState == ConnectionState.waiting) {
+                return Center(child: Shared.myCircularProgressIndicator());
+              }
+              //Hiba történt
+              if(foodSnapshot.hasError) {
+                return Text(
+                  'Hiba: ${foodSnapshot.error}',
 
-            //Üres a lista
-            return const Text('Nincs adat.',);
-          },
+                  style: const TextStyle(color: Colors.red),
+                );
+              }
+              //Nem üres a lista
+              if(foodSnapshot.data!.isNotEmpty) {
+                return _foodColumn(foodSnapshot);
+              }
+
+              //Üres a lista
+              return const Text('Nincs adat.',);
+            },
+          ),
         ),
       ),
     );
