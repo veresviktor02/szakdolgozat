@@ -14,9 +14,11 @@ class APIService {
     //Space encode (%20), mert + jellel nem működik ez az API!
     final encodedQuery = Uri.encodeComponent(normalizedQuery);
 
-    final uri = Uri.parse('${Shared.baseUrl}/api?query=$encodedQuery');
 
-    final response = await http.get(uri);
+
+    final response = await http.get(
+      Uri.parse('${Shared.baseUrl}/api?query=$encodedQuery',),
+    );
 
     if (response.statusCode == 200) {
       return NutritionResponse.fromJson(jsonDecode(response.body));

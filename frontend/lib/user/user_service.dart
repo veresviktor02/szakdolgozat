@@ -16,10 +16,7 @@ import '/utils/shared.dart';
 class UserService {
   Future<List<User>> fetchUsers() async {
     final response = await http.get(
-      Uri.parse('${Shared.baseUrl}/users'),
-      headers: {
-        'Content-Type': 'application/json',
-      },
+      Uri.parse('${Shared.baseUrl}/users',),
     );
 
     if(response.statusCode == 200) {
@@ -27,6 +24,7 @@ class UserService {
 
       return jsonList.map((jsonItem) => User.fromJson(jsonItem)).toList();
     }
+
     throw Exception(
       'Felhasználók lekérése sikertelen! (${response.statusCode})',
     );
@@ -34,14 +32,14 @@ class UserService {
 
   Future<User> getUserById(int id) async {
     final response = await http.get(
-      Uri.parse('${Shared.baseUrl}/users/$id'),
+      Uri.parse('${Shared.baseUrl}/users/$id',),
     );
 
     if (response.statusCode == 200) {
       return User.fromJson(jsonDecode(response.body));
-    } else {
-      throw Exception('Hiba User lekérésekor (ID: $id).');
     }
+
+    throw Exception('Hiba a felhasználó lekérésekor (ID: $id). (${response.statusCode})');
   }
 
   Future<void> sendUser(
@@ -56,7 +54,7 @@ class UserService {
       List<MeasurementUnit> measurementUnits,
   ) async {
     final response = await http.post(
-      Uri.parse('${Shared.baseUrl}/users'),
+      Uri.parse('${Shared.baseUrl}/users',),
       headers: {
         'Content-Type': 'application/json',
       },
@@ -66,10 +64,10 @@ class UserService {
         'weight': weight,
         'userType': userType.name, //sima userType hibás!
         'differentDays': differentDays,
-        'dailyTarget': dailyTarget,
-        'foods': foods,
-        'days': days,
-        'measurementUnits': measurementUnits,
+        'dailyTarget': dailyTarget.map((e) => e.toJson()).toList(),
+        'foods': foods.map((e) => e.toJson()).toList(),
+        'days': days.map((e) => e.toJson()).toList(),
+        'measurementUnits': measurementUnits.map((e) => e.toJson()).toList(),
       }),
     );
 
@@ -82,28 +80,15 @@ class UserService {
 
   Future<void> updateUserById(int userId, User user) async {
     final response = await http.put(
-      Uri.parse('${Shared.baseUrl}/users/$userId'),
+      Uri.parse('${Shared.baseUrl}/users/$userId',),
       headers: {
         'Content-Type': 'application/json',
       },
-      body: jsonEncode({
-        'name': user.name,
-        'height': user.height,
-        'weight': user.weight,
-        'userType': user.userType.name,
-        'differentDays': user.differentDays,
-        'dailyTarget': user.dailyTarget.map((target) => {
-          'kcal': target.kcal,
-          'fat': target.fat,
-          'carb': target.carb,
-          'protein': target.protein,
-        }).toList(),
-        //TODO
-      }),
+      body: jsonEncode(user.toJson(),),
     );
 
     if(response.statusCode != 200) {
-      throw Exception('Nem sikerült frissíteni a felhasználót');
+      throw Exception('Nem sikerült frissíteni a felhasználót (${response.statusCode})');
     }
   }
 }

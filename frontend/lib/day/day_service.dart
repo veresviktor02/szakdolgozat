@@ -14,10 +14,7 @@ import '/utils/shared.dart';
 class DayService {
   Future<List<Day>> fetchDays(int id) async {
     final response = await http.get(
-      Uri.parse('${Shared.baseUrl}/days/$id'),
-      headers: {
-        'Content-Type': 'application/json',
-      },
+      Uri.parse('${Shared.baseUrl}/days/$id',),
     );
 
     if(response.statusCode == 200) {
@@ -32,9 +29,7 @@ class DayService {
 
   Future<void> removeFoodFromDay(int dayId, int foodId) async {
     final response = await http.delete(
-      Uri.parse(
-        '${Shared.baseUrl}/days/$dayId/$foodId',
-      ),
+      Uri.parse('${Shared.baseUrl}/days/$dayId/$foodId',),
     );
 
     //HTTP 204: No content! - Delete sikeres, de nincs válasz!
@@ -59,13 +54,11 @@ class DayService {
 
   Future<void> createEmptyDays(int id) async {
     final response = await http.get(
-      Uri.parse(
-          '${Shared.baseUrl}/days/create-empty-days/$id'
-      ),
+      Uri.parse('${Shared.baseUrl}/days/create-empty-days/$id'),
     );
 
-    if(response.statusCode == 200) {
-      throw Exception('Üres napok létrehozása nem sikerült! (${response.body})');
+    if(response.statusCode != 200) {
+      throw Exception('Üres napok létrehozása nem sikerült! (${response.statusCode})');
     }
   }
 
@@ -94,16 +87,14 @@ class DayService {
 
     if(response.statusCode != 200) {
       throw Exception(
-        'Étel hozzáadása a naphoz (ID: $dayId) sikertelen! (Válasz: ${response.statusCode})',
+        'Étel hozzáadása a naphoz (ID: $dayId) sikertelen! (Válasz: ${response.body})',
       );
     }
   }
 
   Future<List<User>> getMostActiveUsers() async {
     final response = await http.get(
-      Uri.parse(
-        '${Shared.baseUrl}/days/leaderboard',
-      ),
+      Uri.parse('${Shared.baseUrl}/days/leaderboard',),
     );
 
     if(response.statusCode == 200) {
@@ -117,9 +108,7 @@ class DayService {
 
   Future<int> getCurrentActivityStreak(int id) async {
     final response = await http.get(
-      Uri.parse(
-        '${Shared.baseUrl}/days/$id/streak',
-      ),
+      Uri.parse('${Shared.baseUrl}/days/$id/streak',),
     );
 
     if(response.statusCode == 200) {

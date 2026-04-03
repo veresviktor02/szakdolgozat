@@ -10,11 +10,9 @@ class CouponService {
   Future<CouponStatus> validateCoupon(String couponCode) async {
     couponCode = couponCode.trim().toUpperCase();
 
-    final uri = Uri.parse(
-        '${Shared.baseUrl}/coupons/validate/$couponCode'
+    final response = await http.get(
+      Uri.parse('${Shared.baseUrl}/coupons/validate/$couponCode',),
     );
-
-    final response = await http.get(uri);
 
     if(response.statusCode == 200 || response.statusCode == 404) {
       return CouponStatusParser.fromString(response.body);
@@ -26,12 +24,8 @@ class CouponService {
   }
 
   Future<void> useCoupon(String couponCode, int userId) async {
-    final uri = Uri.parse(
-        '${Shared.baseUrl}/coupons/$couponCode/use/$userId'
-    );
-
     final response = await http.put(
-      uri,
+      Uri.parse('${Shared.baseUrl}/coupons/$couponCode/use/$userId',),
       headers: {
         'Content-Type': 'application/json',
       },

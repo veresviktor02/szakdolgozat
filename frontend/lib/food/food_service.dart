@@ -22,6 +22,7 @@ class FoodService {
 
       return jsonList.map((jsonItem) => Food.fromJson(jsonItem)).toList();
     }
+
     throw Exception(
       'Ételek lekérése sikertelen! (${response.statusCode})',
     );
@@ -29,7 +30,7 @@ class FoodService {
 
   Future<void> sendFood(int userId, String name, KcalAndNutrients kcalAndNutrients) async {
     final response = await http.post(
-      Uri.parse('${Shared.baseUrl}/foods/$userId'),
+      Uri.parse('${Shared.baseUrl}/foods/$userId',),
       headers: {
         'Content-Type': 'application/json',
       },
@@ -47,25 +48,23 @@ class FoodService {
 
   Future<void> deleteFood(int foodId) async {
     final response = await http.delete(
-      Uri.parse(
-        '${Shared.baseUrl}/foods/$foodId',
-      ),
+      Uri.parse('${Shared.baseUrl}/foods/$foodId',),
     );
 
     if(response.statusCode != 200 && response.statusCode != 204) {
-      throw Exception('Étel törlése sikertelen!');
+      throw Exception('Étel törlése sikertelen! (${response.statusCode})');
     }
   }
 
   Future<Food> getFoodById(int userId, int foodId) async {
     final response = await http.get(
-      Uri.parse('${Shared.baseUrl}/foods/$userId/$foodId'),
+      Uri.parse('${Shared.baseUrl}/foods/$userId/$foodId',),
     );
 
     if (response.statusCode == 200) {
       return Food.fromJson(jsonDecode(response.body));
-    } else {
-      throw Exception('Hiba étel lekérésekor (ID: $foodId).');
     }
+
+    throw Exception('Hiba étel (ID: $foodId) lekérésekor. (${response.statusCode})');
   }
 }
