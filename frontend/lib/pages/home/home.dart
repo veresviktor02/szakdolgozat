@@ -551,8 +551,8 @@ class _HomePageState extends State<HomePage> {
                   final food = myCalendar.selectedFoods[index];
 
                   return Card(
-                    color: Colors.lightGreenAccent,
-                    shadowColor: Colors.greenAccent,
+                    color: Shared.cardColor,
+                    shadowColor: Shared.cardShadowColor,
 
                     elevation: 8,
 
@@ -697,8 +697,8 @@ class _HomePageState extends State<HomePage> {
               width: 180,
         
               child: Card(
-                color: Colors.lightGreenAccent,
-                shadowColor: Colors.greenAccent,
+                color: Shared.cardColor,
+                shadowColor: Shared.cardShadowColor,
         
                 elevation: 3,
         

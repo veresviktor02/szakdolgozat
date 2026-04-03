@@ -118,6 +118,10 @@ class Shared {
 
   static final Color circularPercentIndicatorBackgroundColor = Colors.grey[300]!;
 
+  static final Color cardColor = Colors.lightGreenAccent;
+
+  static final Color cardShadowColor = Colors.greenAccent;
+
   /////////////////////////////////////////////////////////////////////////////
 
   //ÁLLANDÓ VÁLTOZÓK

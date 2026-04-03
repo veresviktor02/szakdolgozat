@@ -109,6 +109,9 @@ class _ThirdPageState extends State<ThirdPage> {
           height: 200,
 
           child: Card(
+            color: Shared.cardColor,
+            shadowColor: Shared.cardShadowColor,
+
             elevation: 3,
 
             margin: const EdgeInsets.symmetric(vertical: 8.0,),

@@ -197,8 +197,8 @@ class ApiFoodSearchState extends State<ApiFoodSearch> {
 
   Widget _foodCard(APIFood food) {
     return Card(
-      color: Colors.lightGreenAccent,
-      shadowColor: Colors.greenAccent,
+      color: Shared.cardColor,
+      shadowColor: Shared.cardShadowColor,
 
       elevation: 8,
 
