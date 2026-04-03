@@ -47,7 +47,7 @@ class _LeaderboardPageState extends State<LeaderboardPage> {
               const SizedBox(height: 20,),
 
               const Text(
-                'Itt találod a legaktívabb felhasználókat.',
+                'Itt látod a legaktívabb felhasználókat.',
 
                 style: TextStyle(fontSize: 26,),
               ),
