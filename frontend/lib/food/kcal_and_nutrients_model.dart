@@ -11,7 +11,6 @@ class KcalAndNutrients {
     required this.protein,
   });
 
-  //dynamic - bármilyen típus érkezhet! Nem jelent problémát más adat!
   factory KcalAndNutrients.fromJson(Map<String, dynamic> json) {
     return KcalAndNutrients(
       //num lehet int, lehet double (szülőtípus).
@@ -29,5 +28,10 @@ class KcalAndNutrients {
       'carb': carb,
       'protein': protein,
     };
+  }
+
+  @override
+  String toString() {
+    return 'Kcal: $kcal\nZsír: $fat\nSzénhidrát: $carb\nFehérje: $protein';
   }
 }
