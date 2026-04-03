@@ -3,6 +3,8 @@ package Calorie.User;
 import Calorie.Day.Day;
 import Calorie.Day.MeasurementUnit.MeasurementUnit;
 
+import Calorie.Exceptions.UserException;
+
 import Calorie.Food.Food;
 import Calorie.Food.KcalAndNutrients;
 
@@ -118,7 +120,7 @@ public class User {
 
     public void setName(String name) {
         if(name.length() < 3 || name.length() > 20) {
-            throw new IllegalArgumentException(
+            throw new UserException(
                     "A névnek 3 és 20 karakter között kell lennie!"
             );
         }
@@ -128,7 +130,7 @@ public class User {
 
     public void setWeight(Double weight) {
         if(weight < 40 || weight > 250) {
-            throw new IllegalArgumentException(
+            throw new UserException(
                     "Túl alacsony vagy magas súly!"
             );
         }
@@ -138,7 +140,7 @@ public class User {
 
     public void setHeight(Double height) {
         if(height < 100 || height > 250) {
-            throw new IllegalArgumentException(
+            throw new UserException(
                     "Túl alacsony vagy magas magasság!"
             );
         }
@@ -152,7 +154,7 @@ public class User {
 
     public void setDifferentDays(boolean differentDays) {
         if(getUserType() == UserType.FREE && differentDays) {
-            throw new IllegalArgumentException(
+            throw new UserException(
                     "FREE felhasználó nem használhatja ezt a funkciót!"
             );
         }
@@ -188,7 +190,7 @@ public class User {
         if(getUserType() == UserType.FREE) {
             for(int i = 1; i < Objects.requireNonNull(dailyTarget).size(); i++) {
                 if(!dailyTarget.getFirst().equals(dailyTarget.get(i))) {
-                    throw new IllegalArgumentException(
+                    throw new UserException(
                             "FREE felhasználó nem használhatja ezt a funkciót!"
                     );
                 }
@@ -203,7 +205,7 @@ public class User {
                     dailyTarget.get(1).getKcal()
                 )
         ) {
-            throw new IllegalArgumentException(
+            throw new UserException(
                     "Nem használható ez a funkció, ha differentDays hamis!"
             );
         }

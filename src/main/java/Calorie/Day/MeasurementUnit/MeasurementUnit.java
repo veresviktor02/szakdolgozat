@@ -1,5 +1,7 @@
 package Calorie.Day.MeasurementUnit;
 
+import Calorie.Exceptions.MeasurementUnitException;
+
 import Calorie.User.User;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
@@ -62,7 +64,7 @@ public class MeasurementUnit {
 
     public void setMeasurementUnitName(String measurementUnitName) {
         if(measurementUnitName.length() < 3 ||  measurementUnitName.length() > 20) {
-            throw new IllegalArgumentException(
+            throw new MeasurementUnitException(
                     "A mértékegység nevének 3 és 20 karakter között kell lennie!"
             );
         }
@@ -72,7 +74,7 @@ public class MeasurementUnit {
 
     public void setMeasurementUnitInGrams(int measurementUnitInGrams) {
         if(measurementUnitInGrams <= 0) {
-            throw new IllegalArgumentException(
+            throw new MeasurementUnitException(
                     "Tömeg nem lehet nulla vagy kisebb szám!"
             );
         }

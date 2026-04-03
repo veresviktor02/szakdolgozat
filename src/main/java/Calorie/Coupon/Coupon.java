@@ -1,5 +1,7 @@
 package Calorie.Coupon;
 
+import Calorie.Exceptions.CouponException;
+
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.*;
@@ -53,7 +55,7 @@ public class Coupon {
 
     public void setCouponCode(String couponCode) {
         if(couponCode.length() < 5 || couponCode.length() > 20) {
-            throw new IllegalArgumentException(
+            throw new CouponException(
                     "A kuponkódnak 5 és 20 karakter között kell lennie!"
             );
         }

@@ -1,5 +1,7 @@
 package Calorie.Food;
 
+import Calorie.Exceptions.FoodException;
+
 import Calorie.User.User;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
@@ -58,7 +60,7 @@ public class Food {
 
     public void setName(String name) {
         if(name.length() < 2 || name.length() > 40) {
-            throw new IllegalArgumentException(
+            throw new FoodException(
                     "A névnek 2 és 40 karakter között kell lennie!"
             );
         }
