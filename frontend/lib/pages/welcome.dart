@@ -354,9 +354,9 @@ class _WelcomePageState extends State<WelcomePage> {
           protein: dailyTargetValues[index][3],
         ),
       ),
-      [], //TODO
-      [], //TODO
-      [], //TODO
+      [],
+      [],
+      [],
     );
   }
 
@@ -494,25 +494,25 @@ class _WelcomePageState extends State<WelcomePage> {
                           _nutrientField(
                             'Kcal',
                             controllers[dayIndex][0],
-                            (val) => dailyTargetValues[dayIndex][0] = double.tryParse(val)!,
+                            (val) => dailyTargetValues[dayIndex][0] = double.tryParse(val) ?? 0.0,
                           ),
 
                           _nutrientField(
                             'Zsír',
                             controllers[dayIndex][1],
-                            (val) => dailyTargetValues[dayIndex][1] = double.tryParse(val)!,
+                            (val) => dailyTargetValues[dayIndex][1] = double.tryParse(val) ?? 0.0,
                           ),
 
                           _nutrientField(
                             'Szénhidrát',
                             controllers[dayIndex][2],
-                            (val) => dailyTargetValues[dayIndex][2] = double.tryParse(val)!,
+                            (val) => dailyTargetValues[dayIndex][2] = double.tryParse(val) ?? 0.0,
                           ),
 
                           _nutrientField(
                             'Fehérje',
                             controllers[dayIndex][3],
-                            (val) => dailyTargetValues[dayIndex][3] = double.tryParse(val)!,
+                            (val) => dailyTargetValues[dayIndex][3] = double.tryParse(val) ?? 0.0,
                           ),
                         ],
                       ),
@@ -527,83 +527,81 @@ class _WelcomePageState extends State<WelcomePage> {
     }
 
     return Center(
-      child: Expanded(
-        child: Container(
-          width: Shared.pageWidth,
+      child: Container(
+        width: Shared.pageWidth,
 
-          padding: const EdgeInsets.all(10.0,),
+        padding: const EdgeInsets.all(10.0,),
 
-          decoration: BoxDecoration(
-            color: Shared.boxDecorationColor,
-          ),
+        decoration: BoxDecoration(
+          color: Shared.boxDecorationColor,
+        ),
 
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
 
-            children: [
-              const Padding(
-                padding: EdgeInsets.all(15.0,),
+          children: [
+            const Padding(
+              padding: EdgeInsets.all(15.0,),
 
-                child: Text(
-                  'Minden napra ugyannyi tápanyagot tudsz beállítani!',
+              child: Text(
+                'Minden napra ugyannyi tápanyagot tudsz beállítani!',
 
-                  textAlign: TextAlign.center,
+                textAlign: TextAlign.center,
 
-                  style: TextStyle(
-                    fontSize: 16,
-                  ),
+                style: TextStyle(
+                  fontSize: 16,
                 ),
               ),
+            ),
 
-              const SizedBox(height: 10,),
+            const SizedBox(height: 10,),
 
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
 
-                children: [
-                  _nutrientField(
+              children: [
+                _nutrientField(
                     'Kcal',
                     controllers[0][0],
-                    (val) {
+                        (val) {
                       for(int day = 0; day < 7; day++) {
                         dailyTargetValues[day][0] = double.tryParse(val)!;
                       }
                     }
-                  ),
+                ),
 
-                  _nutrientField(
+                _nutrientField(
                     'Zsír',
                     controllers[0][1],
-                    (val) {
+                        (val) {
                       for(int day = 0; day < 7; day++) {
                         dailyTargetValues[day][1] = double.tryParse(val)!;
                       }
                     }
-                  ),
+                ),
 
-                  _nutrientField(
+                _nutrientField(
                     'Szénhidrát',
                     controllers[0][2],
-                    (val) {
+                        (val) {
                       for(int day = 0; day < 7; day++) {
                         dailyTargetValues[day][2] = double.tryParse(val)!;
                       }
                     }
-                  ),
+                ),
 
-                  _nutrientField(
+                _nutrientField(
                     'Fehérje',
                     controllers[0][3],
-                    (val) {
+                        (val) {
                       for(int day = 0; day < 7; day++) {
                         dailyTargetValues[day][3] = double.tryParse(val)!;
                       }
                     }
-                  ),
-                ],
-              ),
-            ],
-          ),
+                ),
+              ],
+            ),
+          ],
         ),
       ),
     );
