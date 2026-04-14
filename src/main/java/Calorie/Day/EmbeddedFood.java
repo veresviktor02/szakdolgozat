@@ -39,6 +39,8 @@ public class EmbeddedFood {
     @JoinColumn(name = "food_id")
     private Food food;
 
+    private int mealNumber;
+
     public EmbeddedFood() {}
 
     public EmbeddedFood(
@@ -48,7 +50,8 @@ public class EmbeddedFood {
             double foodWeight,
             MeasurementUnit measurementUnit,
             Day day,
-            Food food
+            Food food,
+            int mealNumber
     ) {
         this.id = id;
         this.name = name;
@@ -57,6 +60,7 @@ public class EmbeddedFood {
         this.measurementUnit = measurementUnit;
         this.day = day;
         this.food = food;
+        setMealNumber(mealNumber);
     }
 
     public Integer getId() {
@@ -87,6 +91,10 @@ public class EmbeddedFood {
         return food;
     }
 
+    public int getMealNumber() {
+        return mealNumber;
+    }
+
     public void setId(Integer id) {
         this.id = id;
     }
@@ -105,6 +113,7 @@ public class EmbeddedFood {
                     "Az étel súlya nem lehet negatív!"
             );
         }
+
         this.foodWeight = foodWeight;
     }
 
@@ -118,6 +127,14 @@ public class EmbeddedFood {
 
     public void setFood(Food food) {
         this.food = food;
+    }
+
+    public void setMealNumber(int mealNumber) {
+        if(mealNumber < 1 || mealNumber > 3) {
+            throw new IllegalArgumentException("Étkezés csak 1-3 lehet!");
+        }
+
+        this.mealNumber = mealNumber;
     }
 
     @Override
@@ -140,6 +157,8 @@ public class EmbeddedFood {
                 "ID = " + id + '\n' +
                 "Név = " + name + '\n' +
                 "Tápanyag információ: " + kcalAndNutrients + '\n' +
-                "Tömeg: " + foodWeight;
+                "Tömeg: " + foodWeight + '\n' +
+                "Étkezés:" + mealNumber;
+
     }
 }

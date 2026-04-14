@@ -5,11 +5,14 @@ import Calorie.Exceptions.MeasurementUnitException;
 import Calorie.User.User;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import jakarta.persistence.*;
 
 import java.util.Objects;
 
+//"hibernateLazyInitializer": {} ellen!
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 //Egy mértékegységnévből ne lehessen több, de más-más felhasználónak lehet így ugyanaz a név!
 @Entity
 @Table(uniqueConstraints = {@UniqueConstraint(columnNames = {"owner_id", "measurementUnitName"})})

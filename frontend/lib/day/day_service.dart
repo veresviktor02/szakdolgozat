@@ -69,6 +69,7 @@ class DayService {
       KcalAndNutrients kcalAndNutrients,
       double foodWeight,
       MeasurementUnit measurementUnit,
+      int mealNumber
   ) async {
     final response = await http.post(
       Uri.parse(
@@ -82,6 +83,7 @@ class DayService {
         'kcalAndNutrients': kcalAndNutrients.toJson(),
         'foodWeight': foodWeight,
         'measurementUnit': measurementUnit.toJson(),
+        'mealNumber': mealNumber,
       }),
     );
 

@@ -10,6 +10,7 @@ class EmbeddedFood {
   final double foodWeight;
   final MeasurementUnit measurementUnit;
   final Food? food;
+  final int mealNumber;
 
   EmbeddedFood({
     required this.id,
@@ -18,6 +19,7 @@ class EmbeddedFood {
     required this.foodWeight,
     required this.measurementUnit,
     this.food,
+    required this.mealNumber,
   });
 
   @override
@@ -35,6 +37,7 @@ class EmbeddedFood {
       food: json['food'] != null
           ? Food.fromJson(json['food'] as Map<String, dynamic>)
           : null,
+      mealNumber: json['mealNumber'],
     );
   }
 
@@ -46,6 +49,7 @@ class EmbeddedFood {
       'foodWeight': foodWeight,
       'measurementUnit': measurementUnit.toJson(),
       'food': food?.toJson(),
+      'mealNumber': mealNumber,
     };
   }
 }

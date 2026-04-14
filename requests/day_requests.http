@@ -40,7 +40,8 @@ Content-Type: application/json
     "id": 1,
     "measurementUnitName": "gramm",
     "measurementUnitInGrams": 1
-  }
+  },
+  "mealNumber": 2
 }
 
 ###
@@ -61,7 +62,8 @@ Content-Type: application/json
     "id": 2,
     "measurementUnitName": "100 gramm",
     "measurementUnitInGrams": 100
-  }
+  },
+  "mealNumber": 3
 }
 
 ###
@@ -82,7 +84,8 @@ Content-Type: application/json
     "id": 3,
     "measurementUnitName": "kilogramm",
     "measurementUnitInGrams": 1000
-  }
+  },
+  "mealNumber": 1
 }
 
 ###
@@ -103,7 +106,8 @@ Content-Type: application/json
     "id": 4,
     "measurementUnitName": "lbs",
     "measurementUnitInGrams": 453
-  }
+  },
+  "mealNumber": 2
 }
 
 ###
@@ -125,7 +129,8 @@ Content-Type: application/json
     "id": 1,
     "measurementUnitName": "nem létezik",
     "measurementUnitInGrams": 1
-  }
+  },
+  "mealNumber": 2
 }
 
 ###
@@ -149,7 +154,8 @@ Content-Type: application/json
         "id": 1,
         "measurementUnitName": "gramm",
         "measurementUnitInGrams": 1
-      }
+      },
+      "mealNumber": 2
     },
     {
       "name": "New Apple in day",
@@ -164,7 +170,8 @@ Content-Type: application/json
         "id": 1,
         "measurementUnitName": "gramm",
         "measurementUnitInGrams": 1
-      }
+      },
+      "mealNumber": 2
     }
   ]
 }
@@ -191,7 +198,30 @@ Content-Type: application/json
     "id": 1,
     "measurementUnitName": "gramm",
     "measurementUnitInGrams": 1
-  }
+  },
+  "mealNumber": 2
+}
+
+###
+
+POST localhost:8080/days/2/365
+Content-Type: application/json
+
+{
+  "name": "Bad mealNumber Food",
+  "kcalAndNutrients": {
+    "kcal": 420.0,
+    "fat": 6.9,
+    "carb": 6.7,
+    "protein": 18.0
+  },
+  "foodWeight": 100,
+  "measurementUnit": {
+    "id": 1,
+    "measurementUnitName": "gramm",
+    "measurementUnitInGrams": 1
+  },
+  "mealNumber": 4
 }
 
 ###

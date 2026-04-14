@@ -60,7 +60,10 @@ class _HomePageState extends State<HomePage> {
   Future<KcalAndNutrients>? totalFuture;
   late Future<List<MeasurementUnit>> measurementUnitFuture;
 
+  //Dropdown értékek
   MeasurementUnit? selectedMeasurementUnit;
+  int? selectedMealNumber;
+  //
 
   User? user;
   bool isLoading = true;
@@ -385,8 +388,6 @@ class _HomePageState extends State<HomePage> {
               ],
             ),
 
-            const SizedBox(height: 20,),
-
             _nameTextField(nameController),
 
             Row(
@@ -403,7 +404,7 @@ class _HomePageState extends State<HomePage> {
 
             _measurementUnitDropdown(),
 
-            const SizedBox(height: 10,),
+            _mealNumberDropdown(),
 
             Container(
               alignment: Alignment.center,
@@ -513,87 +514,154 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  Widget _dayDetails() {
-    //Nincs étel a napban
-    if(myCalendar.selectedFoods.isEmpty) {
-      return Column(
-        children: [
-          const SizedBox(
-            height: 500,
+  Widget _mealNumberDropdown() {
+    return Align(
+      alignment: Alignment.center,
 
-            child: Center(
-              child: Text(
-                'A napod üres! Adj hozzá ételeket a napodhoz!',
+      child: Padding(
+        padding: const EdgeInsets.all(5.0,),
+
+        child: SizedBox(
+          width: 440,
+
+          child: DropdownButtonFormField<int>(
+            hint: const Text('Étkezés kiválasztása',),
+
+            dropdownColor: Shared.dropdownColor,
+
+            decoration: InputDecoration(
+              filled: true,
+              fillColor: Shared.dropdownColor,
+
+              border: const OutlineInputBorder(),
+            ),
+
+            value: selectedMealNumber,
+
+            items: [1, 2, 3].map((meal) {
+              return DropdownMenuItem<int>(
+                value: meal,
+
+                child: Text(mealNames(meal)),
+              );
+            }).toList(),
+
+            onChanged: (int? value) {
+              setState(() {
+                selectedMealNumber = value;
+              });
+            },
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _dayDetails() {
+    return Column(
+      children: [1, 2, 3].map((meal) {
+        final foodsForMeal = myCalendar.selectedFoods
+            .where((food) => food.mealNumber == meal)
+            .toList();
+
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+
+          children: [
+            Padding(
+              padding: const EdgeInsets.all(8.0,),
+
+              child: Center(
+                child: Text(
+                  mealNames(meal),
+
+                  style: const TextStyle(
+                    fontSize: 20,
+
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
               ),
             ),
-          ),
-        ],
-      );
-    }
 
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.end,
+            SizedBox(
+              height: 200,
 
-      children: [
-        SizedBox(
-          //Fixelt magasság kell, mert a Flutter nem tudja kezelni a
-          //görgethető Widgeten belüli görgethető Widgetet másképpen!
-          height: 500,
-
-          child: SingleChildScrollView(
-            child: Scrollbar(
               child: ListView.builder(
+                scrollDirection: Axis.horizontal,
+
                 shrinkWrap: true,
 
-                itemCount: myCalendar.selectedFoods.length,
+                itemCount: foodsForMeal.length,
 
                 itemBuilder: (context, index) {
-                  final food = myCalendar.selectedFoods[index];
+                  final food = foodsForMeal[index];
 
-                  return Card(
-                    color: Shared.cardColor,
-                    shadowColor: Shared.cardShadowColor,
+                  return SizedBox(
+                    width: 190,
 
-                    elevation: 8,
+                    child: Card(
+                      color: Shared.cardColor,
+                      shadowColor: Shared.cardShadowColor,
 
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.center,
+                      elevation: 8,
 
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.all(10.0,),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.center,
 
-                          child: ElevatedButton(
-                            onPressed: () async {
-                              final day = myCalendar.daysMap[myCalendar.dayOnly(myCalendar.selectedDay)];
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.all(10.0,),
 
-                              await dayService.removeFoodFromDay(day!.id, food.id);
+                            child: ElevatedButton(
+                              onPressed: () async {
+                                final day = myCalendar.daysMap[
+                                  myCalendar.dayOnly(myCalendar.selectedDay)
+                                ];
 
-                              await refreshPage();
-                            },
+                                await dayService.removeFoodFromDay(
+                                  day!.id, food.id
+                                );
 
-                            style: Shared.myButtonStyle,
+                                await refreshPage();
+                              },
 
-                            child: const Text('Törlés',),
+                              style: Shared.myButtonStyle,
+
+                              child: const Text('Törlés'),
+                            ),
                           ),
-                        ),
 
-                        Text('Név: ${food.name}',),
-                        Text('Kcal: ${Shared.format(food.kcalAndNutrients.kcal)}',),
-                        Text('Zsír: ${Shared.format(food.kcalAndNutrients.fat)}',),
-                        Text('Szénhidrát: ${Shared.format(food.kcalAndNutrients.carb)}',),
-                        Text('Fehérje: ${Shared.format(food.kcalAndNutrients.protein)}',),
-                        Text('Tömeg: ${food.foodWeight} ${food.measurementUnit.measurementUnitName}',),
-                      ],
+                          Text('Név: ${food.name}',),
+                          Text('Kcal: ${Shared.format(food.kcalAndNutrients.kcal)}',),
+                          Text('Zsír: ${Shared.format(food.kcalAndNutrients.fat)}',),
+                          Text('Szénhidrát: ${Shared.format(food.kcalAndNutrients.carb)}',),
+                          Text('Fehérje: ${Shared.format(food.kcalAndNutrients.protein)}',),
+                          Text('Tömeg: ${food.foodWeight} ${food.measurementUnit.measurementUnitName}',),
+                        ],
+                      ),
                     ),
                   );
                 },
               ),
             ),
-          ),
-        ),
-      ],
+          ],
+        );
+      }).toList(),
     );
+  }
+
+  String mealNames(int mealNumber) {
+    switch(mealNumber) {
+      case 1:
+        return 'Reggeli';
+      case 2:
+        return 'Ebéd';
+      case 3:
+        return 'Vacsora';
+      default:
+        throw Exception('Rossz mealNumber lett megadva!');
+    }
   }
 
   Widget _foodSender() {
@@ -645,7 +713,9 @@ class _HomePageState extends State<HomePage> {
 
         double.parse(foodWeightController.text),
 
-        selectedMeasurementUnit!
+        selectedMeasurementUnit!,
+
+        selectedMealNumber!
     );
   }
 
@@ -859,7 +929,7 @@ Container _nameTextField(TextEditingController nameController) {
     child: TextField(
       controller: nameController,
 
-      decoration: Shared.inputDecoration('Étel neve:', null,),
+      decoration: Shared.inputDecoration('Étel neve', null,),
     ),
   );
 }

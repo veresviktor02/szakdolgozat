@@ -268,6 +268,8 @@ class ApiFoodSearchState extends State<ApiFoodSearch> {
         measurementUnitName: 'Gramm',
         measurementUnitInGrams: 1,
       ),
+
+      2 //TODO: hozzáadni dropdown-t(?)
     );
   }
 
@@ -278,7 +280,7 @@ class ApiFoodSearchState extends State<ApiFoodSearch> {
 
     if(food.calories < calculatedCaloriesFromNutrients) {
       Shared.mySnackBar(
-        'Az API által megadott kalóriaszám hibás! A naptáradba a helyes kalóriaszám kerül be. ',
+        'Az API által megadott kalóriaszám hibás! A naptáradba a helyes kalóriaszám kerül be.',
         Colors.blue,
         context,
       );
