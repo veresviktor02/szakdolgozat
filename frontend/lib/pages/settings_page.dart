@@ -209,42 +209,25 @@ class _SettingsPageState extends State<SettingsPage> {
 
                       child: Column(
                         children: [
-                          TextField(
-                            controller: nameController,
-
-                            decoration: const InputDecoration(
-                              labelText: 'Név',
-
-                              border: OutlineInputBorder(),
-                            ),
+                          _userDataTextField(
+                              controller: nameController,
+                              labelText: 'Név'
                           ),
 
                           const SizedBox(height: 15,),
 
-                          TextField(
+                          _userDataTextField(
                             controller: weightController,
-
-                            keyboardType: TextInputType.number,
-
-                            decoration: const InputDecoration(
-                              labelText: 'Testtömeg (kg)',
-
-                              border: OutlineInputBorder(),
-                            ),
+                            labelText: 'Testtömeg (kg)',
+                            keyboardType: TextInputType.number
                           ),
 
                           const SizedBox(height: 15,),
 
-                          TextField(
-                            controller: heightController,
-
-                            keyboardType: TextInputType.number,
-
-                            decoration: const InputDecoration(
+                          _userDataTextField(
+                              controller: heightController,
                               labelText: 'Magasság (cm)',
-
-                              border: OutlineInputBorder(),
-                            ),
+                              keyboardType: TextInputType.number
                           ),
 
                           const SizedBox(height: 10,),
@@ -333,54 +316,29 @@ class _SettingsPageState extends State<SettingsPage> {
                           ),
           
                           const SizedBox(height: 7.5,),
-          
-                          TextField(
-                            controller: ageController,
 
-                            keyboardType: TextInputType.number,
-
-                            maxLength: 2,
-
-                            inputFormatters: [
-                              FilteringTextInputFormatter.allow(Shared.onlyNumbers,),
-                            ],
-
-                            decoration: const InputDecoration(
+                          _userDataTextField(
+                              controller: ageController,
                               labelText: 'Életkor',
-
-                              //Nem jelenik meg számláló (0/2, 1/2).
-                              counterText: '',
-
-                              border: OutlineInputBorder(),
-                            ),
+                              keyboardType: TextInputType.number,
+                              maxLength: 2,
+                              format: FilteringTextInputFormatter.allow(Shared.onlyNumbers,)
                           ),
           
                           const SizedBox(height: 15,),
-          
-                          TextField(
-                            controller: weightController,
 
-                            keyboardType: TextInputType.number,
-
-                            decoration: const InputDecoration(
+                          _userDataTextField(
+                              controller: weightController,
                               labelText: 'Testtömeg (kg)',
-
-                              border: OutlineInputBorder(),
-                            ),
+                              keyboardType: TextInputType.number
                           ),
           
                           const SizedBox(height: 15,),
-          
-                          TextField(
-                            controller: heightController,
 
-                            keyboardType: TextInputType.number,
-
-                            decoration: const InputDecoration(
+                          _userDataTextField(
+                              controller: heightController,
                               labelText: 'Magasság (cm)',
-
-                              border: OutlineInputBorder(),
-                            ),
+                              keyboardType: TextInputType.number
                           ),
           
                           const SizedBox(height: 15,),
@@ -396,17 +354,11 @@ class _SettingsPageState extends State<SettingsPage> {
                           ),
           
                           const SizedBox(height: 15,),
-          
-                          TextField(
-                            controller: calculationController,
 
-                            readOnly: true,
-
-                            decoration: const InputDecoration(
+                          _userDataTextField(
+                              controller: calculationController,
                               labelText: 'Napi kalória (Kcal)',
-
-                              border: OutlineInputBorder(),
-                            ),
+                              readOnly: true
                           ),
                         ],
                       ),
@@ -462,6 +414,38 @@ class _SettingsPageState extends State<SettingsPage> {
     }
 
     calculationController.text = Shared.format(calculatedCalories);
+  }
+
+  Widget _userDataTextField({
+      required TextEditingController controller,
+      required String labelText,
+      bool readOnly = false,
+      TextInputType? keyboardType,
+      FilteringTextInputFormatter? format,
+      int? maxLength
+  }) {
+    return TextField(
+      controller: controller,
+
+      keyboardType: keyboardType,
+
+      maxLength: maxLength,
+
+      readOnly: readOnly,
+
+      inputFormatters: [
+        format ?? FilteringTextInputFormatter.allow(RegExp(r'.*'),),
+      ],
+
+      decoration: InputDecoration(
+        //Nem jelenik meg számláló (0/2, 1/2).
+        counterText: '',
+
+        labelText: labelText,
+
+        border: OutlineInputBorder(),
+      ),
+    );
   }
 
   Widget _dropdown(selectedItem, labelText, List<String> itemList, onChanged) {
