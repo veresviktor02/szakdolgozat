@@ -632,7 +632,7 @@ class _HomePageState extends State<HomePage> {
                             Text('Tömeg: ${food.foodWeight} ${food.measurementUnit.measurementUnitName}',),
 
                             Padding(
-                              padding: const EdgeInsets.all(10.0,),
+                              padding: const EdgeInsets.all(8.0,),
 
                               child: ElevatedButton(
                                 onPressed: () async {
