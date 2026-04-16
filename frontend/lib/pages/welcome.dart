@@ -712,30 +712,38 @@ Container _userDataInput({
     ),
 
     child: Row(
-      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
 
       children: [
-        SizedBox(
-          width: 150,
+        Padding(
+          padding: const EdgeInsets.all(10.0,),
 
-          child: Text(labelText,),
+          child: SizedBox(
+            width: 150,
+
+            child: Text(labelText,),
+          ),
         ),
 
-        Container(
-          width: 140,
-          height: 60,
+        Padding(
+          padding: const EdgeInsets.all(10.0,),
 
-          alignment: Alignment.center,
+          child: Container(
+            width: 140,
+            height: 60,
 
-          child: TextField(
-            controller: controller,
-            enabled: isEnabled,
+            alignment: Alignment.center,
 
-            inputFormatters: [
-              format ?? FilteringTextInputFormatter.allow(RegExp(r'.*'),),
-            ],
+            child: TextField(
+              controller: controller,
+              enabled: isEnabled,
 
-            decoration: Shared.inputDecoration(null, hintText),
+              inputFormatters: [
+                format ?? FilteringTextInputFormatter.allow(RegExp(r'.*'),),
+              ],
+
+              decoration: Shared.inputDecoration(null, hintText),
+            ),
           ),
         ),
       ],
