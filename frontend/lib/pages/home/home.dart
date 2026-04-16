@@ -163,6 +163,10 @@ class _HomePageState extends State<HomePage> {
     //Elkerüli a betöltés alatti hibát!
     if(user == null) {
       return Scaffold(
+        appBar: Shared.myAppBar('Töltődés...',),
+
+        backgroundColor: Shared.backgroundColor,
+
         body: Text('',),
       );
     }
