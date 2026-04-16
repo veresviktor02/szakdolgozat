@@ -122,6 +122,8 @@ class Shared {
 
   static final Color cardShadowColor = Colors.greenAccent;
 
+  static final Color borderColor = Colors.blueAccent;
+
   /////////////////////////////////////////////////////////////////////////////
 
   //ÁLLANDÓ VÁLTOZÓK

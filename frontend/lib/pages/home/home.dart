@@ -243,99 +243,105 @@ class _HomePageState extends State<HomePage> {
     return Container(
       alignment: Alignment.center,
 
-      child: SizedBox(
-        width: Shared.pageWidth,
-        //Itt NE legyen magasság, mert az alatta lévő SingleChildScrollView
-        //nem tudja magát üzemeltetni!
-        //height: 500,
+      child: Padding(
+        padding: const EdgeInsets.all(8.0,),
 
-        child: Column(
-          children: [
-            TableCalendar(
-              //Csak egy hetet lehet léptetni a naptárt.
-              //(Telefonon működik, gépen touchpaddel nem!)
-              pageAnimationEnabled: false,
+        child: SizedBox(
+          width: Shared.pageWidth,
+          //Itt NE legyen magasság, mert az alatta lévő SingleChildScrollView
+          //nem tudja magát üzemeltetni!
+          //height: 500,
 
-              availableGestures: AvailableGestures.horizontalSwipe,
+          child: Column(
+            children: [
+              TableCalendar(
+                //Csak egy hetet lehet léptetni a naptárt.
+                //(Telefonon működik, gépen touchpaddel nem!)
+                pageAnimationEnabled: false,
 
-              //Visszavált a mai napra kattintás esetén!
-              onHeaderTapped: (focusedDay) {
-                setState(() {
-                  final today = DateTime.now();
+                availableGestures: AvailableGestures.horizontalSwipe,
 
-                  myCalendar.focusedDay = today;
-                  myCalendar.selectedDay = today;
-                });
-              },
+                //Visszavált a mai napra kattintás esetén!
+                onHeaderTapped: (focusedDay) {
+                  setState(() {
+                    final today = DateTime.now();
 
-              rowHeight: 75,
+                    myCalendar.focusedDay = today;
+                    myCalendar.selectedDay = today;
+                  });
+                },
 
-              headerStyle: HeaderStyle(
-                titleCentered: true,
+                rowHeight: 75,
 
-                formatButtonVisible: false,
+                headerStyle: HeaderStyle(
+                  titleCentered: true,
 
-                headerPadding: const EdgeInsets.all(4.0,),
+                  formatButtonVisible: false,
 
-                decoration: BoxDecoration(
-                  color: Shared.boxDecorationColor,
+                  headerPadding: const EdgeInsets.all(4.0,),
+
+                  decoration: BoxDecoration(
+                    color: Shared.boxDecorationColor,
+
+                    border: Border.all(color: Shared.borderColor,),
+                  ),
+
+                  titleTextStyle: const TextStyle(
+                    fontSize: 20,
+
+                    fontWeight: FontWeight.bold,
+                  ),
+
+                  //Hónapok testreszabása
+                  titleTextFormatter: (date, locale) => MyCalendar.hungarianNameOfMonths(date),
                 ),
 
-                titleTextStyle: const TextStyle(
-                  fontSize: 20,
+                daysOfWeekVisible: false,
 
-                  fontWeight: FontWeight.bold,
+                calendarBuilders: CalendarBuilders(
+                  defaultBuilder: (context, day, focusedDay) => MyCalendar.calendarDay(day, Colors.lightGreen[400]!),
+
+                  todayBuilder: (context, day, focusedDay) => MyCalendar.calendarDay(day, Colors.greenAccent),
+
+                  selectedBuilder: (context, day, focusedDay) => MyCalendar.calendarDay(day, Colors.green[600]!),
+
+                  outsideBuilder: (context, day, focusedDay) => MyCalendar.calendarDay(day, Colors.lightGreen[400]!),
                 ),
 
-                //Hónapok testreszabása
-                titleTextFormatter: (date, locale) => MyCalendar.hungarianNameOfMonths(date),
+                calendarStyle: CalendarStyle(
+                  outsideTextStyle: TextStyle(color: Colors.grey.shade400),
+
+                  cellMargin: EdgeInsets.zero,
+
+                  cellPadding: EdgeInsets.zero,
+                ),
+
+                firstDay: firstDay,
+                lastDay: lastDay,
+                focusedDay: myCalendar.focusedDay,
+
+                //default: Vasárnap!
+                startingDayOfWeek: StartingDayOfWeek.monday,
+
+                selectedDayPredicate: (day) {
+                  return isSameDay(myCalendar.selectedDay, day);
+                },
+
+                onDaySelected: (selectedDay, focusedDay) {
+                  setState(() {
+                    myCalendar.selectedDay = selectedDay;
+                    myCalendar.focusedDay = focusedDay;
+                  });
+
+                  refreshPage();
+                },
+
+                calendarFormat: MyCalendar.calendarFormat,
               ),
 
-              daysOfWeekVisible: false,
-
-              calendarBuilders: CalendarBuilders(
-                defaultBuilder: (context, day, focusedDay) => MyCalendar.calendarDay(day, Colors.lightGreen[400]!),
-
-                todayBuilder: (context, day, focusedDay) => MyCalendar.calendarDay(day, Colors.greenAccent),
-
-                selectedBuilder: (context, day, focusedDay) => MyCalendar.calendarDay(day, Colors.green[600]!),
-
-                outsideBuilder: (context, day, focusedDay) => MyCalendar.calendarDay(day, Colors.lightGreen[400]!),
-              ),
-
-              calendarStyle: CalendarStyle(
-                outsideTextStyle: TextStyle(color: Colors.grey.shade400),
-
-                cellMargin: EdgeInsets.zero,
-
-                cellPadding: EdgeInsets.zero,
-              ),
-
-              firstDay: firstDay,
-              lastDay: lastDay,
-              focusedDay: myCalendar.focusedDay,
-
-              //default: Vasárnap!
-              startingDayOfWeek: StartingDayOfWeek.monday,
-
-              selectedDayPredicate: (day) {
-                return isSameDay(myCalendar.selectedDay, day);
-              },
-
-              onDaySelected: (selectedDay, focusedDay) {
-                setState(() {
-                  myCalendar.selectedDay = selectedDay;
-                  myCalendar.focusedDay = focusedDay;
-                });
-
-                refreshPage();
-              },
-
-              calendarFormat: MyCalendar.calendarFormat,
-            ),
-
-            _dayDetails(),
-          ],
+              _dayDetails(),
+            ],
+          ),
         ),
       ),
     );
@@ -366,7 +372,7 @@ class _HomePageState extends State<HomePage> {
         decoration: BoxDecoration(
           color: Shared.boxDecorationColor,
 
-          border: Border.all(color: Colors.blueAccent,),
+          border: Border.all(color: Shared.borderColor,),
         ),
 
 
@@ -869,7 +875,7 @@ class _HomePageState extends State<HomePage> {
           decoration: BoxDecoration(
             color: Shared.boxDecorationColor,
 
-            border: Border.all(color: Colors.blueAccent),
+            border: Border.all(color: Shared.borderColor),
           ),
 
           child: FutureBuilder<List<Food>>(
