@@ -183,225 +183,239 @@ class _SettingsPageState extends State<SettingsPage> {
 
       backgroundColor: Shared.backgroundColor,
 
-      //TODO reszponzívvá alakítani!
-      body: Center(
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      body: SizedBox(
+        child: SingleChildScrollView(
+          child: Center(
+            child: LayoutBuilder(
+              builder: (context, constraints) {
+                final isWide = constraints.maxWidth > 900;
+          
+                return Flex(
+                  direction: isWide ? Axis.horizontal : Axis.vertical,
 
-          children: [
-            Container(
-              width: 400,
-              height: 700,
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
 
-              padding: const EdgeInsets.all(15.0,),
-              margin: const EdgeInsets.all(40.0,),
+                  children: [
+                    Container(
+                      width: 400,
+                      height: 700,
 
-              decoration: BoxDecoration(
-                border: Border.all(color: Colors.blueAccent,),
-              ),
+                      padding: const EdgeInsets.all(15.0,),
+                      margin: const EdgeInsets.all(40.0,),
 
-              child: Column(
-                children: [
-                  TextField(
-                    controller: nameController,
+                      decoration: BoxDecoration(
+                        border: Border.all(color: Shared.borderColor,),
+                      ),
 
-                    decoration: const InputDecoration(
-                      labelText: 'Név',
+                      child: Column(
+                        children: [
+                          TextField(
+                            controller: nameController,
 
-                      border: OutlineInputBorder(),
-                    ),
-                  ),
+                            decoration: const InputDecoration(
+                              labelText: 'Név',
 
-                  const SizedBox(height: 15,),
+                              border: OutlineInputBorder(),
+                            ),
+                          ),
 
-                  TextField(
-                    controller: weightController,
+                          const SizedBox(height: 15,),
 
-                    keyboardType: TextInputType.number,
+                          TextField(
+                            controller: weightController,
 
-                    decoration: const InputDecoration(
-                      labelText: 'Testtömeg (kg)',
+                            keyboardType: TextInputType.number,
 
-                      border: OutlineInputBorder(),
-                    ),
-                  ),
+                            decoration: const InputDecoration(
+                              labelText: 'Testtömeg (kg)',
 
-                  const SizedBox(height: 15,),
+                              border: OutlineInputBorder(),
+                            ),
+                          ),
 
-                  TextField(
-                    controller: heightController,
+                          const SizedBox(height: 15,),
 
-                    keyboardType: TextInputType.number,
+                          TextField(
+                            controller: heightController,
 
-                    decoration: const InputDecoration(
-                      labelText: 'Magasság (cm)',
+                            keyboardType: TextInputType.number,
 
-                      border: OutlineInputBorder(),
-                    ),
-                  ),
+                            decoration: const InputDecoration(
+                              labelText: 'Magasság (cm)',
 
-                  const SizedBox(height: 10,),
+                              border: OutlineInputBorder(),
+                            ),
+                          ),
 
-                  SwitchListTile(
-                    title: const Text('Különböző napok',),
+                          const SizedBox(height: 10,),
 
-                    value: differentDays,
+                          SwitchListTile(
+                            title: const Text('Különböző napok',),
 
-                    onChanged: (value) {
-                      setState(() {
-                        differentDays = value;
-                      });
-                    },
-                  ),
+                            value: differentDays,
 
-                  //TODO: kuponkód, adatvalidáció!
+                            onChanged: (value) {
+                              setState(() {
+                                differentDays = value;
+                              });
+                            },
+                          ),
 
-                  const SizedBox(height: 10,),
+                          //TODO: kuponkód, adatvalidáció!
 
-                  ElevatedButton(
-                    onPressed: isSaving ? null : saveUser,
+                          const SizedBox(height: 10,),
 
-                    style: Shared.myButtonStyle,
+                          ElevatedButton(
+                            onPressed: isSaving ? null : saveUser,
 
-                    child: isSaving
-                        ? Shared.myCircularProgressIndicator()
-                        : const Text('Mentés',),
-                  ),
-                ],
-              ),
-            ),
+                            style: Shared.myButtonStyle,
 
-            const SizedBox(height: 20,),
-
-            Container(
-              width: 400,
-              height: 700,
-
-              padding: const EdgeInsets.all(15.0,),
-              margin: const EdgeInsets.all(40.0,),
-
-              decoration: BoxDecoration(
-                border: Border.all(color: Colors.blueAccent,),
-              ),
-
-              child: Column(
-                children: [
-                  const Padding(
-                    padding: EdgeInsets.fromLTRB(5.0, 10.0, 5.0, 20.0,),
-
-                    child: Text(
-                      'Napi kalóriaszükséglet kiszámítása',
-
-                      style: TextStyle(
-                        fontSize: 18,
-
-                        fontWeight: FontWeight.w300,
+                            child: isSaving
+                                ? Shared.myCircularProgressIndicator()
+                                : const Text('Mentés',),
+                          ),
+                        ],
                       ),
                     ),
-                  ),
 
-                  _dropdown(
-                    selectedGender,
-                    'Nem',
-                    genders,
-                    (value) {
-                      setState(() {
-                        selectedGender = value;
-                      });
-                    },
-                  ),
-
-                  _dropdown(
-                    selectedActivityLevel,
-                    'Aktivitási szint',
-                    activityLevels,
-                    (value) {
-                      setState(() {
-                        selectedActivityLevel = value;
-                      });
-                    },
-                  ),
-
-                  const SizedBox(height: 7.5,),
-
-                  TextField(
-                    controller: ageController,
-
-                    keyboardType: TextInputType.number,
-
-                    maxLength: 2,
-
-                    inputFormatters: [
-                      FilteringTextInputFormatter.allow(Shared.onlyNumbers,),
-                    ],
-
-                    decoration: const InputDecoration(
-                      labelText: 'Életkor',
-
-                      //Nem jelenik meg számláló (0/2, 1/2).
-                      counterText: '',
-
-                      border: OutlineInputBorder(),
+                    SizedBox(
+                      width: isWide ? 20 : 0,
+                      height: isWide ? 0 : 20,
                     ),
-                  ),
+          
+                    Container(
+                      width: 400,
+                      height: 700,
 
-                  const SizedBox(height: 15,),
+                      padding: const EdgeInsets.all(15.0,),
+                      margin: const EdgeInsets.all(40.0,),
 
-                  TextField(
-                    controller: weightController,
+                      decoration: BoxDecoration(
+                        border: Border.all(color: Shared.borderColor,),
+                      ),
 
-                    keyboardType: TextInputType.number,
+                      child: Column(
+                        children: [
+                          const Padding(
+                            padding: EdgeInsets.fromLTRB(5.0, 10.0, 5.0, 20.0,),
 
-                    decoration: const InputDecoration(
-                      labelText: 'Testtömeg (kg)',
+                            child: Text(
+                              'Napi kalóriaszükséglet kiszámítása',
 
-                      border: OutlineInputBorder(),
+                              style: TextStyle(
+                                fontSize: 18,
+
+                                fontWeight: FontWeight.w300,
+                              ),
+                            ),
+                          ),
+          
+                          _dropdown(
+                            selectedGender,
+                            'Nem',
+                            genders,
+                                (value) {
+                              setState(() {
+                                selectedGender = value;
+                              });
+                            },
+                          ),
+          
+                          _dropdown(
+                            selectedActivityLevel,
+                            'Aktivitási szint',
+                            activityLevels,
+                                (value) {
+                              setState(() {
+                                selectedActivityLevel = value;
+                              });
+                            },
+                          ),
+          
+                          const SizedBox(height: 7.5,),
+          
+                          TextField(
+                            controller: ageController,
+
+                            keyboardType: TextInputType.number,
+
+                            maxLength: 2,
+
+                            inputFormatters: [
+                              FilteringTextInputFormatter.allow(Shared.onlyNumbers,),
+                            ],
+
+                            decoration: const InputDecoration(
+                              labelText: 'Életkor',
+
+                              //Nem jelenik meg számláló (0/2, 1/2).
+                              counterText: '',
+
+                              border: OutlineInputBorder(),
+                            ),
+                          ),
+          
+                          const SizedBox(height: 15,),
+          
+                          TextField(
+                            controller: weightController,
+
+                            keyboardType: TextInputType.number,
+
+                            decoration: const InputDecoration(
+                              labelText: 'Testtömeg (kg)',
+
+                              border: OutlineInputBorder(),
+                            ),
+                          ),
+          
+                          const SizedBox(height: 15,),
+          
+                          TextField(
+                            controller: heightController,
+
+                            keyboardType: TextInputType.number,
+
+                            decoration: const InputDecoration(
+                              labelText: 'Magasság (cm)',
+
+                              border: OutlineInputBorder(),
+                            ),
+                          ),
+          
+                          const SizedBox(height: 15,),
+          
+                          ElevatedButton(
+                            onPressed: () {
+                              calculateDailyCalories();
+                            },
+
+                            style: Shared.myButtonStyle,
+
+                            child: const Text('Kiszámítás',),
+                          ),
+          
+                          const SizedBox(height: 15,),
+          
+                          TextField(
+                            controller: calculationController,
+
+                            readOnly: true,
+
+                            decoration: const InputDecoration(
+                              labelText: 'Napi kalória (Kcal)',
+
+                              border: OutlineInputBorder(),
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
-                  ),
-
-                  const SizedBox(height: 15,),
-
-                  TextField(
-                    controller: heightController,
-
-                    keyboardType: TextInputType.number,
-
-                    decoration: const InputDecoration(
-                      labelText: 'Magasság (cm)',
-
-                      border: OutlineInputBorder(),
-                    ),
-                  ),
-
-                  const SizedBox(height: 15,),
-
-                  ElevatedButton(
-                    onPressed: () {
-                      calculateDailyCalories();
-                    },
-
-                    style: Shared.myButtonStyle,
-
-                    child: const Text('Kiszámítás',),
-                  ),
-
-                  const SizedBox(height: 15,),
-
-                  TextField(
-                    controller: calculationController,
-
-                    readOnly: true,
-
-                    decoration: const InputDecoration(
-                      labelText: 'Napi kalória (Kcal)',
-
-                      border: OutlineInputBorder(),
-                    ),
-                  ),
-                ],
-              ),
+                  ],
+                );
+              },
             ),
-          ],
+          ),
         ),
       ),
     );
