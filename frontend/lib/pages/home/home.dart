@@ -564,88 +564,103 @@ class _HomePageState extends State<HomePage> {
             .where((food) => food.mealNumber == meal)
             .toList();
 
-        return Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+        return Card(
+          color: Shared.boxDecorationColor,
 
-          children: [
-            Padding(
-              padding: const EdgeInsets.all(8.0,),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
 
-              child: Center(
-                child: Text(
-                  mealNames(meal),
+            children: [
+              Padding(
+                padding: const EdgeInsets.all(10.0,),
 
-                  style: const TextStyle(
-                    fontSize: 20,
+                child: Center(
+                  child: Text(
+                    mealNames(meal),
 
-                    fontWeight: FontWeight.bold,
+                    style: const TextStyle(
+                      fontSize: 20,
+
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                 ),
               ),
-            ),
 
-            SizedBox(
-              height: 200,
+              SizedBox(
+                height: 200,
 
-              child: ListView.builder(
-                scrollDirection: Axis.horizontal,
+                child: ListView.builder(
+                  scrollDirection: Axis.horizontal,
 
-                shrinkWrap: true,
+                  shrinkWrap: true,
 
-                itemCount: foodsForMeal.length,
+                  itemCount: foodsForMeal.length,
 
-                itemBuilder: (context, index) {
-                  final food = foodsForMeal[index];
+                  itemBuilder: (context, index) {
+                    final food = foodsForMeal[index];
 
-                  return SizedBox(
-                    width: 190,
+                    return SizedBox(
+                      width: 190,
 
-                    child: Card(
-                      color: Shared.cardColor,
-                      shadowColor: Shared.cardShadowColor,
+                      child: Card(
+                        color: Shared.cardColor,
+                        shadowColor: Shared.cardShadowColor,
 
-                      elevation: 8,
+                        elevation: 8,
 
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.center,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.center,
 
-                        children: [
-                          Padding(
-                            padding: const EdgeInsets.all(10.0,),
+                          children: [
+                            const SizedBox(height: 10,),
 
-                            child: ElevatedButton(
-                              onPressed: () async {
-                                final day = myCalendar.daysMap[
-                                  myCalendar.dayOnly(myCalendar.selectedDay)
-                                ];
+                            Text(
+                              'Név: ${food.name}',
 
-                                await dayService.removeFoodFromDay(
-                                  day!.id, food.id
-                                );
-
-                                await refreshPage();
-                              },
-
-                              style: Shared.myButtonStyle,
-
-                              child: const Text('Törlés'),
+                              style: const TextStyle(
+                                fontSize: 18,
+                              ),
                             ),
-                          ),
 
-                          Text('Név: ${food.name}',),
-                          Text('Kcal: ${Shared.format(food.kcalAndNutrients.kcal)}',),
-                          Text('Zsír: ${Shared.format(food.kcalAndNutrients.fat)}',),
-                          Text('Szénhidrát: ${Shared.format(food.kcalAndNutrients.carb)}',),
-                          Text('Fehérje: ${Shared.format(food.kcalAndNutrients.protein)}',),
-                          Text('Tömeg: ${food.foodWeight} ${food.measurementUnit.measurementUnitName}',),
-                        ],
+                            const SizedBox(height: 5,),
+
+                            Text('Kcal: ${Shared.format(food.kcalAndNutrients.kcal)}',),
+                            Text('Zsír: ${Shared.format(food.kcalAndNutrients.fat)}',),
+                            Text('Szénhidrát: ${Shared.format(food.kcalAndNutrients.carb)}',),
+                            Text('Fehérje: ${Shared.format(food.kcalAndNutrients.protein)}',),
+                            Text('Tömeg: ${food.foodWeight} ${food.measurementUnit.measurementUnitName}',),
+
+                            Padding(
+                              padding: const EdgeInsets.all(10.0,),
+
+                              child: ElevatedButton(
+                                onPressed: () async {
+                                  final day = myCalendar.daysMap[
+                                  myCalendar.dayOnly(myCalendar.selectedDay)
+                                  ];
+
+                                  await dayService.removeFoodFromDay(
+                                      day!.id, food.id
+                                  );
+
+                                  await refreshPage();
+                                },
+
+                                style: Shared.myButtonStyle,
+
+                                child: const Text('Törlés'),
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
-                    ),
-                  );
-                },
+                    );
+                  },
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         );
       }).toList(),
     );
