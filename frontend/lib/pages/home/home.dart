@@ -705,6 +705,16 @@ class _HomePageState extends State<HomePage> {
                 return;
               }
 
+              if(selectedMealNumber == null) {
+                Shared.mySnackBar(
+                  'Nem választottál étkezést!',
+                  Colors.red,
+                  context,
+                );
+
+                return;
+              }
+
               addFoodToDay();
 
               zeroAllTextFields();
