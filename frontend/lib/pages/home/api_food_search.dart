@@ -209,38 +209,76 @@ class ApiFoodSearchState extends State<ApiFoodSearch> {
       child: Padding(
         padding: const EdgeInsets.all(12.0,),
 
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
 
           children: [
-            Text(
-              food.name,
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
 
-              style: const TextStyle(
-                fontSize: 16,
+              children: [
+                Text(
+                  food.name,
 
-                fontWeight: FontWeight.bold,
-              ),
+                  style: const TextStyle(
+                    fontSize: 16,
+
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+
+                const SizedBox(height: 10,),
+
+                Text('Kalória: ${Shared.format(food.calories)} kcal',),
+                Text('Zsír: ${Shared.format(food.fatTotalG)} g',),
+                Text('Szénhidrát: ${Shared.format(food.carbohydratesTotalG)} g',),
+                Text('Fehérje: ${Shared.format(food.proteinG)} g',),
+                Text('Tömeg: ${Shared.format(food.servingSizeG)} g',),
+              ],
             ),
 
-            const SizedBox(height: 10,),
+            Column(
+              children: [
+                ElevatedButton(
+                  onPressed: () async {
+                    addFoodToDay(food, 1);
 
-            Text('Kalória: ${Shared.format(food.calories)} kcal',),
-            Text('Zsír: ${Shared.format(food.fatTotalG)} g',),
-            Text('Szénhidrát: ${Shared.format(food.carbohydratesTotalG)} g',),
-            Text('Fehérje: ${Shared.format(food.proteinG)} g',),
-            Text('Tömeg: ${Shared.format(food.servingSizeG)} g',),
+                    await widget.onRefresh?.call();
+                  },
 
-            ElevatedButton(
-              onPressed: () async {
-                addFoodToDay(food);
+                  style: Shared.myButtonStyle,
 
-                await widget.onRefresh?.call();
-              },
+                  child: Text('Hozzáadás a reggelihez',),
+                ),
 
-              style: Shared.myButtonStyle,
+                const SizedBox(height: 20,),
 
-              child: Text('Hozzáadás a naphoz',),
+                ElevatedButton(
+                  onPressed: () async {
+                    addFoodToDay(food, 2);
+
+                    await widget.onRefresh?.call();
+                  },
+
+                  style: Shared.myButtonStyle,
+
+                  child: Text('Hozzáadás az ebédhez',),
+                ),
+
+                const SizedBox(height: 20,),
+
+                ElevatedButton(
+                  onPressed: () async {
+                    addFoodToDay(food, 3);
+
+                    await widget.onRefresh?.call();
+                  },
+
+                  style: Shared.myButtonStyle,
+
+                  child: Text('Hozzáadás a vacsorához',),
+                ),
+              ],
             ),
           ],
         ),
@@ -248,7 +286,7 @@ class ApiFoodSearchState extends State<ApiFoodSearch> {
     );
   }
 
-  Future<void> addFoodToDay(APIFood food) async {
+  Future<void> addFoodToDay(APIFood food, int mealNumber) async {
     dayService.addFoodToDay(
       userId,
       myCalendar.daysMap[myCalendar.dayOnly(myCalendar.selectedDay)]!.id,
@@ -269,7 +307,7 @@ class ApiFoodSearchState extends State<ApiFoodSearch> {
         measurementUnitInGrams: 1,
       ),
 
-      2 //TODO: hozzáadni dropdown-t(?)
+      mealNumber,
     );
   }
 
