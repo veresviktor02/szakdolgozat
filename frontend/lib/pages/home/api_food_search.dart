@@ -229,7 +229,7 @@ class ApiFoodSearchState extends State<ApiFoodSearch> {
 
                 const SizedBox(height: 10,),
 
-                Text('Kalória: ${Shared.format(food.calories)} kcal',),
+                Text('Kcal: ${Shared.format(food.calories)} kcal',),
                 Text('Zsír: ${Shared.format(food.fatTotalG)} g',),
                 Text('Szénhidrát: ${Shared.format(food.carbohydratesTotalG)} g',),
                 Text('Fehérje: ${Shared.format(food.proteinG)} g',),
