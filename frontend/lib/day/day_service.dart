@@ -52,16 +52,6 @@ class DayService {
     throw Exception('Kcal és tápanyagok lekérése sikertelen! (Válasz: ${response.statusCode})');
   }
 
-  Future<void> createEmptyDays(int id) async {
-    final response = await http.get(
-      Uri.parse('${Shared.baseUrl}/days/create-empty-days/$id'),
-    );
-
-    if(response.statusCode != 200) {
-      throw Exception('Üres napok létrehozása nem sikerült! (${response.statusCode})');
-    }
-  }
-
   Future<void> addFoodToDay(
       int userId,
       int dayId,
