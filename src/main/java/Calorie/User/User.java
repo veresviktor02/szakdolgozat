@@ -16,7 +16,10 @@ import java.util.Objects;
 
 //Azért kell átnevezni, mert a PostgreSQL a "User" nevet használja már!!!
 @Entity
-@Table(name = "app_user")
+@Table(
+        name = "app_user",
+        uniqueConstraints = {@UniqueConstraint(columnNames = {"name"})}
+)
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
