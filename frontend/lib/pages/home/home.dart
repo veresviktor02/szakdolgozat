@@ -697,9 +697,9 @@ class _HomePageState extends State<HomePage> {
             onPressed: () async {
               if(selectedMeasurementUnit == null) {
                 Shared.mySnackBar(
-                  'Nem választottál mértékegységet!',
-                  Colors.red,
-                  context,
+                  message: 'Nem választottál mértékegységet!',
+                  color: Colors.red,
+                  context: context,
                 );
 
                 return;
@@ -707,9 +707,9 @@ class _HomePageState extends State<HomePage> {
 
               if(selectedMealNumber == null) {
                 Shared.mySnackBar(
-                  'Nem választottál étkezést!',
-                  Colors.red,
-                  context,
+                  message: 'Nem választottál étkezést!',
+                  color: Colors.red,
+                  context: context,
                 );
 
                 return;
