@@ -776,7 +776,7 @@ Padding _greeting() {
 
       children: [
         Text(
-          'Ez a bejelentkezési oldal.\nTöltsd ki az alábbi adatokat a kezdéshez!',
+          'Ez a regisztrációs oldal.\nTöltsd ki az alábbi adatokat a kezdéshez!',
 
           textAlign: TextAlign.center,
 
