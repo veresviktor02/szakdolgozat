@@ -1,5 +1,7 @@
 package Calorie.User;
 
+import Calorie.Day.DayService;
+
 import Calorie.Exceptions.UserException;
 
 import Calorie.Food.KcalAndNutrients;
@@ -21,13 +23,16 @@ public class UserService {
 
     private final UserRepository userRepository;
     private final UserNameCheckerService userNameCheckerService;
+    private final DayService dayService;
 
     public UserService(
             UserRepository userRepository,
-            UserNameCheckerService userNameCheckerService
+            UserNameCheckerService userNameCheckerService,
+            DayService dayService
     ) {
         this.userRepository = userRepository;
         this.userNameCheckerService = userNameCheckerService;
+        this.dayService = dayService;
     }
 
     public List<User> getAllUsers() {
@@ -39,6 +44,10 @@ public class UserService {
     }
 
     public void insertUser(User user) {
+        if(userRepository.findByName(user.getName()).isPresent()) {
+            throw new UserException("Ez a felhasználónév már foglalt!");
+        }
+
         userNameCheckerService.validate(user.getName());
 
         if(user.getUserType() == UserType.FREE && user.isDifferentDays()) {
@@ -49,8 +58,14 @@ public class UserService {
 
         try {
             userRepository.save(user);
-        } catch(Exception e) {
+        } catch (Exception e) {
             throw new UserException("userRepository.save(user) hibát dobott!", e);
+        }
+
+        try {
+            dayService.createEmptyDays(user.getId());
+        } catch (Exception e) {
+            throw new UserException("dayService.createEmptyDays(user.getId()) hibát dobott!", e);
         }
     }
 
@@ -90,6 +105,13 @@ public class UserService {
                 ));
     }
 
+    public User getUserByName(String name) {
+        return userRepository.findByName(name)
+                .orElseThrow(() -> new UserException(
+                        "A kért felhasználó nem található! (Név: " + name + ')'
+                ));
+    }
+
     void createTestUser() {
         User user = new User();
 
@@ -114,8 +136,14 @@ public class UserService {
 
         try {
             userRepository.save(user);
-        } catch(Exception e) {
-            throw new UserException("userRepository.save(user), hibát dobott!", e);
+        } catch (Exception e) {
+            throw new UserException("userRepository.save(user) hibát dobott!", e);
+        }
+
+        try {
+            dayService.createEmptyDays(user.getId());
+        } catch (Exception e) {
+            throw new UserException("dayService.createEmptyDays(user.getId()) hibát dobott!", e);
         }
     }
 }

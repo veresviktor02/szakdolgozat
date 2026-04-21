@@ -8,10 +8,8 @@ import Calorie.Food.KcalAndNutrients;
 import Calorie.User.User;
 import Calorie.User.UserRepository;
 
-import jakarta.annotation.PostConstruct;
 import jakarta.transaction.Transactional;
 
-import org.springframework.context.annotation.DependsOn;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -19,13 +17,7 @@ import java.time.LocalDate;
 import java.util.List;
 
 @Service
-@DependsOn("UserService") //Ez biztosítja, hogy a UserService előbb fog lefutni!
 public class DayService {
-    @PostConstruct
-    public void init() {
-        createEmptyDays(1);
-    }
-
     private final DayRepository dayRepository;
     private final UserRepository userRepository;
 
