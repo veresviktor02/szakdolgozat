@@ -35,11 +35,23 @@ class UserService {
       Uri.parse('${Shared.baseUrl}/users/$id',),
     );
 
-    if (response.statusCode == 200) {
+    if(response.statusCode == 200) {
       return User.fromJson(jsonDecode(response.body));
     }
 
     throw Exception('Hiba a felhasználó lekérésekor (ID: $id). (${response.statusCode})');
+  }
+
+  Future<User> getUserByName(String name) async {
+    final response = await http.get(
+      Uri.parse('${Shared.baseUrl}/users/name/$name',),
+    );
+
+    if(response.statusCode == 200) {
+      return User.fromJson(jsonDecode(response.body));
+    }
+
+    throw Exception('Hiba a felhasználó lekérésekor (Név: $name). (${response.statusCode})');
   }
 
   Future<void> sendUser(
