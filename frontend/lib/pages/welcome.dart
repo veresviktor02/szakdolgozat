@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_application/day/day_service.dart';
 
 import 'package:go_router/go_router.dart';
 
@@ -24,6 +25,7 @@ class WelcomePage extends StatefulWidget {
 
 class _WelcomePageState extends State<WelcomePage> {
   final UserService userService = UserService();
+  final DayService dayService = DayService();
 
   bool differentDays = false;
 
@@ -189,7 +191,7 @@ class _WelcomePageState extends State<WelcomePage> {
       Shared.mySnackBar(
         message: 'Hiba kupon ellenőrzésnél: $error',
         color: Colors.red,
-          context: context
+        context: context
       );
     } finally {
       setState(() {
@@ -652,10 +654,23 @@ class _WelcomePageState extends State<WelcomePage> {
 
       child: Center(
           child: ElevatedButton(
-            onPressed: () {
-              //.go, hogy ne lehessen visszanavigálni a belépési képernyőre!
-              //TODO: User legyen!
-              context.go('/home/2',);
+            onPressed: () async {
+              try {
+                User user = await userService.getUserByName(nameController.text);
+
+                if(!mounted) return;
+
+                //.go, hogy ne lehessen visszanavigálni a belépési képernyőre!
+                context.go('/home/${user.id}');
+              } catch (e) {
+                if (!mounted) return;
+
+                Shared.mySnackBar(
+                  message: 'Felhasználó (Név: ${nameController.text}) nem található!',
+                  color: Colors.red,
+                  context: context,
+                );
+              }
             },
 
             style: Shared.myButtonStyle,
