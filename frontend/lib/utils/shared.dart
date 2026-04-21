@@ -3,7 +3,12 @@ import 'package:flutter/material.dart';
 class Shared {
   //WIDGETEK
   /////////////////////////////////////////////////////////////////////////////
-  static void mySnackBar(String message, Color color, BuildContext context) {
+  static void mySnackBar({
+      required String message,
+      required Color color,
+      required BuildContext context,
+      int duration = 2
+  }) {
     ScaffoldMessenger.of(context).removeCurrentSnackBar();
 
     ScaffoldMessenger.of(context).showSnackBar(
@@ -16,7 +21,7 @@ class Shared {
 
         backgroundColor: color,
 
-        duration: const Duration(seconds: 2,),
+        duration: Duration(seconds: duration,),
       ),
     );
   }

@@ -102,9 +102,9 @@ class _SettingsPageState extends State<SettingsPage> {
       });
 
       Shared.mySnackBar(
-        'Hiba a felhasználó betöltésekor: $error',
-        Colors.red,
-        context,
+        message: 'Hiba a felhasználó betöltésekor: $error',
+        color: Colors.red,
+        context: context,
       );
     }
   }
@@ -139,9 +139,9 @@ class _SettingsPageState extends State<SettingsPage> {
       }
 
       Shared.mySnackBar(
-        'Adatok sikeresen mentve!',
-        Colors.green,
-        context,
+        message: 'Adatok sikeresen mentve!',
+        color: Colors.green,
+        context: context,
       );
 
     } catch (error) {
@@ -150,9 +150,9 @@ class _SettingsPageState extends State<SettingsPage> {
       }
 
       Shared.mySnackBar(
-        'Hiba mentés közben: $error',
-        Colors.red,
-        context,
+        message: 'Hiba mentés közben: $error',
+        color: Colors.red,
+        context: context,
       );
     } finally {
       if (mounted) {

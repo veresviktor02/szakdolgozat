@@ -58,9 +58,9 @@ class ApiFoodSearchState extends State<ApiFoodSearch> {
 
     if(query.isEmpty) {
       Shared.mySnackBar(
-        'Üres a keresési mező!',
-        Colors.red,
-        context,
+        message: 'Üres a keresési mező!',
+        color: Colors.red,
+        context: context,
       );
 
       return;
@@ -318,9 +318,10 @@ class ApiFoodSearchState extends State<ApiFoodSearch> {
 
     if(food.calories < calculatedCaloriesFromNutrients) {
       Shared.mySnackBar(
-        'Az API által megadott kalóriaszám hibás! A naptáradba a helyes kalóriaszám kerül be.',
-        Colors.blue,
-        context,
+        message: 'Az API által megadott kalóriaszám hibás! A naptáradba a helyes kalóriaszám kerül be.',
+        color: Colors.blue,
+        context: context,
+        duration: 5
       );
 
       checkedCalories = calculatedCaloriesFromNutrients;

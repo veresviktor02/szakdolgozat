@@ -156,9 +156,9 @@ class _WelcomePageState extends State<WelcomePage> {
 
     if(couponCode.isEmpty) {
       Shared.mySnackBar(
-        'Adj meg egy kuponkódot!',
-        Colors.blueAccent,
-        context,
+        message: 'Adj meg egy kuponkódot!',
+        color: Colors.blueAccent,
+        context: context,
       );
 
       setState(() {
@@ -187,9 +187,9 @@ class _WelcomePageState extends State<WelcomePage> {
       }
 
       Shared.mySnackBar(
-        'Hiba kupon ellenőrzésnél: $error',
-        Colors.red,
-        context
+        message: 'Hiba kupon ellenőrzésnél: $error',
+        color: Colors.red,
+          context: context
       );
     } finally {
       setState(() {
@@ -202,9 +202,9 @@ class _WelcomePageState extends State<WelcomePage> {
     switch(couponStatus) {
       case CouponStatus.VALID:
         Shared.mySnackBar(
-          'Kupon érvényes!',
-          Colors.green,
-          context,
+          message: 'Kupon érvényes!',
+          color: Colors.green,
+          context: context,
         );
 
         setState(() {
@@ -213,9 +213,9 @@ class _WelcomePageState extends State<WelcomePage> {
 
       case CouponStatus.USED:
         Shared.mySnackBar(
-          'A megadott kupont már felhasználták!',
-          Colors.red,
-          context,
+          message: 'A megadott kupont már felhasználták!',
+          color: Colors.red,
+          context: context,
         );
 
         setState(() {
@@ -224,9 +224,9 @@ class _WelcomePageState extends State<WelcomePage> {
 
       case CouponStatus.NOT_FOUND:
         Shared.mySnackBar(
-          'A megadott kupon nem létezik!',
-          Colors.red,
-          context,
+          message: 'A megadott kupon nem létezik!',
+          color: Colors.red,
+          context: context,
         );
 
         setState(() {
@@ -235,9 +235,9 @@ class _WelcomePageState extends State<WelcomePage> {
 
       case CouponStatus.EXPIRED:
         Shared.mySnackBar(
-          'A megadott kupon érvényességi ideje már lejárt!',
-          Colors.red,
-          context,
+          message: 'A megadott kupon érvényességi ideje már lejárt!',
+          color: Colors.red,
+          context: context,
         );
 
         setState(() {
@@ -311,9 +311,9 @@ class _WelcomePageState extends State<WelcomePage> {
     //Nem jogosult a prémium funkcióra az ingyenes felhasználó!
     if(userType == UserType.FREE && differentDays) {
       Shared.mySnackBar(
-        'FREE felhasználó (Név: ${nameController.text}) nem jogosult különböző napokra!',
-        Colors.red,
-        context,
+        message: 'FREE felhasználó (Név: ${nameController.text}) nem jogosult különböző napokra!',
+        color: Colors.red,
+        context: context,
       );
 
       return;
@@ -322,18 +322,18 @@ class _WelcomePageState extends State<WelcomePage> {
     //Ha üresek a kontrollerek, akkor
     if(areControllersEmpty()) {
       Shared.mySnackBar(
-        'Még nem adtál meg minden adatot! Töltsd ki a fentebbi mezőket!',
-        Colors.red,
-        context,
+        message: 'Még nem adtál meg minden adatot! Töltsd ki a fentebbi mezőket!',
+        color: Colors.red,
+        context: context,
       );
 
       return;
     }
 
     Shared.mySnackBar(
-      'Felhasználó sikeresen létrehozva! (Név: ${nameController.text})',
-      Colors.green,
-      context,
+      message: 'Felhasználó sikeresen létrehozva! (Név: ${nameController.text})',
+      color: Colors.green,
+      context: context,
     );
 
     await userService.sendUser(
@@ -402,9 +402,9 @@ class _WelcomePageState extends State<WelcomePage> {
         //Jó a kuponkód ÉS még nincs bekapcsolva.
         if(isCouponValid && value) {
           Shared.mySnackBar(
-            'Milyen érzés PREMIUM ügyfélnek lenni? szerintünk nagyon jó!',
-            Colors.green,
-            context,
+            message: 'Milyen érzés PREMIUM ügyfélnek lenni? szerintünk nagyon jó!',
+            color: Colors.green,
+            context: context,
           );
 
           setState(() => differentDays = value);
@@ -414,9 +414,9 @@ class _WelcomePageState extends State<WelcomePage> {
           differentDays = false;
 
           Shared.mySnackBar(
-            'Biztos kikapcsolod? Ez egy nagyon jó funkció!',
-            Colors.orangeAccent,
-            context,
+            message: 'Biztos kikapcsolod? Ez egy nagyon jó funkció!',
+            color: Colors.orangeAccent,
+            context: context,
           );
 
           //Ha átváltja a felhasználó különböző napokra és elmenti az adatokat,
@@ -431,9 +431,9 @@ class _WelcomePageState extends State<WelcomePage> {
         } else {
           //Rossz a kuponkód ÉS ki van kapcsolva.
           Shared.mySnackBar(
-            'Csak PREMIUM felhasználóknak! Te nem vagy az!',
-            Colors.red,
-            context,
+            message: 'Csak PREMIUM felhasználóknak! Te nem vagy az!',
+            color: Colors.red,
+            context: context,
           );
         }
       },
@@ -675,9 +675,9 @@ class _WelcomePageState extends State<WelcomePage> {
           onPressed: () {
             if (tempUser == null) {
               Shared.mySnackBar(
-                'A felhasználó még nem töltődött be!',
-                Colors.red,
-                context,
+                message: 'A felhasználó még nem töltődött be!',
+                color: Colors.red,
+                context: context,
               );
 
               return;
