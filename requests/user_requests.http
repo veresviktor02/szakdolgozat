@@ -2,6 +2,10 @@ GET localhost:8080/users
 
 ###
 
+GET localhost:8080/users/name/Viktor
+
+###
+
 POST localhost:8080/users
 Content-Type: application/json
 
