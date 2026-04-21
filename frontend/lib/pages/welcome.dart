@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_application/day/day_service.dart';
 
 import 'package:go_router/go_router.dart';
+
+import '/day/day_service.dart';
 
 import '/food/kcal_and_nutrients_model.dart';
 
