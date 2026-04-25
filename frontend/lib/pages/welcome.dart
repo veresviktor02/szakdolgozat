@@ -166,7 +166,7 @@ class _WelcomePageState extends State<WelcomePage> {
 
               _navigateToHomePage(),
 
-              _navigateUserToHomePage(),
+              _navigateToLoginPage(),
             ],
 
 
@@ -785,39 +785,19 @@ class _WelcomePageState extends State<WelcomePage> {
     couponService.useCoupon(couponCode, userId);
   }
 
-  //TODO: Gomb!
   Widget _navigateToLoginPage() {
-    return Text('TODO');
-  }
-
-  Widget _navigateUserToHomePage() {
     return Padding(
       padding: const EdgeInsets.all(12.0,),
 
       child: Center(
           child: ElevatedButton(
-            onPressed: () async {
-              try {
-                User user = await userService.getUserByName(nameController.text);
-
-                if(!mounted) return;
-
-                //.go, hogy ne lehessen visszanavigálni a belépési képernyőre!
-                context.go('/home/${user.id}');
-              } catch(e) {
-                if (!mounted) return;
-
-                Shared.mySnackBar(
-                  message: 'Felhasználó (Név: ${nameController.text}) nem található!',
-                  color: Colors.red,
-                  context: context,
-                );
-              }
+            onPressed: () {
+              context.go('/login');
             },
 
             style: Shared.myButtonStyle,
 
-            child: const Text('Belépés',),
+            child: const Text('Bejelentkezési oldal',),
           )
       ),
     );
