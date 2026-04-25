@@ -52,6 +52,8 @@ class _WelcomePageState extends State<WelcomePage> {
   bool correctLength = false;
   //
 
+  bool hidePassword = true;
+
   //Kupon check
   final CouponService couponService = CouponService();
 
@@ -98,6 +100,13 @@ class _WelcomePageState extends State<WelcomePage> {
     weightController.text = '';
     heightController.text = '';
     couponController.text = '';
+
+    setState(() {
+      hasLowercase = false;
+      hasUppercase = false;
+      hasNumber = false;
+      correctLength = false;
+    });
   }
 
   //Vele tudunk bejelentkezni az adatok kitöltése nélkül!
@@ -284,7 +293,15 @@ class _WelcomePageState extends State<WelcomePage> {
               controller: passwordController1,
               labelText: 'Jelszó:',
               hintText: 'Jelszó',
-              hiddenText: true,
+              hiddenText: hidePassword,
+              showToggle: true,
+
+              onToggleVisibility: () {
+                setState(() {
+                  hidePassword = !hidePassword;
+                });
+              },
+
               onChanged: validatePassword
             ),
 
@@ -294,7 +311,7 @@ class _WelcomePageState extends State<WelcomePage> {
               controller: passwordController2,
               labelText: 'Jelszó ismét:',
               hintText: 'Jelszó ismét',
-              hiddenText: true,
+              hiddenText: hidePassword,
             ),
 
             _userDataInput(
@@ -479,11 +496,6 @@ class _WelcomePageState extends State<WelcomePage> {
             }
 
             zeroAllTextFields();
-
-            hasLowercase = false;
-            hasUppercase = false;
-            hasNumber = false;
-            correctLength = false;
           },
 
           style: Shared.myButtonStyle,
@@ -845,6 +857,8 @@ Container _userDataInput({
   Function(String)? onChanged,
   bool isEnabled = true,
   bool hiddenText = false,
+  bool showToggle = false,
+  VoidCallback? onToggleVisibility,
 }) {
   return Container(
     decoration: BoxDecoration(
@@ -885,7 +899,18 @@ Container _userDataInput({
                 format ?? FilteringTextInputFormatter.allow(RegExp(r'.*'),),
               ],
 
-              decoration: Shared.inputDecoration(null, hintText),
+              decoration: Shared.inputDecoration(null, hintText).copyWith(
+                suffixIcon: showToggle
+                    ? IconButton(
+                  icon: Icon(
+                    hiddenText
+                        ? Icons.visibility_off
+                        : Icons.visibility,
+                  ),
+                  onPressed: onToggleVisibility,
+                )
+                    : null,
+              ),
             ),
           ),
         ),
