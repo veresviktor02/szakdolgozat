@@ -15,14 +15,12 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
 
       theme: ThemeData(
-        //TODO: style (fontFamily, stb.)
-
         scrollbarTheme: ScrollbarThemeData(
-          thumbColor: WidgetStateProperty.all(Colors.greenAccent),
+          thumbColor: WidgetStateProperty.all(Colors.greenAccent,),
 
-          thickness: WidgetStateProperty.all(10),
+          thickness: WidgetStateProperty.all(10.0,),
 
-          radius: const Radius.circular(8),
+          radius: const Radius.circular(8.0,),
         ),
       ),
 
