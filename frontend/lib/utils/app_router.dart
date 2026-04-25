@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
 import '/pages/welcome.dart';
+import '/pages/login_page.dart';
 import '/pages/home/home.dart';
 import '/pages/food_data_page.dart';
 import '/pages/third_page.dart';
@@ -16,7 +17,7 @@ import 'shared.dart';
 final GoRouter appRouter = GoRouter(
   initialLocation: '/',
 
-  errorBuilder: (context, state) => _ErrorPage(message: state.error!.toString()),
+  errorBuilder: (context, state) => ErrorPage(message: state.error!.toString()),
 
   routes: [
     GoRoute(
@@ -26,13 +27,19 @@ final GoRouter appRouter = GoRouter(
     ),
 
     GoRoute(
+      path: '/login',
+
+      builder: (context, state) => const LoginPage(),
+    ),
+
+    GoRoute(
       path: '/home/:userId',
 
       builder: (context, state) {
         final userId = int.tryParse(state.pathParameters['userId'] ?? '');
 
         if(userId == null) {
-          return const _ErrorPage(message: 'Hiányzó argumentum (userId)!');
+          return const ErrorPage(message: 'Hiányzó argumentum (userId)!');
         }
 
         return HomePage(userId: userId);
@@ -47,11 +54,11 @@ final GoRouter appRouter = GoRouter(
         final foodId = int.tryParse(state.pathParameters['foodId'] ?? '');
 
         if(userId == null) {
-          return const _ErrorPage(message: 'Hiányzó argumentum (userId)!');
+          return const ErrorPage(message: 'Hiányzó argumentum (userId)!');
         }
 
         if(foodId == null) {
-          return const _ErrorPage(message: 'Hiányzó argumentum (foodId)!');
+          return const ErrorPage(message: 'Hiányzó argumentum (foodId)!');
         }
 
         return FoodDataPage(userId: userId, foodId: foodId);
@@ -77,7 +84,7 @@ final GoRouter appRouter = GoRouter(
         final userId = int.tryParse(state.pathParameters['userId'] ?? '');
 
         if(userId == null) {
-          return const _ErrorPage(message: 'Hiányzó adat!');
+          return const ErrorPage(message: 'Hiányzó adat!');
         }
 
         return SettingsPage(userId: userId);
@@ -86,10 +93,10 @@ final GoRouter appRouter = GoRouter(
   ],
 );
 
-class _ErrorPage extends StatelessWidget {
+class ErrorPage extends StatelessWidget {
   final String message;
 
-  const _ErrorPage({required this.message});
+  const ErrorPage({required this.message});
 
   @override
   Widget build(BuildContext context) {
