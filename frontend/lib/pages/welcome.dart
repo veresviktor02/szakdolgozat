@@ -43,6 +43,15 @@ class _WelcomePageState extends State<WelcomePage> {
   final couponController = TextEditingController();
   //
 
+  //Jelszó check
+  bool hasLowercase = false;
+  bool hasUppercase = false;
+  bool hasNumber = false;
+  final int minLength = 6;
+  final int maxLength = 30;
+  bool correctLength = false;
+  //
+
   //Kupon check
   final CouponService couponService = CouponService();
 
@@ -276,7 +285,10 @@ class _WelcomePageState extends State<WelcomePage> {
               labelText: 'Jelszó:',
               hintText: 'Jelszó',
               hiddenText: true,
+              onChanged: validatePassword
             ),
+
+            _passwordChecklist(),
 
             _userDataInput(
               controller: passwordController2,
@@ -284,8 +296,6 @@ class _WelcomePageState extends State<WelcomePage> {
               hintText: 'Jelszó ismét',
               hiddenText: true,
             ),
-
-            //TODO: Jelszóhoz checklist!
 
             _userDataInput(
               controller: weightController,
@@ -365,7 +375,15 @@ class _WelcomePageState extends State<WelcomePage> {
       return;
     }
 
-    //TODO: jelszó követelményeinek visszajelzése!
+    if(!isPasswordValid()) {
+      Shared.mySnackBar(
+        message: 'A jelszó nem teljesíti az összes követelményt!',
+        color: Colors.red,
+        context: context,
+      );
+
+      return;
+    }
 
     Shared.mySnackBar(
       message: 'Felhasználó sikeresen létrehozva! (Név: ${nameController.text})',
@@ -393,6 +411,60 @@ class _WelcomePageState extends State<WelcomePage> {
     );
   }
 
+  void validatePassword(String password) {
+    setState(() {
+      hasLowercase = RegExp(r'[a-z]').hasMatch(password);
+      hasUppercase = RegExp(r'[A-Z]').hasMatch(password);
+      hasNumber = RegExp(r'[0-9]').hasMatch(password);
+      correctLength = password.length >= minLength && password.length <= maxLength;
+    });
+  }
+
+  bool isPasswordValid() {
+    return hasLowercase
+        && hasUppercase
+        && hasNumber
+        && passwordController1.text.length >= minLength
+        && passwordController1.text.length <= maxLength;
+  }
+
+  Widget _passwordChecklist() {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 5,),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          _checkItem("6-30 karakter", correctLength,),
+          _checkItem("Kisbetű", hasLowercase,),
+          _checkItem("Nagybetű", hasUppercase,),
+          _checkItem("Szám", hasNumber,),
+        ],
+      ),
+    );
+  }
+
+  Widget _checkItem(String text, bool valid) {
+    return Row(
+      children: [
+        Icon(
+          valid ? Icons.check : Icons.close,
+
+          color: valid ? Colors.green : Colors.red,
+
+          size: 25,
+        ),
+
+        const SizedBox(width: 5),
+
+        Text(
+          text,
+
+          style: TextStyle(fontSize: 16,),
+        ),
+      ],
+    );
+  }
+
   Widget _saveUserButton() {
     return Padding(
       padding: const EdgeInsets.all(15.0,),
@@ -407,6 +479,11 @@ class _WelcomePageState extends State<WelcomePage> {
             }
 
             zeroAllTextFields();
+
+            hasLowercase = false;
+            hasUppercase = false;
+            hasNumber = false;
+            correctLength = false;
           },
 
           style: Shared.myButtonStyle,
@@ -765,6 +842,7 @@ Container _userDataInput({
   required String labelText,
   required String hintText,
   FilteringTextInputFormatter? format,
+  Function(String)? onChanged,
   bool isEnabled = true,
   bool hiddenText = false,
 }) {
@@ -800,6 +878,8 @@ Container _userDataInput({
               controller: controller,
               enabled: isEnabled,
               obscureText: hiddenText,
+
+              onChanged: onChanged,
 
               inputFormatters: [
                 format ?? FilteringTextInputFormatter.allow(RegExp(r'.*'),),
