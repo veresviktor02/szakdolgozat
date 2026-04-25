@@ -28,17 +28,23 @@ class _SettingsPageState extends State<SettingsPage> {
   bool isSaving = false;
 
   //Kontrollerek
-  late final TextEditingController nameController;
-  late final TextEditingController weightController;
-  late final TextEditingController heightController;
-  late final TextEditingController genderController;
-  late final TextEditingController ageController;
-  late final TextEditingController activityController;
+  final TextEditingController nameController = TextEditingController();
+  final TextEditingController weightController = TextEditingController();
+  final TextEditingController heightController = TextEditingController();
+  final TextEditingController genderController = TextEditingController();
+  final TextEditingController ageController = TextEditingController();
+  final TextEditingController activityController = TextEditingController();
 
   final TextEditingController calculationController = TextEditingController();
   //
 
-  final List<String> genders = ['Férfi', 'Nő', 'Egyéb',];
+  final int screenBreakPoint = 1000;
+
+  final List<String> genders = [
+    'Férfi',
+    'Nő',
+    'Egyéb',
+  ];
 
   final List<String> activityLevels = [
     'Ülőmunka (Kevés vagy semmi mozgás)',
@@ -58,13 +64,6 @@ class _SettingsPageState extends State<SettingsPage> {
   void initState() {
     super.initState();
 
-    nameController = TextEditingController();
-    weightController = TextEditingController();
-    heightController = TextEditingController();
-    genderController = TextEditingController();
-    ageController = TextEditingController();
-    activityController = TextEditingController();
-
     refreshPage();
   }
 
@@ -76,9 +75,7 @@ class _SettingsPageState extends State<SettingsPage> {
     try {
       final loadedUser = await userService.getUserById(widget.userId);
 
-      if(!mounted) {
-        return;
-      }
+      if(!mounted) return;
 
       setState(() {
         user = loadedUser;
@@ -93,9 +90,7 @@ class _SettingsPageState extends State<SettingsPage> {
         isLoading = false;
       });
     } catch (error) {
-      if(!mounted) {
-        return;
-      }
+      if(!mounted) return;
 
       setState(() {
         isLoading = false;
@@ -110,9 +105,7 @@ class _SettingsPageState extends State<SettingsPage> {
   }
 
   Future<void> saveUser() async {
-    if (user == null) {
-      return;
-    }
+    if(user == null) return;
 
     setState(() {
       isSaving = true;
@@ -122,6 +115,7 @@ class _SettingsPageState extends State<SettingsPage> {
       final updatedUser = User(
         id: user!.id,
         name: nameController.text,
+        password: user!.password,
         weight: double.parse(weightController.text),
         height: double.parse(heightController.text),
         userType: userType,
@@ -134,9 +128,7 @@ class _SettingsPageState extends State<SettingsPage> {
 
       await userService.updateUserById(widget.userId, updatedUser);
 
-      if(!mounted) {
-        return;
-      }
+      if(!mounted) return;
 
       Shared.mySnackBar(
         message: 'Adatok sikeresen mentve!',
@@ -145,9 +137,7 @@ class _SettingsPageState extends State<SettingsPage> {
       );
 
     } catch (error) {
-      if(!mounted) {
-        return;
-      }
+      if(!mounted) return;
 
       Shared.mySnackBar(
         message: 'Hiba mentés közben: $error',
@@ -155,7 +145,7 @@ class _SettingsPageState extends State<SettingsPage> {
         context: context,
       );
     } finally {
-      if (mounted) {
+      if(mounted) {
         setState(() {
           isSaving = false;
         });
@@ -188,7 +178,7 @@ class _SettingsPageState extends State<SettingsPage> {
           child: Center(
             child: LayoutBuilder(
               builder: (context, constraints) {
-                final isWide = constraints.maxWidth > 900;
+                final isWide = constraints.maxWidth > screenBreakPoint;
           
                 return Flex(
                   direction: isWide ? Axis.horizontal : Axis.vertical,
@@ -196,68 +186,84 @@ class _SettingsPageState extends State<SettingsPage> {
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
 
                   children: [
-                    Container(
-                      width: 400,
-                      height: 700,
+                    Center(
+                      child: Container(
+                        width: 400,
 
-                      padding: const EdgeInsets.all(15.0,),
-                      margin: const EdgeInsets.all(40.0,),
+                        padding: const EdgeInsets.all(15.0,),
+                        margin: const EdgeInsets.all(40.0,),
 
-                      decoration: BoxDecoration(
-                        border: Border.all(color: Shared.borderColor,),
-                      ),
+                        decoration: BoxDecoration(
+                          color: Shared.boxDecorationColor,
+                        ),
 
-                      child: Column(
-                        children: [
-                          _userDataTextField(
-                              controller: nameController,
-                              labelText: 'Név'
-                          ),
+                        child: Column(
+                          children: [
+                            //TODO: Refaktorálás - kiemelés függvénybe
+                            const Padding(
+                              padding: EdgeInsets.fromLTRB(5.0, 10.0, 5.0, 20.0,),
 
-                          const SizedBox(height: 15,),
+                              child: Text(
+                                'Felhasználói adatok',
 
-                          _userDataTextField(
-                            controller: weightController,
-                            labelText: 'Testtömeg (kg)',
-                            keyboardType: TextInputType.number
-                          ),
+                                style: TextStyle(
+                                  fontSize: 18,
 
-                          const SizedBox(height: 15,),
+                                  fontWeight: FontWeight.w300,
+                                ),
+                              ),
+                            ),
 
-                          _userDataTextField(
-                              controller: heightController,
-                              labelText: 'Magasság (cm)',
+                            _userDataTextField(
+                                controller: nameController,
+                                labelText: 'Név'
+                            ),
+
+                            const SizedBox(height: 15,),
+
+                            _userDataTextField(
+                              controller: weightController,
+                              labelText: 'Testtömeg (kg)',
                               keyboardType: TextInputType.number
-                          ),
+                            ),
 
-                          const SizedBox(height: 10,),
+                            const SizedBox(height: 15,),
 
-                          SwitchListTile(
-                            title: const Text('Különböző napok',),
+                            _userDataTextField(
+                                controller: heightController,
+                                labelText: 'Magasság (cm)',
+                                keyboardType: TextInputType.number
+                            ),
 
-                            value: differentDays,
+                            const SizedBox(height: 10,),
 
-                            onChanged: (value) {
-                              setState(() {
-                                differentDays = value;
-                              });
-                            },
-                          ),
+                            SwitchListTile(
+                              title: const Text('Különböző napok',),
 
-                          //TODO: kuponkód, adatvalidáció!
+                              value: differentDays,
 
-                          const SizedBox(height: 10,),
+                              onChanged: (value) {
+                                setState(() {
+                                  differentDays = value;
+                                });
+                              },
+                            ),
 
-                          ElevatedButton(
-                            onPressed: isSaving ? null : saveUser,
+                            //TODO: kuponkód, adatvalidáció!
 
-                            style: Shared.myButtonStyle,
+                            const SizedBox(height: 10,),
 
-                            child: isSaving
-                                ? Shared.myCircularProgressIndicator()
-                                : const Text('Mentés',),
-                          ),
-                        ],
+                            ElevatedButton(
+                              onPressed: isSaving ? null : saveUser,
+
+                              style: Shared.myButtonStyle,
+
+                              child: isSaving
+                                  ? Shared.myCircularProgressIndicator()
+                                  : const Text('Mentés',),
+                            ),
+                          ],
+                        ),
                       ),
                     ),
 
@@ -266,101 +272,102 @@ class _SettingsPageState extends State<SettingsPage> {
                       height: isWide ? 0 : 20,
                     ),
           
-                    Container(
-                      width: 400,
-                      height: 700,
+                    Center(
+                      child: Container(
+                        width: 400,
 
-                      padding: const EdgeInsets.all(15.0,),
-                      margin: const EdgeInsets.all(40.0,),
+                        padding: const EdgeInsets.all(15.0,),
+                        margin: const EdgeInsets.all(40.0,),
 
-                      decoration: BoxDecoration(
-                        border: Border.all(color: Shared.borderColor,),
-                      ),
+                        decoration: BoxDecoration(
+                          color: Shared.boxDecorationColor,
+                        ),
 
-                      child: Column(
-                        children: [
-                          const Padding(
-                            padding: EdgeInsets.fromLTRB(5.0, 10.0, 5.0, 20.0,),
+                        child: Column(
+                          children: [
+                            const Padding(
+                              padding: EdgeInsets.fromLTRB(5.0, 10.0, 5.0, 20.0,),
 
-                            child: Text(
-                              'Napi kalóriaszükséglet kiszámítása',
+                              child: Text(
+                                'Napi kalóriaszükséglet kiszámítása',
 
-                              style: TextStyle(
-                                fontSize: 18,
+                                style: TextStyle(
+                                  fontSize: 18,
 
-                                fontWeight: FontWeight.w300,
+                                  fontWeight: FontWeight.w300,
+                                ),
                               ),
                             ),
-                          ),
-          
-                          _dropdown(
-                            selectedGender,
-                            'Nem',
-                            genders,
-                                (value) {
-                              setState(() {
-                                selectedGender = value;
-                              });
-                            },
-                          ),
-          
-                          _dropdown(
-                            selectedActivityLevel,
-                            'Aktivitási szint',
-                            activityLevels,
-                                (value) {
-                              setState(() {
-                                selectedActivityLevel = value;
-                              });
-                            },
-                          ),
-          
-                          const SizedBox(height: 7.5,),
 
-                          _userDataTextField(
-                              controller: ageController,
-                              labelText: 'Életkor',
-                              keyboardType: TextInputType.number,
-                              maxLength: 2,
-                              format: FilteringTextInputFormatter.allow(Shared.onlyNumbers,)
-                          ),
-          
-                          const SizedBox(height: 15,),
+                            _dropdown(
+                              selectedGender,
+                              'Nem',
+                              genders,
+                              (value) {
+                                setState(() {
+                                  selectedGender = value;
+                                });
+                              },
+                            ),
 
-                          _userDataTextField(
-                              controller: weightController,
-                              labelText: 'Testtömeg (kg)',
-                              keyboardType: TextInputType.number
-                          ),
-          
-                          const SizedBox(height: 15,),
+                            _dropdown(
+                              selectedActivityLevel,
+                              'Aktivitási szint',
+                              activityLevels,
+                              (value) {
+                                setState(() {
+                                  selectedActivityLevel = value;
+                                });
+                              },
+                            ),
 
-                          _userDataTextField(
-                              controller: heightController,
-                              labelText: 'Magasság (cm)',
-                              keyboardType: TextInputType.number
-                          ),
-          
-                          const SizedBox(height: 15,),
-          
-                          ElevatedButton(
-                            onPressed: () {
-                              calculateDailyCalories();
-                            },
+                            const SizedBox(height: 7.5,),
 
-                            style: Shared.myButtonStyle,
+                            _userDataTextField(
+                                controller: ageController,
+                                labelText: 'Életkor',
+                                keyboardType: TextInputType.number,
+                                maxLength: 2,
+                                format: FilteringTextInputFormatter.allow(Shared.onlyNumbers,)
+                            ),
 
-                            child: const Text('Kiszámítás',),
-                          ),
-          
-                          const SizedBox(height: 15,),
+                            const SizedBox(height: 15,),
 
-                          _userDataTextField(
-                              controller: calculationController,
-                              labelText: 'Napi kalória (Kcal)',
-                              readOnly: true
-                          ),
-                        ],
+                            _userDataTextField(
+                                controller: weightController,
+                                labelText: 'Testtömeg (kg)',
+                                keyboardType: TextInputType.number
+                            ),
+
+                            const SizedBox(height: 15,),
+
+                            _userDataTextField(
+                                controller: heightController,
+                                labelText: 'Magasság (cm)',
+                                keyboardType: TextInputType.number
+                            ),
+
+                            const SizedBox(height: 15,),
+
+                            ElevatedButton(
+                              onPressed: () {
+                                calculateDailyCalories();
+                              },
+
+                              style: Shared.myButtonStyle,
+
+                              child: const Text('Kiszámítás',),
+                            ),
+
+                            const SizedBox(height: 15,),
+
+                            _userDataTextField(
+                                controller: calculationController,
+                                labelText: 'Napi kalória (Kcal)',
+                                readOnly: true
+                            ),
+                          ],
+                        ),
                       ),
                     ),
                   ],
@@ -424,26 +431,32 @@ class _SettingsPageState extends State<SettingsPage> {
       FilteringTextInputFormatter? format,
       int? maxLength
   }) {
-    return TextField(
-      controller: controller,
+    return Container(
+      decoration: BoxDecoration(
+        color: Shared.textFieldFillColor,
+      ),
 
-      keyboardType: keyboardType,
+      child: TextField(
+        controller: controller,
 
-      maxLength: maxLength,
+        keyboardType: keyboardType,
 
-      readOnly: readOnly,
+        maxLength: maxLength,
 
-      inputFormatters: [
-        format ?? FilteringTextInputFormatter.allow(RegExp(r'.*'),),
-      ],
+        readOnly: readOnly,
 
-      decoration: InputDecoration(
-        //Nem jelenik meg számláló (0/2, 1/2).
-        counterText: '',
+        inputFormatters: [
+          format ?? FilteringTextInputFormatter.allow(RegExp(r'.*'),),
+        ],
 
-        labelText: labelText,
+        decoration: InputDecoration(
+          //Nem jelenik meg számláló (0/2, 1/2).
+          counterText: '',
 
-        border: OutlineInputBorder(),
+          labelText: labelText,
+
+          border: OutlineInputBorder(),
+        ),
       ),
     );
   }
@@ -452,32 +465,40 @@ class _SettingsPageState extends State<SettingsPage> {
     return Padding(
       padding: const EdgeInsets.fromLTRB(0.0, 7.5, 0.0, 7.5,),
 
-      child: DropdownButtonFormField<String>(
-        value: selectedItem,
-
-        decoration: InputDecoration(
-          labelText: labelText,
-
-          border: OutlineInputBorder(),
+      child: Container(
+        decoration: BoxDecoration(
+          color: Shared.textFieldFillColor,
         ),
 
-        items: itemList.map((item) {
-          return DropdownMenuItem(
-            value: item,
+        child: DropdownButtonFormField<String>(
+          dropdownColor: Shared.dropdownColor,
 
-            child: Text(item,),
-          );
-        }).toList(),
+          value: selectedItem,
 
-        onChanged: onChanged,
+          decoration: InputDecoration(
+            labelText: labelText,
 
-        validator: (value) {
-          if (value == null || value.isEmpty) {
-            return 'Válassz egy elemet!';
-          }
+            border: OutlineInputBorder(),
+          ),
 
-          return null;
-        },
+          items: itemList.map((item) {
+            return DropdownMenuItem(
+              value: item,
+
+              child: Text(item,),
+            );
+          }).toList(),
+
+          onChanged: onChanged,
+
+          validator: (value) {
+            if(value == null || value.isEmpty) {
+              return 'Válassz egy elemet!';
+            }
+
+            return null;
+          },
+        ),
       ),
     );
   }
