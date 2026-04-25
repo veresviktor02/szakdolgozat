@@ -277,6 +277,7 @@ class _WelcomePageState extends State<WelcomePage> {
     return Center(
       child: Container(
         width: Shared.pageWidth,
+
         color: Shared.boxDecorationColor,
 
         child: Column(
@@ -441,9 +442,14 @@ class _WelcomePageState extends State<WelcomePage> {
 
   Widget _passwordChecklist() {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 5,),
+      padding: const EdgeInsets.symmetric(
+        horizontal: 20.0,
+        vertical: 5.0,
+      ),
+
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
+
         children: [
           _checkItem("6-30 karakter", correctLength,),
           _checkItem("Kisbetű", hasLowercase,),
@@ -843,7 +849,7 @@ class _WelcomePageState extends State<WelcomePage> {
 /////////////////////////////////////////////////////////////////////////
 }
 
-Container _userDataInput({
+Widget _userDataInput({
   required TextEditingController controller,
   required String text,
   FilteringTextInputFormatter? format,
@@ -876,7 +882,7 @@ Container _userDataInput({
           padding: const EdgeInsets.all(10.0,),
 
           child: Container(
-            width: 140,
+            width: 200,
             height: 60,
 
             alignment: Alignment.center,
