@@ -3,8 +3,6 @@ import 'package:flutter/services.dart';
 
 import 'package:go_router/go_router.dart';
 
-import '/day/day_service.dart';
-
 import '/food/kcal_and_nutrients_model.dart';
 
 import '/coupon/coupon_service.dart';
@@ -26,9 +24,8 @@ class WelcomePage extends StatefulWidget {
 
 class _WelcomePageState extends State<WelcomePage> {
   final UserService userService = UserService();
-  final DayService dayService = DayService();
 
-  bool differentDays = false;
+  bool isDifferentDays = false;
 
   UserType userType = UserType.FREE;
 
@@ -114,16 +111,17 @@ class _WelcomePageState extends State<WelcomePage> {
     try {
       final user = await userService.getUserById(1);
 
-      if(!mounted) {
-        return;
-      }
+      if(!mounted) return;
 
       setState(() {
         tempUser = user;
       });
     } catch(e, stackTrace) {
-      print('User betöltési hiba: $e');
-      print(stackTrace);
+      Shared.mySnackBar(
+          message: 'Felhasználó betöltési hiba: $e\n$stackTrace',
+          color: Colors.red,
+          context: context,
+      );
     }
   }
 
@@ -202,16 +200,12 @@ class _WelcomePageState extends State<WelcomePage> {
     try {
       final couponStatus = await couponService.validateCoupon(couponCode);
 
-      if(!mounted) {
-        return;
-      }
+      if(!mounted) return;
 
       checkCouponStatus(couponStatus);
 
     } catch(error) {
-      if(!mounted) {
-        return;
-      }
+      if(!mounted) return;
 
       Shared.mySnackBar(
         message: 'Hiba kupon ellenőrzésnél: $error',
@@ -238,6 +232,8 @@ class _WelcomePageState extends State<WelcomePage> {
           isCouponValid = true;
         });
 
+        return;
+
       case CouponStatus.USED:
         Shared.mySnackBar(
           message: 'A megadott kupont már felhasználták!',
@@ -248,6 +244,8 @@ class _WelcomePageState extends State<WelcomePage> {
         setState(() {
           isCouponValid = false;
         });
+
+        return;
 
       case CouponStatus.NOT_FOUND:
         Shared.mySnackBar(
@@ -260,6 +258,8 @@ class _WelcomePageState extends State<WelcomePage> {
           isCouponValid = false;
         });
 
+        return;
+
       case CouponStatus.EXPIRED:
         Shared.mySnackBar(
           message: 'A megadott kupon érvényességi ideje már lejárt!',
@@ -270,6 +270,8 @@ class _WelcomePageState extends State<WelcomePage> {
         setState(() {
           isCouponValid = false;
         });
+
+        return;
     }
   }
 
@@ -356,7 +358,7 @@ class _WelcomePageState extends State<WelcomePage> {
     }
 
     //Nem jogosult a prémium funkcióra az ingyenes felhasználó!
-    if(userType == UserType.FREE && differentDays) {
+    if(userType == UserType.FREE && isDifferentDays) {
       Shared.mySnackBar(
         message: 'FREE felhasználó (Név: ${nameController.text}) nem jogosult különböző napokra!',
         color: Colors.red,
@@ -409,7 +411,7 @@ class _WelcomePageState extends State<WelcomePage> {
       double.parse(heightController.text),
       double.parse(weightController.text),
       userType,
-      differentDays,
+      isDifferentDays,
       List.generate(7, (index) => KcalAndNutrients(
           kcal: dailyTargetValues[index][0],
           fat: dailyTargetValues[index][1],
@@ -523,7 +525,7 @@ class _WelcomePageState extends State<WelcomePage> {
 
       tileColor: Shared.boxDecorationColor,
 
-      value: differentDays,
+      value: isDifferentDays,
 
       onChanged: (bool value) {
         switchListTileCouponCheck(value);
@@ -540,11 +542,11 @@ class _WelcomePageState extends State<WelcomePage> {
         context: context,
       );
 
-      setState(() => differentDays = value);
+      setState(() => isDifferentDays = value);
     }
     //Be van kapcsolva (és kikapcsolom).
     else if(!value) {
-      differentDays = false;
+      isDifferentDays = false;
 
       Shared.mySnackBar(
         message: 'Biztos kikapcsolod? Ez egy nagyon jó funkció!',
@@ -560,7 +562,7 @@ class _WelcomePageState extends State<WelcomePage> {
         }
       }
 
-      setState(() => differentDays = value);
+      setState(() => isDifferentDays = value);
     } else {
       //Rossz a kuponkód ÉS ki van kapcsolva.
       Shared.mySnackBar(
@@ -572,7 +574,7 @@ class _WelcomePageState extends State<WelcomePage> {
   }
 
   Center _fillDailyTarget() {
-    if(differentDays) {
+    if(isDifferentDays) {
       return Center(
         child: Container(
           width: Shared.pageWidth,
@@ -783,6 +785,11 @@ class _WelcomePageState extends State<WelcomePage> {
     couponService.useCoupon(couponCode, userId);
   }
 
+  //TODO: Gomb!
+  Widget _navigateToLoginPage() {
+    return Text('TODO');
+  }
+
   Widget _navigateUserToHomePage() {
     return Padding(
       padding: const EdgeInsets.all(12.0,),
@@ -797,7 +804,7 @@ class _WelcomePageState extends State<WelcomePage> {
 
                 //.go, hogy ne lehessen visszanavigálni a belépési képernyőre!
                 context.go('/home/${user.id}');
-              } catch (e) {
+              } catch(e) {
                 if (!mounted) return;
 
                 Shared.mySnackBar(
@@ -823,7 +830,7 @@ class _WelcomePageState extends State<WelcomePage> {
       child: Center(
         child: ElevatedButton(
           onPressed: () {
-            if (tempUser == null) {
+            if(tempUser == null) {
               Shared.mySnackBar(
                 message: 'A felhasználó még nem töltődött be!',
                 color: Colors.red,
