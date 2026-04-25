@@ -285,14 +285,12 @@ class _WelcomePageState extends State<WelcomePage> {
           children: [
             _userDataInput(
               controller: nameController,
-              labelText: 'Név:',
-              hintText: 'Név',
+              text: 'Név',
             ),
 
             _userDataInput(
               controller: passwordController1,
-              labelText: 'Jelszó:',
-              hintText: 'Jelszó',
+              text: 'Jelszó',
               hiddenText: hidePassword,
               showToggle: true,
 
@@ -309,29 +307,25 @@ class _WelcomePageState extends State<WelcomePage> {
 
             _userDataInput(
               controller: passwordController2,
-              labelText: 'Jelszó ismét:',
-              hintText: 'Jelszó ismét',
+              text: 'Jelszó ismét',
               hiddenText: hidePassword,
             ),
 
             _userDataInput(
               controller: weightController,
-              labelText: 'Testtömeg (kg):',
-              hintText: 'Testtömeg',
+              text: 'Testtömeg',
               format: FilteringTextInputFormatter.allow(Shared.onlyNumbers),
             ),
 
             _userDataInput(
               controller: heightController,
-              labelText: 'Magasság (cm):',
-              hintText: 'Magasság',
+              text: 'Magasság',
               format: FilteringTextInputFormatter.allow(Shared.onlyNumbers),
             ),
 
             _userDataInput(
               controller: couponController,
-              labelText: 'Kuponkód:',
-              hintText: 'Kuponkód',
+              text: 'Kuponkód',
               isEnabled: !isCouponValid
             ),
 
@@ -851,8 +845,7 @@ class _WelcomePageState extends State<WelcomePage> {
 
 Container _userDataInput({
   required TextEditingController controller,
-  required String labelText,
-  required String hintText,
+  required String text,
   FilteringTextInputFormatter? format,
   Function(String)? onChanged,
   bool isEnabled = true,
@@ -875,7 +868,7 @@ Container _userDataInput({
           child: SizedBox(
             width: 150,
 
-            child: Text(labelText,),
+            child: Text('$text:',),
           ),
         ),
 
@@ -899,17 +892,18 @@ Container _userDataInput({
                 format ?? FilteringTextInputFormatter.allow(RegExp(r'.*'),),
               ],
 
-              decoration: Shared.inputDecoration(null, hintText).copyWith(
+              decoration: Shared.inputDecoration(null, text).copyWith(
                 suffixIcon: showToggle
-                    ? IconButton(
-                  icon: Icon(
-                    hiddenText
+                  ? IconButton(
+                    icon: Icon(
+                      hiddenText
                         ? Icons.visibility_off
                         : Icons.visibility,
-                  ),
-                  onPressed: onToggleVisibility,
-                )
-                    : null,
+                    ),
+
+                    onPressed: onToggleVisibility,
+                  )
+                  : null,
               ),
             ),
           ),
