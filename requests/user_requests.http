@@ -11,6 +11,7 @@ Content-Type: application/json
 
 {
   "name" : "Viktor",
+  "password": "Passw0rd",
   "height": 190.0,
   "weight": 84.0,
   "userType": "PREMIUM",
@@ -27,6 +28,7 @@ Content-Type: application/json
 
 {
   "name" : "Dávid",
+  "password": "Passw0rd",
   "height": 160.0,
   "weight": 64.0,
   "userType": "FREE",
@@ -43,6 +45,7 @@ Content-Type: application/json
 
 {
   "name" : "New Dávid",
+  "password": "Passw0rd",
   "height": 169.0,
   "weight": 67.0,
   "userType": "PREMIUM",
@@ -59,6 +62,7 @@ Content-Type: application/json
 
 {
   "name" : "Betolakodó",
+  "password": "Passw0rd",
   "height": 190.0,
   "weight": 84.0,
   "userType": "FREE",

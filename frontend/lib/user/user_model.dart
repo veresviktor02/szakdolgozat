@@ -9,6 +9,7 @@ import '/food/kcal_and_nutrients_model.dart';
 class User {
   final int id;
   final String name;
+  final String password;
   final double height;
   final double weight;
   final UserType userType;
@@ -21,6 +22,7 @@ class User {
   User({
     required this.id,
     required this.name,
+    required this.password,
     required this.height,
     required this.weight,
     required this.userType,
@@ -35,6 +37,7 @@ class User {
     return User(
       id: json['id'],
       name: json['name'],
+      password: json['password'],
       height: json['height'],
       weight: json['weight'],
       userType: UserType.values.firstWhere(
@@ -60,6 +63,7 @@ class User {
     return {
       'id': id,
       'name': name,
+      'password': password,
       'height': height,
       'weight': weight,
       'userType': userType.name,

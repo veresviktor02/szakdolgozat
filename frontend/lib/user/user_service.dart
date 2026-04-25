@@ -39,7 +39,9 @@ class UserService {
       return User.fromJson(jsonDecode(response.body));
     }
 
-    throw Exception('Hiba a felhasználó lekérésekor (ID: $id). (${response.statusCode})');
+    throw Exception(
+        'Hiba a felhasználó lekérésekor (ID: $id). (${response.statusCode})'
+    );
   }
 
   Future<User> getUserByName(String name) async {
@@ -51,11 +53,14 @@ class UserService {
       return User.fromJson(jsonDecode(response.body));
     }
 
-    throw Exception('Hiba a felhasználó lekérésekor (Név: $name). (${response.statusCode})');
+    throw Exception(
+        'Hiba a felhasználó lekérésekor (Név: $name). (${response.statusCode})'
+    );
   }
 
   Future<void> sendUser(
       String name,
+      String password,
       double height,
       double weight,
       UserType userType,
@@ -72,6 +77,7 @@ class UserService {
       },
       body: jsonEncode({
         'name': name,
+        'password': password,
         'height': height,
         'weight': weight,
         'userType': userType.name, //sima userType hibás!
@@ -100,7 +106,9 @@ class UserService {
     );
 
     if(response.statusCode != 200) {
-      throw Exception('Nem sikerült frissíteni a felhasználót (${response.statusCode})');
+      throw Exception(
+          'Nem sikerült frissíteni a felhasználót (${response.statusCode})'
+      );
     }
   }
 }

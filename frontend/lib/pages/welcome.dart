@@ -36,6 +36,8 @@ class _WelcomePageState extends State<WelcomePage> {
 
   //Beviteli mezők
   final nameController = TextEditingController();
+  final passwordController1 = TextEditingController();
+  final passwordController2 = TextEditingController();
   final weightController = TextEditingController();
   final heightController = TextEditingController();
   final couponController = TextEditingController();
@@ -82,6 +84,8 @@ class _WelcomePageState extends State<WelcomePage> {
     }
 
     nameController.text = '';
+    passwordController1.text = '';
+    passwordController2.text = '';
     weightController.text = '';
     heightController.text = '';
     couponController.text = '';
@@ -108,6 +112,8 @@ class _WelcomePageState extends State<WelcomePage> {
   @override
   void dispose() {
     nameController.dispose();
+    passwordController1.dispose();
+    passwordController2.dispose();
     weightController.dispose();
     heightController.dispose();
     couponController.dispose();
@@ -266,6 +272,22 @@ class _WelcomePageState extends State<WelcomePage> {
             ),
 
             _userDataInput(
+              controller: passwordController1,
+              labelText: 'Jelszó:',
+              hintText: 'Jelszó',
+              hiddenText: true,
+            ),
+
+            _userDataInput(
+              controller: passwordController2,
+              labelText: 'Jelszó ismét:',
+              hintText: 'Jelszó ismét',
+              hiddenText: true,
+            ),
+
+            //TODO: Jelszóhoz checklist!
+
+            _userDataInput(
               controller: weightController,
               labelText: 'Testtömeg (kg):',
               hintText: 'Testtömeg',
@@ -333,6 +355,18 @@ class _WelcomePageState extends State<WelcomePage> {
       return;
     }
 
+    if(!checkIfPasswordFieldsMatch()) {
+      Shared.mySnackBar(
+        message: 'A jelszómezők nem egyeznek meg!',
+        color: Colors.red,
+        context: context,
+      );
+
+      return;
+    }
+
+    //TODO: jelszó követelményeinek visszajelzése!
+
     Shared.mySnackBar(
       message: 'Felhasználó sikeresen létrehozva! (Név: ${nameController.text})',
       color: Colors.green,
@@ -341,6 +375,7 @@ class _WelcomePageState extends State<WelcomePage> {
 
     await userService.sendUser(
       nameController.text,
+      passwordController1.text,
       double.parse(heightController.text),
       double.parse(weightController.text),
       userType,
@@ -401,6 +436,7 @@ class _WelcomePageState extends State<WelcomePage> {
 
       value: differentDays,
 
+      //TODO: refaktorálni külön függvénybe!
       onChanged: (bool value) {
         //Jó a kuponkód ÉS még nincs bekapcsolva.
         if(isCouponValid && value) {
@@ -635,8 +671,14 @@ class _WelcomePageState extends State<WelcomePage> {
     );
   }
 
+  bool checkIfPasswordFieldsMatch() {
+    return passwordController1.text == passwordController2.text;
+  }
+
   bool areControllersEmpty() {
     return nameController.text == '' ||
+        passwordController1.text == '' ||
+        passwordController2.text == '' ||
         heightController.text == '' ||
         weightController.text == '' ||
         controllers[0][0].text == '' ||
@@ -721,6 +763,7 @@ Container _userDataInput({
   required String hintText,
   FilteringTextInputFormatter? format,
   bool isEnabled = true,
+  bool hiddenText = false,
 }) {
   return Container(
     decoration: BoxDecoration(
@@ -753,6 +796,7 @@ Container _userDataInput({
             child: TextField(
               controller: controller,
               enabled: isEnabled,
+              obscureText: hiddenText,
 
               inputFormatters: [
                 format ?? FilteringTextInputFormatter.allow(RegExp(r'.*'),),

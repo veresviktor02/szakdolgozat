@@ -27,6 +27,8 @@ public class User {
 
     private String name;
 
+    private String password;
+
     private Double weight;
 
     private Double height;
@@ -56,6 +58,7 @@ public class User {
     public User(
             Integer id,
             String name,
+            String password,
             Double weight,
             Double height,
             UserType userType,
@@ -67,6 +70,7 @@ public class User {
     ) {
         this.id = id;
         setName(name);
+        setPassword(password);
         setWeight(weight);
         setHeight(height);
         this.userType = userType;
@@ -83,6 +87,10 @@ public class User {
 
     public String getName() {
         return name;
+    }
+
+    public String getPassword() {
+        return password;
     }
 
     public Double getWeight() {
@@ -129,6 +137,12 @@ public class User {
         }
 
         this.name = name;
+    }
+
+    public void setPassword(String password) {
+        validatePassword(password);
+
+        this.password = password;
     }
 
     public void setWeight(Double weight) {
@@ -214,6 +228,20 @@ public class User {
         }
 
         this.dailyTarget = dailyTarget;
+    }
+
+    public void validatePassword(String password) {
+        if(password.length() < 6 || password.length() > 30) {
+            throw new UserException(
+                    "A jelszó hosszának 6 és 30 karakter között kell lennie!"
+            );
+        }
+
+        if(!password.matches("^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d).+$")) {
+            throw new UserException(
+                    "A jelszónak tartalmaznia kell legalább egy kisbetűt, nagybetűt és számot!"
+            );
+        }
     }
 
     @Override

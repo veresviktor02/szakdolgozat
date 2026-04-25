@@ -120,6 +120,7 @@ public class UserService {
         user.setWeight(100.0);
         user.setUserType(UserType.FREE);
         user.setDifferentDays(false);
+        user.setPassword("Passw0rd");
 
         List<KcalAndNutrients> kcalAndNutrientsList = new ArrayList<>(7);
 
@@ -136,14 +137,18 @@ public class UserService {
 
         try {
             userRepository.save(user);
-        } catch (Exception e) {
-            throw new UserException("userRepository.save(user) hibát dobott!", e);
+        } catch(Exception e) {
+            throw new UserException(
+                    "userRepository.save(user) hibát dobott!", e
+            );
         }
 
         try {
             dayService.createEmptyDays(user.getId());
-        } catch (Exception e) {
-            throw new UserException("dayService.createEmptyDays(user.getId()) hibát dobott!", e);
+        } catch(Exception e) {
+            throw new UserException(
+                    "dayService.createEmptyDays(user.getId()) hibát dobott!", e
+            );
         }
     }
 }
