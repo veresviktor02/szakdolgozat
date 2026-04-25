@@ -436,47 +436,50 @@ class _WelcomePageState extends State<WelcomePage> {
 
       value: differentDays,
 
-      //TODO: refaktorálni külön függvénybe!
       onChanged: (bool value) {
-        //Jó a kuponkód ÉS még nincs bekapcsolva.
-        if(isCouponValid && value) {
-          Shared.mySnackBar(
-            message: 'Milyen érzés PREMIUM ügyfélnek lenni? szerintünk nagyon jó!',
-            color: Colors.green,
-            context: context,
-          );
-
-          setState(() => differentDays = value);
-        }
-        //Be van kapcsolva (és kikapcsolom).
-        else if(!value) {
-          differentDays = false;
-
-          Shared.mySnackBar(
-            message: 'Biztos kikapcsolod? Ez egy nagyon jó funkció!',
-            color: Colors.orangeAccent,
-            context: context,
-          );
-
-          //Ha átváltja a felhasználó különböző napokra és elmenti az adatokat,
-          //akkor a visszaváltásnál megőrződnek a volt értékek!
-          for(int day = 1; day < 7; day++) {
-            for(int nutrient = 0; nutrient < 4; nutrient++) {
-              dailyTargetValues[day][nutrient] = 0.0;
-            }
-          }
-
-          setState(() => differentDays = value);
-        } else {
-          //Rossz a kuponkód ÉS ki van kapcsolva.
-          Shared.mySnackBar(
-            message: 'Csak PREMIUM felhasználóknak! Te nem vagy az!',
-            color: Colors.red,
-            context: context,
-          );
-        }
+        switchListTileCouponCheck(value);
       },
     );
+  }
+
+  void switchListTileCouponCheck(bool value) {
+    //Jó a kuponkód ÉS még nincs bekapcsolva.
+    if(isCouponValid && value) {
+      Shared.mySnackBar(
+        message: 'Milyen érzés PREMIUM ügyfélnek lenni? szerintünk nagyon jó!',
+        color: Colors.green,
+        context: context,
+      );
+
+      setState(() => differentDays = value);
+    }
+    //Be van kapcsolva (és kikapcsolom).
+    else if(!value) {
+      differentDays = false;
+
+      Shared.mySnackBar(
+        message: 'Biztos kikapcsolod? Ez egy nagyon jó funkció!',
+        color: Colors.orangeAccent,
+        context: context,
+      );
+
+      //Ha átváltja a felhasználó különböző napokra és elmenti az adatokat,
+      //akkor a visszaváltásnál megőrződnek a volt értékek!
+      for(int day = 1; day < 7; day++) {
+        for(int nutrient = 0; nutrient < 4; nutrient++) {
+          dailyTargetValues[day][nutrient] = 0.0;
+        }
+      }
+
+      setState(() => differentDays = value);
+    } else {
+      //Rossz a kuponkód ÉS ki van kapcsolva.
+      Shared.mySnackBar(
+        message: 'Csak PREMIUM felhasználóknak! Te nem vagy az!',
+        color: Colors.red,
+        context: context,
+      );
+    }
   }
 
   Center _fillDailyTarget() {
