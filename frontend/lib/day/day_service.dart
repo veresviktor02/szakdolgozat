@@ -23,7 +23,7 @@ class DayService {
       return jsonList.map((jsonItem) => Day.fromJson(jsonItem)).toList();
     }
     throw Exception(
-      'Napok lekérése sikertelen! (${response.statusCode})',
+      'Napok lekérése sikertelen!\n${response.body}',
     );
   }
 
@@ -34,7 +34,9 @@ class DayService {
 
     //HTTP 204: No content! - Delete sikeres, de nincs válasz!
     if(response.statusCode != 204 && response.statusCode != 200) {
-      throw Exception('Étel törlése a napból sikertelen!');
+      throw Exception(
+        'Étel törlése a napból sikertelen!\n${response.body}'
+      );
     }
   }
 
@@ -49,7 +51,9 @@ class DayService {
       return KcalAndNutrients.fromJson(jsonMap);
     }
 
-    throw Exception('Kcal és tápanyagok lekérése sikertelen! (Válasz: ${response.statusCode})');
+    throw Exception(
+      'Kcal és tápanyagok lekérése sikertelen!\n${response.body}'
+    );
   }
 
   Future<void> addFoodToDay(
@@ -79,7 +83,7 @@ class DayService {
 
     if(response.statusCode != 200) {
       throw Exception(
-        'Étel hozzáadása a naphoz (ID: $dayId) sikertelen! (Válasz: ${response.body})',
+        'Étel hozzáadása a naphoz (ID: $dayId) sikertelen!\n${response.body}',
       );
     }
   }
@@ -95,7 +99,9 @@ class DayService {
       return data.map((json) => User.fromJson(json)).toList();
     }
 
-    throw Exception('Ranglista betöltése sikertelen. ${response.statusCode}',);
+    throw Exception(
+      'Ranglista betöltése sikertelen!\n${response.body}',
+    );
   }
 
   Future<int> getCurrentActivityStreak(int id) async {
@@ -107,6 +113,8 @@ class DayService {
       return int.parse(response.body);
     }
 
-    throw Exception('Nem sikerült lekérni a felhasználó (ID: $id) aktivitását. ${response.statusCode}');
+    throw Exception(
+      'Nem sikerült lekérni a felhasználó (ID: $id) aktivitását!\n${response.body}'
+    );
   }
 }

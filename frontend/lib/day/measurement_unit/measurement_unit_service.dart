@@ -21,7 +21,7 @@ class MeasurementUnitService {
       return jsonList.map((jsonItem) => MeasurementUnit.fromJson(jsonItem)).toList();
     }
     throw Exception(
-      'Mértékegységek lekérése sikertelen! (${response.statusCode})',
+      'Mértékegységek lekérése sikertelen!\n${response.body}',
     );
   }
 
@@ -38,7 +38,9 @@ class MeasurementUnitService {
     );
 
     if(response.statusCode != 200) {
-      throw Exception('Mértékegység hozzáadása sikertelen!');
+      throw Exception(
+        'Mértékegység hozzáadása sikertelen!\n${response.body}'
+      );
     }
   }
 
@@ -50,8 +52,9 @@ class MeasurementUnitService {
     );
 
     if(response.statusCode != 200 && response.statusCode != 204) {
-      print(response.body);
-      throw Exception('Mértékegység törlése sikertelen!');
+      throw Exception(
+        'Mértékegység törlése sikertelen!\n${response.body}'
+      );
     }
   }
 }

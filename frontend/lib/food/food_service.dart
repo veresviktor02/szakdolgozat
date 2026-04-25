@@ -42,7 +42,9 @@ class FoodService {
     );
 
     if(response.statusCode != 200) {
-      throw Exception('Étel küldése sikertelen! (${response.body})');
+      throw Exception(
+        'Étel küldése sikertelen!\n${response.body}'
+      );
     }
   }
 
@@ -52,7 +54,9 @@ class FoodService {
     );
 
     if(response.statusCode != 200 && response.statusCode != 204) {
-      throw Exception('Étel törlése sikertelen! (${response.statusCode})');
+      throw Exception(
+        'Étel törlése sikertelen!\n${response.body}'
+      );
     }
   }
 
@@ -61,10 +65,12 @@ class FoodService {
       Uri.parse('${Shared.baseUrl}/foods/$userId/$foodId',),
     );
 
-    if (response.statusCode == 200) {
+    if(response.statusCode == 200) {
       return Food.fromJson(jsonDecode(response.body));
     }
 
-    throw Exception('Hiba étel (ID: $foodId) lekérésekor. (${response.statusCode})');
+    throw Exception(
+      'Hiba étel (ID: $foodId) lekérésekor!\n${response.body}'
+    );
   }
 }
