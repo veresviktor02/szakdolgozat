@@ -79,6 +79,9 @@ build/
 .packages
 .pub/
 .pub-cache/
+teszt.txt
+korlatozasok.txt
+api.properties
 
 ### API ###
 
