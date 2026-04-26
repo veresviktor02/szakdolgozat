@@ -227,6 +227,13 @@ class _SettingsPageState extends State<SettingsPage> {
                             SwitchListTile(
                               title: const Text('Különböző napok',),
 
+                              activeThumbColor: Colors.green.shade50,
+                              activeTrackColor: Colors.green,
+                              inactiveThumbColor: Colors.green.shade50,
+                              inactiveTrackColor: Colors.green,
+
+                              tileColor: Shared.boxDecorationColor,
+
                               value: differentDays,
 
                               onChanged: (value) {
