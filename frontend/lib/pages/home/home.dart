@@ -211,6 +211,10 @@ class _HomePageState extends State<HomePage> {
               _navigateToLeaderboardPage(),
 
               const SizedBox(height: 20,),
+
+              _navigateToSettingsPage(),
+
+              const SizedBox(height: 20,),
             ],
           ),
         ),
@@ -948,6 +952,20 @@ class _HomePageState extends State<HomePage> {
         style: Shared.myButtonStyle,
 
         child: const Text('Ranglista',),
+      ),
+    );
+  }
+
+  Widget _navigateToSettingsPage() {
+    return Center(
+      child: ElevatedButton(
+        onPressed: () {
+          context.go('/settings/${user!.id}');
+        },
+
+        style: Shared.myButtonStyle,
+
+        child: const Text('Beállítások',),
       ),
     );
   }
