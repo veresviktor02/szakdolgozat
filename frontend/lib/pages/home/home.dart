@@ -430,6 +430,8 @@ class _HomePageState extends State<HomePage> {
 
                         zeroAllTextFields();
 
+                        emptyMealDropdownValue();
+
                         await refreshPage();
                       },
 
@@ -719,6 +721,8 @@ class _HomePageState extends State<HomePage> {
 
               zeroAllTextFields();
 
+              emptyMealDropdownValue();
+
               await refreshPage();
             },
 
@@ -946,6 +950,12 @@ class _HomePageState extends State<HomePage> {
         child: const Text('Ranglista',),
       ),
     );
+  }
+
+  void emptyMealDropdownValue() {
+    setState(() {
+      selectedMealNumber = null;
+    });
   }
 
   //////////////////////////////////////////////////////////////////////
