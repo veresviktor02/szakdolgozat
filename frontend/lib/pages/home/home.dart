@@ -5,8 +5,6 @@ import 'package:table_calendar/table_calendar.dart';
 
 import 'package:go_router/go_router.dart';
 
-import 'package:flutter_svg/flutter_svg.dart';
-
 import '/day/day_model.dart';
 import '/day/day_service.dart';
 import '/day/measurement_unit/measurement_unit_model.dart';
@@ -23,6 +21,7 @@ import '/utils/shared.dart';
 import '/utils/my_calendar.dart';
 
 import 'api_food_search.dart';
+
 import 'daily_target.dart';
 
 class HomePage extends StatefulWidget {
@@ -960,7 +959,7 @@ class _HomePageState extends State<HomePage> {
     return Center(
       child: ElevatedButton(
         onPressed: () {
-          context.go('/settings/${user!.id}');
+          context.push('/settings/${user!.id}');
         },
 
         style: Shared.myButtonStyle,
