@@ -199,20 +199,7 @@ class _SettingsPageState extends State<SettingsPage> {
 
                         child: Column(
                           children: [
-                            //TODO: Refaktorálás - kiemelés függvénybe
-                            const Padding(
-                              padding: EdgeInsets.fromLTRB(5.0, 10.0, 5.0, 20.0,),
-
-                              child: Text(
-                                'Felhasználói adatok',
-
-                                style: TextStyle(
-                                  fontSize: 18,
-
-                                  fontWeight: FontWeight.w300,
-                                ),
-                              ),
-                            ),
+                            _headerText('Felhasználói adatok'),
 
                             _userDataTextField(
                                 controller: nameController,
@@ -285,19 +272,7 @@ class _SettingsPageState extends State<SettingsPage> {
 
                         child: Column(
                           children: [
-                            const Padding(
-                              padding: EdgeInsets.fromLTRB(5.0, 10.0, 5.0, 20.0,),
-
-                              child: Text(
-                                'Napi kalóriaszükséglet kiszámítása',
-
-                                style: TextStyle(
-                                  fontSize: 18,
-
-                                  fontWeight: FontWeight.w300,
-                                ),
-                              ),
-                            ),
+                            _headerText('Napi kalóriaszükséglet kiszámítása'),
 
                             _dropdown(
                               selectedGender,
@@ -498,6 +473,22 @@ class _SettingsPageState extends State<SettingsPage> {
 
             return null;
           },
+        ),
+      ),
+    );
+  }
+
+  Widget _headerText(String text) {
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(5.0, 10.0, 5.0, 20.0,),
+
+      child: Text(
+        text,
+
+        style: const TextStyle(
+          fontSize: 18,
+
+          fontWeight: FontWeight.w300,
         ),
       ),
     );
