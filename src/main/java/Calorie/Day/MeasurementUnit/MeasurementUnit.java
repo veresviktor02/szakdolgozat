@@ -11,14 +11,12 @@ import jakarta.persistence.*;
 
 import java.util.Objects;
 
-//"hibernateLazyInitializer": {} ellen!
-@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 //Egy mértékegységnévből ne lehessen több, de más-más felhasználónak lehet így ugyanaz a név!
 @Entity
 @Table(uniqueConstraints = {@UniqueConstraint(columnNames = {"owner_id", "measurementUnitName"})})
 public class MeasurementUnit {
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
     //kg, g, 100g, lbs, ...
@@ -26,7 +24,7 @@ public class MeasurementUnit {
 
     private int measurementUnitInGrams;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "owner_id", nullable = false)
     @JsonBackReference //Ettől nem lesz rekurzív a JSON!
     private User owner;
