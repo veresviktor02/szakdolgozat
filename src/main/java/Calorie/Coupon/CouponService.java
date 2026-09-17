@@ -42,7 +42,11 @@ public class CouponService {
 
                         break;
                     }
-                } catch (Exception e) {}
+                } catch(Exception e) {
+                    throw new CouponException(
+                            "couponRepository.findAll() kivételt dobott!", e
+                    );
+                }
             }
 
             if(matchedCoupon == null) {
@@ -61,9 +65,9 @@ public class CouponService {
 
             return ResponseEntity.ok(CouponStatus.VALID);
 
-        } catch (Exception e) {
+        } catch(Exception e) {
             throw new CouponException(
-                    "checkIfCouponIsValid(String couponCode) hibát dobott!", e
+                    "checkIfCouponIsValid(String couponCode) kivételt dobott!", e
             );
         }
     }
@@ -88,7 +92,9 @@ public class CouponService {
         try {
             couponRepository.save(coupon);
         } catch(Exception e) {
-            throw new CouponException("couponRepository.save(coupon) hibát dobott!", e);
+            throw new CouponException(
+                    "couponRepository.save(coupon) kivételt dobott!", e
+            );
         }
     }
 
@@ -96,7 +102,9 @@ public class CouponService {
         try {
             return couponRepository.findAll();
         } catch(Exception e) {
-            throw new CouponException("couponRepository.findAll() hibát dobott!", e);
+            throw new CouponException(
+                    "couponRepository.findAll() kivételt dobott!", e
+            );
         }
     }
 
@@ -124,7 +132,9 @@ public class CouponService {
             try {
                 couponRepository.save(coupon);
             } catch(Exception e) {
-                throw new CouponException("couponRepository.save(coupon) hibát dobott!", e);
+                throw new CouponException(
+                        "couponRepository.save(coupon) kivételt dobott!", e
+                );
             }
         }
     }
