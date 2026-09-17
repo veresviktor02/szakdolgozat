@@ -19,10 +19,10 @@ public class KcalAndNutrients {
 
         //Nem a settert hívjuk meg, mert kezdetben még nincs beállítva semmi,
         //amit lehetne mérni (null).
-        checkIfNutrientIsNegative(kcal, "Kcal");
-        checkIfNutrientIsNegative(fat, "Fat");
-        checkIfNutrientIsNegative(carb, "Carb");
-        checkIfNutrientIsNegative(protein, "Protein");
+        checkIfValueIsNegative(kcal, "Kcal");
+        checkIfValueIsNegative(fat, "Fat");
+        checkIfValueIsNegative(carb, "Carb");
+        checkIfValueIsNegative(protein, "Protein");
 
         this.kcal = kcal;
         this.fat = fat;
@@ -47,35 +47,35 @@ public class KcalAndNutrients {
     }
 
     public void setKcal(Double kcal) {
-        checkIfNutrientIsNegative(kcal, "Kcal");
+        checkIfValueIsNegative(kcal, "Kcal");
         checkIfCaloriesAreLess(kcal, getFat(), getCarb(), getProtein());
 
         this.kcal = kcal;
     }
 
     public void setFat(Double fat) {
-        checkIfNutrientIsNegative(fat, "Fat");
+        checkIfValueIsNegative(fat, "Fat");
         checkIfCaloriesAreLess(getKcal(), fat, getCarb(), getProtein());
 
         this.fat = fat;
     }
 
     public void setCarb(Double carb) {
-        checkIfNutrientIsNegative(carb, "Carb");
+        checkIfValueIsNegative(carb, "Carb");
         checkIfCaloriesAreLess(getKcal(), getFat(), carb, getProtein());
 
         this.carb = carb;
     }
 
     public void setProtein(Double protein) {
-        checkIfNutrientIsNegative(protein, "Protein");
+        checkIfValueIsNegative(protein, "Protein");
         checkIfCaloriesAreLess(getKcal(), getFat(), getCarb(), protein);
 
         this.protein = protein;
     }
 
-    public void checkIfNutrientIsNegative(double nutrient, String nutrientName) {
-        if(nutrient < 0) {
+    public void checkIfValueIsNegative(Double nutrient, String nutrientName) {
+        if(nutrient < 0.0) {
             throw new IllegalArgumentException(nutrientName + " nem lehet negatív!");
         }
     }
