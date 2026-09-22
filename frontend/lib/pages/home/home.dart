@@ -640,11 +640,11 @@ class _HomePageState extends State<HomePage> {
 
                             const SizedBox(height: 5,),
 
-                            Text('Kcal: ${Shared.format(food.kcalAndNutrients.kcal * (food.foodWeight / food.measurementUnit.measurementUnitInGrams) / 100)} kcal',),
-                            Text('Zsír: ${Shared.format(food.kcalAndNutrients.fat * (food.foodWeight / food.measurementUnit.measurementUnitInGrams) / 100)} g',),
-                            Text('Szénhidrát: ${Shared.format(food.kcalAndNutrients.carb * (food.foodWeight / food.measurementUnit.measurementUnitInGrams) / 100)} g',),
-                            Text('Fehérje: ${Shared.format(food.kcalAndNutrients.protein * (food.foodWeight / food.measurementUnit.measurementUnitInGrams) / 100)} g',),
-                            Text('Tömeg: ${food.foodWeight} ${food.measurementUnit.measurementUnitName}',),
+                            Text('Kcal: ${Shared.format(food.kcalAndNutrients.kcal * (food.measurementUnit.measurementUnitInGrams / food.foodWeight) / 100)} kcal',),
+                            Text('Zsír: ${Shared.format(food.kcalAndNutrients.fat * (food.measurementUnit.measurementUnitInGrams / food.foodWeight) / 100)} g',),
+                            Text('Szénhidrát: ${Shared.format(food.kcalAndNutrients.carb * (food.measurementUnit.measurementUnitInGrams / food.foodWeight) / 100)} g',),
+                            Text('Fehérje: ${Shared.format(food.kcalAndNutrients.protein * (food.measurementUnit.measurementUnitInGrams / food.foodWeight) / 100)} g',),
+                            Text('Tömeg: ${food.foodWeight} \'${food.measurementUnit.measurementUnitName}\'',),
 
                             Padding(
                               padding: const EdgeInsets.all(8.0,),
