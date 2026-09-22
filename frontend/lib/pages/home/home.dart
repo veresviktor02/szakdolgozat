@@ -640,10 +640,10 @@ class _HomePageState extends State<HomePage> {
 
                             const SizedBox(height: 5,),
 
-                            Text('Kcal: ${Shared.format(food.kcalAndNutrients.kcal)}',),
-                            Text('Zsír: ${Shared.format(food.kcalAndNutrients.fat)}',),
-                            Text('Szénhidrát: ${Shared.format(food.kcalAndNutrients.carb)}',),
-                            Text('Fehérje: ${Shared.format(food.kcalAndNutrients.protein)}',),
+                            Text('Kcal: ${Shared.format(food.kcalAndNutrients.kcal * (food.foodWeight / food.measurementUnit.measurementUnitInGrams) / 100)} kcal',),
+                            Text('Zsír: ${Shared.format(food.kcalAndNutrients.fat * (food.foodWeight / food.measurementUnit.measurementUnitInGrams) / 100)} g',),
+                            Text('Szénhidrát: ${Shared.format(food.kcalAndNutrients.carb * (food.foodWeight / food.measurementUnit.measurementUnitInGrams) / 100)} g',),
+                            Text('Fehérje: ${Shared.format(food.kcalAndNutrients.protein * (food.foodWeight / food.measurementUnit.measurementUnitInGrams) / 100)} g',),
                             Text('Tömeg: ${food.foodWeight} ${food.measurementUnit.measurementUnitName}',),
 
                             Padding(
